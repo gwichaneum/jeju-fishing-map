@@ -8,6 +8,7 @@ const files = new Map([
   ["/styles.css", ["styles.css", "text/css; charset=utf-8"]],
   ["/script.js", ["script.js", "text/javascript; charset=utf-8"]],
   ["/fishing-spots.js", ["fishing-spots.js", "text/javascript; charset=utf-8"]],
+  ["/restrooms.js", ["restrooms.js", "text/javascript; charset=utf-8"]],
   ["/assets/jeju-coast.jpg", ["assets/jeju-coast.jpg", "image/jpeg"]],
 ]);
 

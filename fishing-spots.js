@@ -89,9 +89,9 @@ const fishingSpots = [
   {
     "id": 4,
     "name": "성산노외2공영주차장",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
+    "latitude": 33.4589386,
+    "longitude": 126.929765,
+    "region": "서귀포시 성산읍 성산리",
     "category": "access-point",
     "kind": "access-point",
     "species": [],
@@ -99,9 +99,25 @@ const fishingSpots = [
     "userNote": "무늬오징어 포인트",
     "safetyNote": "",
     "source": "개인 즐겨찾기",
-    "externalSources": [],
-    "needsVerification": true,
-    "verificationNote": "주차장은 접근 기준점. 주차장 및 실제 낚시 해안의 정확한 위치 확인 필요."
+    "externalSources": [
+      {
+        "name": "공공데이터포털 · 서귀포시 주차장정보",
+        "url": "https://www.data.go.kr/data/15012896/standard.do"
+      },
+      {
+        "name": "서귀포시 주차장정보 CSV (2026-04-16)",
+        "url": "https://www.data.go.kr/cmm/cmm/fileDownload.do?atchFileId=FILE_000000003628454&fileDetailSn=1&insertDataPrcus=N"
+      }
+    ],
+    "needsVerification": false,
+    "verificationNote": "서귀포시 주차장정보 CSV의 주차장관리번호 406-2-000100과 지번 399-123, 좌표를 대조함. 기준일 2026-04-16. 실제 해안 낚시 발판과는 다를 수 있음.",
+    "locationNote": "개인이 저장한 해안 접근 기준점입니다. 주차장 자체를 낚시터로 의미하지 않습니다.",
+    "address": "제주특별자치도 서귀포시 성산읍 성산리 399-123",
+    "coordinateSource": {
+      "name": "공공데이터포털 · 서귀포시 주차장정보",
+      "url": "https://www.data.go.kr/data/15012896/standard.do"
+    },
+    "coordinateScope": "사용자 제공 지번과 일치하는 공영주차장 대표 위치"
   },
   {
     "id": 5,
@@ -125,7 +141,7 @@ const fishingSpots = [
     "name": "태흥1리어촌계",
     "latitude": null,
     "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
+    "region": "제주특별자치도 서귀포시 남원읍 태흥리",
     "category": "landmark",
     "kind": "landmark",
     "species": [],
@@ -135,7 +151,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "어촌계 시설과 실제 낚시 해안을 구분할 위치 확인 필요."
+    "verificationNote": "사용자 제공 지번 1214-6의 정확한 좌표를 공개 주소 자료에서 확인하지 못함. 지오코딩의 태흥리 마을 중심, 인접 1214-1/1214-4 및 같은 시설명의 다른 주소를 대체 좌표로 사용하지 않음.",
+    "address": "제주특별자치도 서귀포시 남원읍 태흥리 1214-6"
   },
   {
     "id": 7,
@@ -158,9 +175,9 @@ const fishingSpots = [
     "id": 8,
     "name": "무거버거",
     "address": "제주 제주시 조천읍 조함해안로 356 1층",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
+    "latitude": 33.5488969,
+    "longitude": 126.6550619,
+    "region": "제주 조천읍 신흥리",
     "category": "landmark",
     "kind": "landmark",
     "species": [],
@@ -174,8 +191,14 @@ const fishingSpots = [
         "url": "https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_200000000012605"
       }
     ],
-    "needsVerification": true,
-    "verificationNote": "음식점임을 확인. 조함해안로 356 1층의 주변 낚시 해안은 특정하지 않음."
+    "needsVerification": false,
+    "verificationNote": "공식 자료에서 조함해안로 356과 좌표를 확인. 주변 낚시 해안의 정밀 위치는 미확인.",
+    "coordinateSource": {
+      "name": "제주관광공사",
+      "url": "https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_200000000012605"
+    },
+    "coordinateScope": "음식점 주소 기준점",
+    "locationNote": "무거버거 주변 해안을 찾기 위한 개인 기준점입니다. 마커는 가게 주소 위치이며 가게 자체는 낚시터가 아닙니다."
   },
   {
     "id": 9,
@@ -274,7 +297,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "접근 기준점. 어느 진입로와 해안 낚시 위치를 의미하는지 확인 필요."
+    "verificationNote": "접근 기준점. 어느 진입로와 해안 낚시 위치를 의미하는지 확인 필요.",
+    "locationNote": "개인이 저장한 해안 접근 기준점입니다. 어느 입구인지 확인되지 않아 위치를 임의로 지정하지 않았습니다."
   },
   {
     "id": 14,
@@ -301,9 +325,9 @@ const fishingSpots = [
   {
     "id": 15,
     "name": "수마포구",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 성산 (사용자 제공)",
+    "latitude": 33.460981,
+    "longitude": 126.933603,
+    "region": "제주특별자치도 서귀포시 성산읍 성산리",
     "category": "포구",
     "kind": "fishing-spot",
     "species": [],
@@ -311,16 +335,31 @@ const fishingSpots = [
     "userNote": "",
     "safetyNote": "",
     "source": "개인 즐겨찾기",
-    "externalSources": [],
-    "needsVerification": true,
-    "verificationNote": "성산 지역 포구의 정확한 좌표 미확인. 성산포항 외 방파제로 대체하지 않음."
+    "externalSources": [
+      {
+        "name": "해양수산부 바다온",
+        "url": "https://badaon.or.kr/seantour_map/travel/destination/detail.do?destId=DEST023367"
+      },
+      {
+        "name": "성산스쿠버리조트 (주소 교차 확인)",
+        "url": "https://www.sscuba.kr/"
+      }
+    ],
+    "needsVerification": false,
+    "verificationNote": "바다온 성산스쿠버리조트 자료의 일출로 258-5와 지도 좌표를 대조함. 도로 전체 중심 또는 성산포항 방파제 좌표로 대체하지 않음. 주소 기준점이며 포구 내 정밀 발판은 현장 확인 필요.",
+    "address": "제주특별자치도 서귀포시 성산읍 일출로 258-5",
+    "coordinateSource": {
+      "name": "해양수산부 바다온",
+      "url": "https://badaon.or.kr/seantour_map/travel/destination/detail.do?destId=DEST023367"
+    },
+    "coordinateScope": "사용자 제공 주소의 대표 위치"
   },
   {
     "id": 16,
     "name": "덕돌포구",
     "latitude": 33.2905628,
     "longitude": 126.7606705,
-    "region": "제주 남동부",
+    "region": "제주특별자치도 서귀포시 남원읍 태흥리",
     "category": "포구",
     "kind": "fishing-spot",
     "species": [
@@ -347,7 +386,7 @@ const fishingSpots = [
       }
     ],
     "needsVerification": false,
-    "verificationNote": "공개 자료의 대표 위치를 확인했으며 개인 저장 핀의 정밀 좌표와는 다를 수 있음.",
+    "verificationNote": "OpenStreetMap의 덕돌포구 locality와 남원읍 태흥리 위치를 재확인함. 기존 포구 대표 좌표를 유지하며 태흥리 마을 중심으로 바꾸지 않음. 개인 저장 핀의 정밀 좌표와는 다를 수 있음.",
     "coordinateSource": {
       "name": "OpenStreetMap",
       "url": "https://www.openstreetmap.org/node/3739763534"
@@ -572,7 +611,8 @@ const fishingSpots = [
       "벵에돔",
       "참돔",
       "고등어",
-      "독가시치"
+      "독가시치",
+      "갈치"
     ],
     "methods": [
       "릴찌",
@@ -587,6 +627,10 @@ const fishingSpots = [
       {
         "name": "바다타임",
         "url": "https://www.badatime.com/67/spots"
+      },
+      {
+        "name": "애월항 방파제 야간낚시 가이드 (2025)",
+        "url": "https://pigkim4.tistory.com/14"
       }
     ],
     "needsVerification": false,
@@ -602,6 +646,15 @@ const fishingSpots = [
     },
     "aliases": [
       "애월항 방파제"
+    ],
+    "additionalFishingInfoSources": [
+      {
+        "name": "애월항 방파제 야간낚시 가이드 (2025)",
+        "url": "https://pigkim4.tistory.com/14",
+        "species": [
+          "갈치"
+        ]
+      }
     ]
   },
   {
@@ -809,7 +862,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "도로 범위가 넓어 특정 갯바위 지점 확인 필요."
+    "verificationNote": "도로 범위가 넓어 특정 갯바위 지점 확인 필요.",
+    "locationNote": "개인이 저장한 갯바위 접근 기준점입니다. 노을해안로 전체를 하나의 낚시터로 의미하지 않습니다."
   },
   {
     "id": 31,
@@ -826,7 +880,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "지번에 해당하는 해안의 실제 낚시 위치 미확인. 대평포구의 임의 좌표로 대체하지 않음."
+    "verificationNote": "정확한 지번 좌표 미확인. 공개 지오코딩은 창천리 행정구역 중심만 반환해 채택하지 않음.",
+    "locationNote": "개인이 저장한 갯바위 기준점입니다. 인근 카페나 마을 중심으로 대체하지 않았습니다."
   },
   {
     "id": 32,
@@ -937,7 +992,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "지번 기준점과 실제 낚시 위치 미확인. 외도천 방파제 좌표로 대체하지 않음."
+    "verificationNote": "지번 기준점과 실제 낚시 위치 미확인. 외도천 방파제 좌표로 대체하지 않음.",
+    "locationNote": "개인이 저장한 해안 기준점입니다. 내도동 465-3의 정확한 위치 확인이 필요합니다."
   },
   {
     "id": 35,
@@ -995,7 +1051,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "해당 지번의 정확한 낚시 위치 미확인. 인근 다른 지번 또는 낚시터로 대체하지 않음."
+    "verificationNote": "정확한 지번 좌표 미확인. 공개 지오코딩의 영락리 마을 중심과 인근 2169-5 주소를 채택하지 않음.",
+    "locationNote": "개인이 저장한 해안 기준점입니다. 인근 다른 지번을 같은 위치로 단정하지 않았습니다."
   },
   {
     "id": 37,
@@ -1054,19 +1111,30 @@ const fishingSpots = [
   {
     "id": 39,
     "name": "제주 제주시 삼봉로2길 34 1층 101호 주변",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
-    "category": "landmark",
-    "kind": "landmark",
+    "latitude": 33.5197092,
+    "longitude": 126.5844851,
+    "region": "제주 제주시 삼양이동",
+    "category": "access-point",
+    "kind": "access-point",
     "species": [],
     "methods": [],
     "userNote": "주변 양식장 구멍치기 포인트",
     "safetyNote": "",
     "source": "개인 즐겨찾기",
-    "externalSources": [],
-    "needsVerification": true,
-    "verificationNote": "건물은 기준점. 주변 양식장 및 실제 구멍치기 해안의 정확한 위치 미확인."
+    "externalSources": [
+      {
+        "name": "OpenStreetMap",
+        "url": "https://www.openstreetmap.org/way/1495325686"
+      }
+    ],
+    "needsVerification": false,
+    "verificationNote": "삼봉로2길 34와 일치하는 공개 지도 건물을 확인. 주변 양식장 및 개인 낚시 해안의 정밀 위치는 미확인.",
+    "coordinateSource": {
+      "name": "OpenStreetMap",
+      "url": "https://www.openstreetmap.org/way/1495325686"
+    },
+    "coordinateScope": "도로명주소 건물 기준점",
+    "locationNote": "주변 해안을 찾기 위한 개인 기준점입니다. 마커는 삼봉로2길 34 건물 위치이며 건물 자체는 낚시터가 아닙니다."
   },
   {
     "id": 40,
@@ -1110,7 +1178,8 @@ const fishingSpots = [
     "source": "개인 즐겨찾기",
     "externalSources": [],
     "needsVerification": true,
-    "verificationNote": "정확한 제주 교차로 명칭과 좌표 미확인. 미수동포구나 다른 지역 지점으로 바꾸지 않음."
+    "verificationNote": "정확한 교차로 명칭과 제주 좌표를 다시 조회했으나 확인되지 않음. 미수동포구 등으로 임의 수정하지 않음.",
+    "locationNote": "개인이 저장한 접근 기준점입니다. 정확한 교차로의 저장 핀 확인이 필요합니다."
   },
   {
     "id": 42,
@@ -1132,19 +1201,68 @@ const fishingSpots = [
   {
     "id": 43,
     "name": "서부두",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
+    "latitude": 33.5227588,
+    "longitude": 126.5301222,
+    "region": "제주시 건입동 · 제주항",
     "category": "부두",
     "kind": "fishing-spot",
-    "species": [],
+    "species": [
+      "농어",
+      "참돔",
+      "감성돔",
+      "벵에돔",
+      "돌돔",
+      "부시리",
+      "전갱이",
+      "숭어",
+      "보리멸",
+      "붕장어",
+      "학꽁치",
+      "무늬오징어",
+      "한치",
+      "혹돔",
+      "다금바리",
+      "자리돔"
+    ],
     "methods": [],
     "userNote": "",
     "safetyNote": "",
     "source": "개인 즐겨찾기",
-    "externalSources": [],
-    "needsVerification": true,
-    "verificationNote": "항구 또는 주소가 없어 정확한 부두와 저장 지점 미확인."
+    "externalSources": [
+      {
+        "name": "OpenStreetMap 기여자",
+        "url": "https://www.openstreetmap.org/node/4488145812"
+      },
+      {
+        "name": "제주항 등대 위치 참고 (과거 검역구역 자료)",
+        "url": "https://www.law.go.kr/flDownload.do?bylClsCd=110201&flSeq=102421597&gubun="
+      },
+      {
+        "name": "피싱맵 제주항·동부두·서부두",
+        "url": "https://fishingmap.co.kr/mobile/m_map_view.php?no=1020&wher=16"
+      }
+    ],
+    "needsVerification": false,
+    "verificationNote": "사용자 요청으로 제주항의 부두임을 확인. 공개 지도 기준점과 과거 공식 등대 위치를 대조했으며 개인 발판의 정밀 좌표는 아님. 피싱맵의 제주항 주요 어종과 사용자 제보 어종을 분리하며, 모든 어종이 항상 잡힌다는 뜻은 아님.",
+    "reportedSpecies": [
+      "갈치",
+      "점다랑어",
+      "잿방어"
+    ],
+    "coordinateSource": {
+      "name": "OpenStreetMap 기여자",
+      "url": "https://www.openstreetmap.org/node/4488145812"
+    },
+    "coordinateScope": "제주항 서부두 육지 연결 방파제 끝 대표 위치",
+    "locationNote": "제주항 서부두의 육지 연결 방파제 기준점입니다. 바다 쪽 긴방파제 빨간등대와 다른 지점이며, 개인 저장 발판의 정밀 위치나 현재 출입 허용을 뜻하지 않습니다.",
+    "fishingInfoSource": {
+      "name": "피싱맵 제주항·동부두·서부두",
+      "url": "https://fishingmap.co.kr/mobile/m_map_view.php?no=1020&wher=16"
+    },
+    "aliases": [
+      "제주항 서부두",
+      "제주항 서부두 방파제"
+    ]
   },
   {
     "id": 44,
@@ -1166,19 +1284,68 @@ const fishingSpots = [
   {
     "id": 45,
     "name": "동부두",
-    "latitude": null,
-    "longitude": null,
-    "region": "제주 (세부 위치 확인 필요)",
+    "latitude": 33.5293798,
+    "longitude": 126.5416005,
+    "region": "제주시 건입동 · 제주항",
     "category": "부두",
     "kind": "fishing-spot",
-    "species": [],
+    "species": [
+      "농어",
+      "참돔",
+      "감성돔",
+      "벵에돔",
+      "돌돔",
+      "부시리",
+      "전갱이",
+      "숭어",
+      "보리멸",
+      "붕장어",
+      "학꽁치",
+      "무늬오징어",
+      "한치",
+      "혹돔",
+      "다금바리",
+      "자리돔"
+    ],
     "methods": [],
     "userNote": "",
     "safetyNote": "",
     "source": "개인 즐겨찾기",
-    "externalSources": [],
-    "needsVerification": true,
-    "verificationNote": "항구 또는 주소가 없어 정확한 부두와 저장 지점 미확인."
+    "externalSources": [
+      {
+        "name": "OpenStreetMap 기여자",
+        "url": "https://www.openstreetmap.org/node/1271043839"
+      },
+      {
+        "name": "제주항 등대 위치 참고 (과거 검역구역 자료)",
+        "url": "https://www.law.go.kr/flDownload.do?bylClsCd=110201&flSeq=102421597&gubun="
+      },
+      {
+        "name": "피싱맵 제주항·동부두·서부두",
+        "url": "https://fishingmap.co.kr/mobile/m_map_view.php?no=1020&wher=16"
+      }
+    ],
+    "needsVerification": false,
+    "verificationNote": "사용자 요청으로 제주항의 부두임을 확인. 공개 지도 기준점과 과거 공식 등대 위치를 대조했으며 개인 발판의 정밀 좌표는 아님. 피싱맵의 제주항 주요 어종과 사용자 제보 어종을 분리하며, 모든 어종이 항상 잡힌다는 뜻은 아님.",
+    "reportedSpecies": [
+      "갈치",
+      "점다랑어",
+      "잿방어"
+    ],
+    "coordinateSource": {
+      "name": "OpenStreetMap 기여자",
+      "url": "https://www.openstreetmap.org/node/1271043839"
+    },
+    "coordinateScope": "제주항 동방파제 등대 부근 대표 위치",
+    "locationNote": "제주항 동방파제 등대 부근의 대표 기준점입니다. 개인 저장 발판의 정밀 위치가 아니며, 항만 통제와 출입 가능 여부는 현장 안내를 확인해야 합니다.",
+    "fishingInfoSource": {
+      "name": "피싱맵 제주항·동부두·서부두",
+      "url": "https://fishingmap.co.kr/mobile/m_map_view.php?no=1020&wher=16"
+    },
+    "aliases": [
+      "제주항 동부두",
+      "제주항 동방파제"
+    ]
   },
   {
     "id": 46,
@@ -2036,5 +2203,119 @@ const fishingSpots = [
       "url": "https://www.badatime.com/67/spots"
     },
     "verificationNote": "공개 낚시 자료에 표시된 좌표. 현재 출입 허용 또는 안전 상태를 뜻하지 않음."
+  },
+  {
+    "id": 67,
+    "name": "현사포구",
+    "latitude": 33.49753,
+    "longitude": 126.449588,
+    "region": "제주시 이호1동",
+    "category": "포구",
+    "kind": "fishing-spot",
+    "species": [
+      "농어",
+      "한치"
+    ],
+    "methods": [],
+    "userNote": "자주 가는 포인트",
+    "safetyNote": "",
+    "source": "개인 즐겨찾기",
+    "externalSources": [
+      {
+        "name": "제주관광공사 Visit Jeju",
+        "url": "https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021167"
+      },
+      {
+        "name": "해양수산부 바다온",
+        "url": "https://badaon.or.kr/seantour_map/travel/destination/detail.do?destId=DEST023308"
+      },
+      {
+        "name": "주소가 (주소 교차 확인)",
+        "url": "https://jusoga.com/b/5011012500117880006000001/"
+      }
+    ],
+    "needsVerification": false,
+    "coordinateSource": {
+      "name": "해양수산부 바다온",
+      "url": "https://badaon.or.kr/seantour_map/travel/destination/detail.do?destId=DEST023308"
+    },
+    "coordinateScope": "사용자 제공 주소의 대표 위치",
+    "fishingInfoSource": {
+      "name": "제주관광공사 Visit Jeju",
+      "url": "https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021167"
+    },
+    "description": "공식 소개에서는 낮의 농어 낚시와 밤에 가로등 불빛 주변으로 모이는 한치를 설명한다.",
+    "verificationNote": "테우해안로 143과 일치하는 바다온 바구스서핑스쿨이호의 지도 좌표로 기존 위치를 수정함. 주소가의 동일 도로명/지번(이호일동 1788-6) 좌표와 교차 확인. Visit Jeju는 어종 정보 근거로만 유지하며 기존 좌표는 사용하지 않음.",
+    "address": "제주특별자치도 제주시 테우해안로 143"
+  },
+  {
+    "id": 68,
+    "name": "신산리 개인 포인트",
+    "latitude": 33.383144200305,
+    "longitude": 126.88158422146,
+    "region": "서귀포시 성산읍 신산리",
+    "category": "personal-spot",
+    "kind": "personal-spot",
+    "species": [],
+    "methods": [],
+    "userNote": "",
+    "safetyNote": "",
+    "source": "개인 즐겨찾기",
+    "address": "제주특별자치도 서귀포시 성산읍 신산리 565-7",
+    "externalSources": [
+      {
+        "name": "주소가",
+        "url": "https://jusoga.com/b/5013025927105650007000002/"
+      },
+      {
+        "name": "도로명주소 (주소 교차 확인)",
+        "url": "https://dorojuso.kr/5013025927105650007000002/"
+      }
+    ],
+    "needsVerification": false,
+    "coordinateSource": {
+      "name": "주소가",
+      "url": "https://jusoga.com/b/5013025927105650007000002/"
+    },
+    "coordinateScope": "사용자 제공 지번의 건물 대표 위치",
+    "locationNote": "개인이 저장한 주소 기준점입니다. 건물 자체는 낚시터가 아닙니다. 실제 해안 낚시 위치와 출입 가능 여부는 현장에서 확인해야 합니다.",
+    "verificationNote": "공개 주소 자료에서 신산리 565-7과 도로명 환해장성로 136의 일치 및 건물 좌표를 확인함. 두 주소 자료의 좌표는 약 5m 차이. 마을 중심 좌표를 사용하지 않음."
+  },
+  {
+    "id": 69,
+    "name": "삼달리 개인 포인트",
+    "latitude": 33.366216557618,
+    "longitude": 126.87170308046,
+    "region": "서귀포시 성산읍 삼달리",
+    "category": "personal-spot",
+    "kind": "personal-spot",
+    "species": [],
+    "methods": [],
+    "userNote": "",
+    "safetyNote": "",
+    "source": "개인 즐겨찾기",
+    "address": "제주특별자치도 서귀포시 성산읍 삼달하동로32번길 3",
+    "externalSources": [
+      {
+        "name": "주소가",
+        "url": "https://jusoga.com/b/5013025928100010004000001/"
+      },
+      {
+        "name": "도로명주소 (주소 교차 확인)",
+        "url": "https://dorojuso.kr/5013025928100010004000003/"
+      },
+      {
+        "name": "트리플 (주소 교차 확인)",
+        "url": "https://triple.guide/attractions/927c6cbd-0ed4-4223-8444-4f5d2d41cc50"
+      }
+    ],
+    "needsVerification": false,
+    "coordinateSource": {
+      "name": "주소가",
+      "url": "https://jusoga.com/b/5013025928100010004000001/"
+    },
+    "coordinateScope": "사용자 제공 도로명 주소의 건물 대표 위치",
+    "locationNote": "개인이 저장한 주소 기준점입니다. 건물 자체는 낚시터가 아닙니다. 실제 해안 낚시 위치와 출입 가능 여부는 현장에서 확인해야 합니다.",
+    "verificationNote": "공개 주소 자료에서 삼달하동로32번길 3과 지번 삼달리 1-4의 일치 및 건물 좌표를 확인함. 주소/여행 자료의 동일 주소 좌표와 약 2~7m 이내로 교차 확인. 임의의 포구 이름을 부여하지 않음."
   }
 ];
