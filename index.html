@@ -7,22 +7,19 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <title>Jeju Fishing Map</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="./styles.css" />
     <script defer src="./script.js"></script>
   </head>
   <body>
     <div class="page-shell">
-      <header class="site-header" aria-label="서비스 소개">
-        <p class="kicker">Jeju Coast Archive</p>
-        <h1>Jeju Fishing Map</h1>
-        <p class="intro">
-          제주의 바다, 나만의 낚시 포인트를 찾아보세요.
-        </p>
-      </header>
-
       <main class="main-content">
-        <section class="coast-hero" aria-labelledby="main-heading">
-          <div class="coast-scene" aria-hidden="true">
+        <section class="hero-map" aria-labelledby="main-heading">
+          <div class="hero-background" aria-hidden="true">
             <img
               src="./assets/jeju-coast.jpg"
               alt=""
@@ -32,13 +29,24 @@
             />
           </div>
 
-          <div class="hero-copy">
-            <p class="section-label">Jeju Island</p>
-            <h2 id="main-heading">바다와 가까워지는 시간</h2>
-            <p>
-              푸른 해안선과 잔잔한 파도.<br />
-              제주에서의 낚시는 바다를 천천히 바라보는 일에서 시작됩니다.
+          <header class="hero-copy">
+            <p class="kicker">JEJU COAST ARCHIVE</p>
+            <h1 id="main-heading">Jeju Fishing Map</h1>
+            <p class="intro" id="map-description">
+              제주의 바다,<br />
+              나만의 낚시 포인트를 찾아보세요.
             </p>
+          </header>
+
+          <div class="map-frame">
+            <div
+              id="jeju-map"
+              class="jeju-map"
+              role="region"
+              aria-label="제주도 지도"
+              aria-describedby="map-description"
+            ></div>
+            <p class="map-status" role="status">지도를 불러오는 중입니다.</p>
           </div>
         </section>
       </main>
