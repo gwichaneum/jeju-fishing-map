@@ -47,16 +47,18 @@ function searchSpots(spots, query) {
   });
 }
 
-function filterSpots(spots, { query = "", species = "", method = "", type = "" } = {}) {
+function filterSpots(spots, { query = "", species = "", method = "", type = "", favoritesOnly = false } = {}, favoriteIds = []) {
+  const favorites = new Set(favoriteIds);
   return searchSpots(spots, query).filter(spot =>
     (!species || spot.species.includes(species) || spot.reportedSpecies?.includes(species)
       || noteHasFishingTerm(spot.userNote, species))
     && (!method || spot.methods.includes(method) || noteHasFishingTerm(spot.userNote, method))
     && (!type || getSpotFilterType(spot) === type)
+    && (!favoritesOnly || favorites.has(spot.id))
   );
 }
 
-function initializeSpotControls(markerController) {
+function initializeSpotControls(markerController, favorites = null) {
   const form = document.querySelector(".spot-controls");
   if (!form || typeof fishingSpots === "undefined" || !markerController) return;
   const search = form.querySelector("#spot-search");
@@ -66,6 +68,10 @@ function initializeSpotControls(markerController) {
   const count = form.querySelector(".spot-result-count");
   const emptyMap = form.querySelector(".spot-empty-map");
   const reset = form.querySelector(".spot-reset");
+  const favoriteOnly = form.querySelector("#spot-favorites");
+  const favoriteCount = form.querySelector(".spot-favorites-count");
+  const favoriteEmpty = form.querySelector(".spot-favorites-empty");
+  const storageStatus = form.querySelector(".favorite-storage-status");
   const selects = {
     species: form.querySelector("#spot-species"),
     method: form.querySelector("#spot-method"),
@@ -81,6 +87,7 @@ function initializeSpotControls(markerController) {
     }
   }
   for (const control of form.querySelectorAll("input, select, button")) control.disabled = false;
+  favoriteOnly.disabled = !favorites;
 
   let matches = [];
   const closeResults = () => { resultsPanel.hidden = true; };
@@ -117,19 +124,25 @@ function initializeSpotControls(markerController) {
   }
 
   function applyFilters() {
-    const state = { query: search.value, ...Object.fromEntries(Object.entries(selects).map(([key, select]) => [key, select.value])) };
-    matches = filterSpots(fishingSpots, state);
+    const state = { query: search.value, favoritesOnly: favoriteOnly.checked, ...Object.fromEntries(Object.entries(selects).map(([key, select]) => [key, select.value])) };
+    matches = filterSpots(fishingSpots, state, favorites?.getFavorites());
     const visible = matches.filter(isDisplayableFishingSpot);
     markerController.renderMarkers(visible);
-    const active = normalizeSpotSearch(state.query) || state.species || state.method || state.type;
+    const active = normalizeSpotSearch(state.query) || state.species || state.method || state.type || state.favoritesOnly;
     count.textContent = `${active ? "" : "전체 "}${visible.length}개 포인트`;
-    emptyMap.hidden = visible.length !== 0 || normalizeSpotSearch(state.query).length !== 0;
+    const noFavorites = state.favoritesOnly && favorites?.getFavoriteCount() === 0;
+    favoriteEmpty.hidden = !noFavorites;
+    emptyMap.hidden = noFavorites || visible.length !== 0 || normalizeSpotSearch(state.query).length !== 0;
+    emptyResult.textContent = noFavorites ? "아직 즐겨찾기한 포인트가 없습니다." : "검색 결과가 없습니다.";
+    favoriteCount.textContent = `즐겨찾기 ${favorites?.getFavoriteCount() || 0}`;
+    storageStatus.hidden = !favorites || favorites.canPersist();
     renderSearchResults();
   }
 
   function resetFilters() {
     search.value = "";
     for (const select of Object.values(selects)) select.value = "";
+    favoriteOnly.checked = false;
     closeResults();
     applyFilters();
     markerController.resetView();
@@ -163,6 +176,12 @@ function initializeSpotControls(markerController) {
     if (event.key === "Escape") { search.focus(); closeResults(); event.preventDefault(); }
   });
   for (const select of Object.values(selects)) select.addEventListener("change", applyFilters);
+  favoriteOnly.addEventListener("change", applyFilters);
+  favorites?.subscribe(() => {
+    const focused = document.activeElement;
+    applyFilters();
+    if (focused && !focused.isConnected && favoriteOnly.checked) favoriteOnly.focus({ preventScroll: true });
+  });
   form.addEventListener("submit", event => {
     event.preventDefault();
     if (normalizeSpotSearch(search.value)) {

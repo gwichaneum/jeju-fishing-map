@@ -374,7 +374,8 @@ test("a personal popup near the map center can compact its scroll area without m
   const details = { style: {} };
   const dialog = {
     offsetWidth: 280,
-    querySelector: selector => selector === ".fishing-popup-header" ? { offsetHeight: 112 } : details,
+    querySelector: selector => selector === ".fishing-popup-header" ? { offsetHeight: 112 }
+      : selector === ".fishing-popup-details" ? details : null,
   };
   const popup = { options: {}, getElement: () => dialog, setOffset: () => {} };
   const map = { project: () => ({ x: 200, y: 219 }), getContainer: () => ({ clientWidth: 341, clientHeight: 440 }) };

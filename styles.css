@@ -295,7 +295,7 @@ h1 {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 12px;
+  gap: 4px 8px;
   min-height: 44px;
   margin-top: 4px;
   color: rgba(255, 255, 255, 0.92);
@@ -304,6 +304,64 @@ h1 {
 
 .spot-empty-map {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.spot-favorites-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease;
+}
+
+.spot-favorites-filter input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+.spot-favorites-filter:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.spot-favorites-filter:has(input:checked) {
+  background: #edf4ff;
+  color: #005bb5;
+}
+
+.spot-favorites-filter:focus-within {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.spot-favorites-empty,
+.favorite-storage-status {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.8125rem;
+}
+
+.favorite-icon {
+  display: inline-block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask: url("./assets/heart.svg") center / contain no-repeat;
+  mask: url("./assets/heart.svg") center / contain no-repeat;
+}
+
+[aria-pressed="true"] .favorite-icon {
+  -webkit-mask-image: url("./assets/heart-filled.svg");
+  mask-image: url("./assets/heart-filled.svg");
 }
 
 .spot-reset {
@@ -469,6 +527,72 @@ h1 {
 .fishing-marker-personal:hover .fishing-marker-dot,
 .fishing-marker-personal[aria-expanded="true"] .fishing-marker-dot {
   background: #b8412c;
+}
+
+.fishing-marker-favorite-badge {
+  display: none;
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 1px 4px rgba(5, 25, 40, 0.18);
+  pointer-events: none;
+}
+
+.fishing-marker-favorite-badge::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  -webkit-mask: url("./assets/heart-filled.svg") center / contain no-repeat;
+  mask: url("./assets/heart-filled.svg") center / contain no-repeat;
+}
+
+.fishing-marker-favorite .fishing-marker-favorite-badge {
+  display: block;
+}
+
+.fishing-popup-actions {
+  margin-top: 12px;
+}
+
+.fishing-popup-favorite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 113, 227, 0.12);
+  border-radius: 12px;
+  background: #edf4ff;
+  color: #005bb5;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease;
+}
+
+.fishing-popup-favorite:hover {
+  background: #dcecff;
+}
+
+.fishing-popup-favorite[aria-pressed="true"] {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.fishing-popup-favorite[aria-pressed="true"]:hover,
+.fishing-popup-favorite:active {
+  background: #005bb5;
+  color: #ffffff;
 }
 
 .fishing-popup-badge {
@@ -702,6 +826,8 @@ h1 {
   .spot-search input,
   .spot-search-result,
   .spot-reset,
+  .spot-favorites-filter,
+  .fishing-popup-favorite,
   .fishing-marker-dot,
   .jeju-map .fishing-popup .maplibregl-popup-close-button {
     transition: none;

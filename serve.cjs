@@ -9,11 +9,14 @@ const files = new Map([
   ["/styles.css", ["styles.css", "text/css; charset=utf-8"]],
   ["/script.js", ["script.js", "text/javascript; charset=utf-8"]],
   ["/spot-filters.js", ["spot-filters.js", "text/javascript; charset=utf-8"]],
+  ["/favorites.js", ["favorites.js", "text/javascript; charset=utf-8"]],
   ["/fishing-spots.js", ["fishing-spots.js", "text/javascript; charset=utf-8"]],
   ["/restrooms.js", ["restrooms.js", "text/javascript; charset=utf-8"]],
   ["/assets/jeju-coast.jpg", ["assets/jeju-coast.jpg", "image/jpeg"]],
   ["/assets/search.svg", ["assets/search.svg", "image/svg+xml"]],
   ["/assets/rotate-ccw.svg", ["assets/rotate-ccw.svg", "image/svg+xml"]],
+  ["/assets/heart.svg", ["assets/heart.svg", "image/svg+xml"]],
+  ["/assets/heart-filled.svg", ["assets/heart-filled.svg", "image/svg+xml"]],
 ]);
 
 http.createServer((request, response) => {
