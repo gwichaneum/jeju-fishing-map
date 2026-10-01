@@ -213,6 +213,15 @@ function addFishingSpotMarkers(map, maplibregl) {
 
   let activePopup = null;
   let activeSpot = null;
+  let pendingFocus = null;
+  const markers = new Map();
+
+  const cancelPendingFocus = () => {
+    if (!pendingFocus) return;
+    map.off("moveend", pendingFocus);
+    pendingFocus = null;
+    map.stop();
+  };
 
   const fitActivePopup = () => {
     if (activePopup) fitFishingSpotPopup(map, activePopup, activeSpot);
@@ -251,6 +260,7 @@ function addFishingSpotMarkers(map, maplibregl) {
       .setLngLat([spot.longitude, spot.latitude])
       .setPopup(popup)
       .addTo(map);
+    markers.set(spot.id, { spot, marker, popup, visible: true });
 
     const focusMarker = () => element.focus({ preventScroll: true });
 
@@ -296,6 +306,57 @@ function addFishingSpotMarkers(map, maplibregl) {
       }
     });
   }
+
+  return {
+    renderMarkers(spots) {
+      cancelPendingFocus();
+      const visibleIds = new Set(spots.map(spot => spot.id));
+      for (const [id, entry] of markers) {
+        const visible = visibleIds.has(id);
+        if (entry.visible === visible) continue;
+        if (visible) entry.marker.addTo(map);
+        else entry.marker.remove();
+        entry.visible = visible;
+      }
+    },
+    focusSpot(id) {
+      const entry = markers.get(id);
+      if (!entry?.visible) return;
+      cancelPendingFocus();
+      activePopup?.remove();
+      map.stop();
+      map.getContainer().scrollIntoView({ block: "nearest" });
+      const openPopup = () => {
+        pendingFocus = null;
+        if (entry.visible && !entry.popup.isOpen()) entry.marker.togglePopup();
+      };
+      pendingFocus = openPopup;
+      map.once("moveend", openPopup);
+      map.flyTo({
+        center: [entry.spot.longitude, entry.spot.latitude],
+        zoom: Math.max(map.getZoom(), 13),
+        duration: 650,
+      });
+      if (pendingFocus === openPopup && !map.isMoving()) {
+        map.off("moveend", openPopup);
+        openPopup();
+      }
+    },
+    resetView() {
+      cancelPendingFocus();
+      activePopup?.remove();
+      map.stop();
+      map.flyTo({ ...getJejuOverviewCamera(map), bearing: 0, pitch: 0, duration: 650 });
+    },
+  };
+}
+
+function getJejuOverviewCamera(map) {
+  const camera = map.cameraForBounds(
+    [[126.13, 33.12], [126.97, 33.64]],
+    { padding: 24, maxZoom: 9.2 }
+  );
+  return { center: [126.55, 33.38], zoom: camera?.zoom ?? 8.5 };
 }
 
 async function initializeJejuMap() {
@@ -310,9 +371,16 @@ async function initializeJejuMap() {
   let mapLoaded = false;
   mapElement.setAttribute("aria-busy", "true");
 
+  const reportMapError = () => {
+    mapStatus.textContent = errorMessage;
+    mapElement.setAttribute("aria-busy", "false");
+    const count = document.querySelector(".spot-result-count");
+    if (count) count.textContent = "지도를 불러오지 못했습니다.";
+  };
+
   const loadingTimeout = window.setTimeout(() => {
     if (!mapLoaded) {
-      mapStatus.textContent = errorMessage;
+      reportMapError();
     }
   }, 20000);
 
@@ -340,11 +408,7 @@ async function initializeJejuMap() {
     });
 
     // Keep the island in view on mobile without changing the initial center.
-    const camera = map.cameraForBounds(
-      [[126.13, 33.12], [126.97, 33.64]],
-      { padding: 24, maxZoom: 9.2 }
-    );
-    map.jumpTo({ center: [126.55, 33.38], zoom: camera?.zoom ?? 8.5 });
+    map.jumpTo(getJejuOverviewCamera(map));
     map.touchZoomRotate.disableRotation();
 
     map.addControl(
@@ -363,20 +427,23 @@ async function initializeJejuMap() {
       window.clearTimeout(loadingTimeout);
       mapStatus.hidden = true;
       mapElement.setAttribute("aria-busy", "false");
-      addFishingSpotMarkers(map, maplibregl);
+      const markers = addFishingSpotMarkers(map, maplibregl);
+      if (typeof initializeSpotControls === "function") initializeSpotControls(markers);
+      else {
+        const count = document.querySelector(".spot-result-count");
+        if (count) count.textContent = "검색을 불러오지 못했습니다.";
+      }
     });
 
     map.on("error", () => {
       if (!mapLoaded) {
         window.clearTimeout(loadingTimeout);
-        mapStatus.textContent = errorMessage;
-        mapElement.setAttribute("aria-busy", "false");
+        reportMapError();
       }
     });
   } catch {
     window.clearTimeout(loadingTimeout);
-    mapStatus.textContent = errorMessage;
-    mapElement.setAttribute("aria-busy", "false");
+    reportMapError();
   }
 }
 
