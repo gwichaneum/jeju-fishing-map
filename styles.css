@@ -1,0 +1,312 @@
+:root {
+  --bg: #f5faf7;
+  --surface: #ffffff;
+  --ink: #183238;
+  --muted: #5c7175;
+  --line: #d8e5e0;
+  --sea: #0f8f95;
+  --deep-sea: #0c6570;
+  --leaf: #487a4a;
+  --coral: #ef8354;
+  --sun: #f5c35b;
+  --shadow: 0 18px 45px rgba(24, 50, 56, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(15, 143, 149, 0.12), transparent 340px),
+    var(--bg);
+  color: var(--ink);
+  font-family:
+    "Pretendard",
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    system-ui,
+    sans-serif;
+}
+
+.page-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header,
+.main-content,
+.site-footer {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.site-header {
+  padding-top: 38px;
+  padding-bottom: 24px;
+}
+
+.kicker,
+.section-label {
+  margin: 0 0 12px;
+  color: var(--deep-sea);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 14px;
+  font-size: 2.45rem;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.intro {
+  max-width: 620px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 32px;
+}
+
+.coast-hero {
+  display: grid;
+  gap: 24px;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy h2 {
+  margin-bottom: 14px;
+  font-size: 1.65rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.hero-copy p:last-child {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.coast-scene {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #a7dbe1 0 48%, #39a9a8 49% 64%, #0f8f95 65% 100%);
+  isolation: isolate;
+}
+
+.sun {
+  position: absolute;
+  top: 28px;
+  right: 34px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--sun);
+  box-shadow: 0 0 0 14px rgba(245, 195, 91, 0.18);
+}
+
+.cloud {
+  position: absolute;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.cloud::before,
+.cloud::after {
+  position: absolute;
+  bottom: 4px;
+  content: "";
+  border-radius: 50%;
+  background: inherit;
+}
+
+.cloud::before {
+  left: 14px;
+  width: 24px;
+  height: 24px;
+}
+
+.cloud::after {
+  right: 18px;
+  width: 30px;
+  height: 30px;
+}
+
+.cloud-one {
+  top: 54px;
+  left: 24px;
+  width: 92px;
+}
+
+.cloud-two {
+  top: 96px;
+  right: 86px;
+  width: 78px;
+  opacity: 0.72;
+}
+
+.island {
+  position: absolute;
+  right: -18px;
+  bottom: 88px;
+  width: 74%;
+  height: 92px;
+  border-radius: 58% 42% 0 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.24), transparent 36%),
+    linear-gradient(180deg, #5d924f, var(--leaf));
+}
+
+.island::before {
+  position: absolute;
+  bottom: 0;
+  left: -42px;
+  width: 54%;
+  height: 62px;
+  content: "";
+  border-radius: 70% 38% 0 0;
+  background: #6b9e59;
+}
+
+.water {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.water-one {
+  bottom: 64px;
+}
+
+.water-two {
+  bottom: 42px;
+  left: 76px;
+}
+
+.boat {
+  position: absolute;
+  bottom: 70px;
+  left: 44px;
+  width: 82px;
+  height: 74px;
+}
+
+.sail {
+  position: absolute;
+  bottom: 18px;
+  left: 32px;
+  width: 0;
+  height: 0;
+  border-bottom: 58px solid rgba(255, 255, 255, 0.92);
+  border-left: 30px solid transparent;
+}
+
+.sail::after {
+  position: absolute;
+  top: 4px;
+  left: -2px;
+  width: 3px;
+  height: 58px;
+  content: "";
+  background: var(--deep-sea);
+}
+
+.hull {
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+  width: 72px;
+  height: 20px;
+  border-radius: 0 0 42px 42px;
+  background: var(--coral);
+}
+
+.site-footer {
+  padding-top: 6px;
+  padding-bottom: 26px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.js-ready .coast-hero {
+  animation: fade-up 560ms ease both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 760px) {
+  .site-header {
+    padding-top: 58px;
+    padding-bottom: 36px;
+  }
+
+  h1 {
+    font-size: 3.7rem;
+  }
+
+  .intro {
+    font-size: 1.08rem;
+  }
+
+  .coast-hero {
+    grid-template-columns: minmax(0, 0.92fr) minmax(340px, 0.78fr);
+    gap: 36px;
+    padding: 36px;
+  }
+
+  .hero-copy h2 {
+    font-size: 2.1rem;
+  }
+
+  .coast-scene {
+    min-height: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-ready .coast-hero {
+    animation: none;
+  }
+}
