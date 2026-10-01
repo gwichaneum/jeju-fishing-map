@@ -4,6 +4,92 @@ if (yearElement) {
   yearElement.textContent = new Date().getFullYear();
 }
 
+function addFishingSpotMarkers(map, maplibregl) {
+  if (typeof fishingSpots === "undefined") {
+    return;
+  }
+
+  let activePopup = null;
+
+  for (const spot of fishingSpots) {
+    const element = document.createElement("button");
+    element.type = "button";
+    element.className = "fishing-marker";
+    element.title = spot.name;
+    element.setAttribute("aria-label", `${spot.name} 정보 보기`);
+    element.setAttribute("aria-expanded", "false");
+    element.setAttribute("aria-haspopup", "dialog");
+
+    const dot = document.createElement("span");
+    dot.className = "fishing-marker-dot";
+    dot.setAttribute("aria-hidden", "true");
+    element.append(dot);
+
+    const content = document.createElement("div");
+    const name = document.createElement("h2");
+    name.className = "fishing-popup-name";
+    name.id = `fishing-spot-title-${spot.id}`;
+    name.textContent = spot.name;
+
+    const region = document.createElement("p");
+    region.className = "fishing-popup-region";
+    region.textContent = spot.region;
+
+    const type = document.createElement("p");
+    type.className = "fishing-popup-type";
+    type.textContent = `${spot.type} 낚시`;
+    content.append(name, region, type);
+
+    const popup = new maplibregl.Popup({
+      className: "fishing-popup",
+      offset: 16,
+      maxWidth: "240px",
+      padding: { top: 24, right: 8, bottom: 24, left: 8 },
+    }).setDOMContent(content);
+
+    const marker = new maplibregl.Marker({ element })
+      .setLngLat([spot.longitude, spot.latitude])
+      .setPopup(popup)
+      .addTo(map);
+
+    const focusMarker = () => element.focus({ preventScroll: true });
+
+    // Avoid toggling twice through native button activation and MapLibre keypress.
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!event.repeat) marker.togglePopup();
+      }
+    });
+
+    popup.on("open", () => {
+      if (activePopup && activePopup !== popup) activePopup.remove();
+      activePopup = popup;
+      element.setAttribute("aria-expanded", "true");
+
+      const dialog = popup.getElement();
+      dialog.setAttribute("role", "dialog");
+      dialog.setAttribute("aria-labelledby", name.id);
+      dialog.querySelector(".maplibregl-popup-close-button")
+        .addEventListener("click", focusMarker);
+      dialog.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
+          popup.remove();
+          focusMarker();
+        }
+      });
+    });
+
+    popup.on("close", () => {
+      element.setAttribute("aria-expanded", "false");
+      if (activePopup === popup) activePopup = null;
+    });
+  }
+}
+
 async function initializeJejuMap() {
   const mapElement = document.querySelector("#jeju-map");
   const mapStatus = document.querySelector(".map-status");
@@ -41,6 +127,7 @@ async function initializeJejuMap() {
         "NavigationControl.ZoomIn": "지도 확대",
         "NavigationControl.ZoomOut": "지도 축소",
         "AttributionControl.ToggleAttribution": "지도 출처 표시",
+        "Popup.Close": "정보창 닫기",
       },
     });
 
@@ -68,6 +155,7 @@ async function initializeJejuMap() {
       window.clearTimeout(loadingTimeout);
       mapStatus.hidden = true;
       mapElement.setAttribute("aria-busy", "false");
+      addFishingSpotMarkers(map, maplibregl);
     });
 
     map.on("error", () => {

@@ -7,6 +7,7 @@ const files = new Map([
   ["/index.html", ["index.html", "text/html; charset=utf-8"]],
   ["/styles.css", ["styles.css", "text/css; charset=utf-8"]],
   ["/script.js", ["script.js", "text/javascript; charset=utf-8"]],
+  ["/fishing-spots.js", ["fishing-spots.js", "text/javascript; charset=utf-8"]],
   ["/assets/jeju-coast.jpg", ["assets/jeju-coast.jpg", "image/jpeg"]],
 ]);
 

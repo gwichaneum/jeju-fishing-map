@@ -194,6 +194,101 @@ h1 {
   color: var(--blue);
 }
 
+.fishing-marker {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fishing-marker-dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 2px 6px rgba(5, 25, 40, 0.24);
+  transition: transform 0.22s ease, background-color 0.22s ease;
+}
+
+.fishing-marker:hover,
+.fishing-marker:focus-visible {
+  z-index: 1;
+}
+
+.fishing-marker:hover .fishing-marker-dot,
+.fishing-marker[aria-expanded="true"] .fishing-marker-dot {
+  background: #005bb5;
+  transform: scale(1.12);
+}
+
+.fishing-marker:active .fishing-marker-dot {
+  transform: scale(0.95);
+}
+
+.jeju-map .fishing-popup {
+  z-index: 2;
+  width: min(200px, 60%);
+  font-family: inherit;
+}
+
+.jeju-map .fishing-popup .maplibregl-popup-content {
+  flex: 1;
+  min-width: 0;
+  padding: 18px 44px 18px 18px;
+  border: 1px solid rgba(29, 29, 31, 0.05);
+  border-radius: 18px;
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 6px 24px rgba(5, 25, 40, 0.12);
+}
+
+.fishing-popup-name {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+}
+
+.fishing-popup-region,
+.fishing-popup-type {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.fishing-popup-region {
+  color: var(--muted);
+}
+
+.fishing-popup-type {
+  margin-top: 4px;
+  color: #005bb5;
+  font-weight: 500;
+}
+
+.jeju-map .fishing-popup .maplibregl-popup-close-button {
+  top: 6px;
+  right: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 1.25rem;
+  transition: background-color 0.22s ease;
+}
+
+.jeju-map .fishing-popup .maplibregl-popup-close-button:hover {
+  background: #edf4ff;
+}
+
 .site-footer {
   padding-top: 28px;
   padding-bottom: calc(28px + env(safe-area-inset-bottom));
@@ -254,7 +349,9 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .jeju-map .maplibregl-ctrl-group button {
+  .jeju-map .maplibregl-ctrl-group button,
+  .fishing-marker-dot,
+  .jeju-map .fishing-popup .maplibregl-popup-close-button {
     transition: none;
   }
 }
