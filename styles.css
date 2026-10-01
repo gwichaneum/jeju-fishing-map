@@ -917,6 +917,103 @@ h1 {
   background: #edf4ff;
 }
 
+.fishing-popup-weather {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(29, 29, 31, 0.08);
+}
+
+.fishing-popup-weather h3 {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.weather-marine,
+.weather-forecast {
+  margin-top: 16px;
+}
+
+.weather-status,
+.weather-meta,
+.weather-caution,
+.weather-source {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+}
+
+.weather-meta {
+  margin-top: 6px;
+}
+
+.weather-condition {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.fishing-popup-details .weather-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin-top: 10px;
+}
+
+.weather-metrics > div {
+  min-width: 0;
+}
+
+.fishing-popup-details .weather-metrics dt {
+  margin: 0;
+  font-weight: 400;
+}
+
+.fishing-popup-details .weather-metrics dd {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-forecast-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-forecast-table th,
+.weather-forecast-table td {
+  padding: 7px 2px;
+  text-align: right;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid rgba(29, 29, 31, 0.06);
+}
+
+.weather-forecast-table thead th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.weather-forecast-table th:first-child {
+  text-align: left;
+}
+
+.weather-forecast-table tbody th {
+  font-weight: 500;
+}
+
+.weather-caution,
+.weather-source {
+  margin-top: 12px;
+}
+
+.weather-source a {
+  color: var(--blue);
+  text-underline-offset: 3px;
+}
+
 .site-footer {
   padding-top: 28px;
   padding-bottom: calc(28px + env(safe-area-inset-bottom));

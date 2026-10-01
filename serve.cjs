@@ -11,6 +11,7 @@ const files = new Map([
   ["/spot-filters.js", ["spot-filters.js", "text/javascript; charset=utf-8"]],
   ["/favorites.js", ["favorites.js", "text/javascript; charset=utf-8"]],
   ["/location.js", ["location.js", "text/javascript; charset=utf-8"]],
+  ["/weather.js", ["weather.js", "text/javascript; charset=utf-8"]],
   ["/fishing-spots.js", ["fishing-spots.js", "text/javascript; charset=utf-8"]],
   ["/restrooms.js", ["restrooms.js", "text/javascript; charset=utf-8"]],
   ["/assets/jeju-coast.jpg", ["assets/jeju-coast.jpg", "image/jpeg"]],

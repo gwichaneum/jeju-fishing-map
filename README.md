@@ -114,6 +114,61 @@ Geolocation은 보안 컨텍스트와 사용자 허용이 필요하다.
 [위치 정확도](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates/accuracy).
 위치/제주 전체 아이콘도 기존 Lucide 0.577.0 라이선스의 정적 SVG이며 새 런타임 의존성은 없다.
 
+## 포인트별 날씨 및 해상 상태
+
+`weather.js`에서 브라우저 `fetch`로 Open-Meteo 공식 공개 API를 직접 호출한다.
+API 키, 회원가입, 프레임워크, 프록시 서버, 데이터베이스는 추가하지 않았다.
+기존 정적 파일 서버에는 `weather.js` 제공 경로만 추가했으므로 실행 중인 서버는 재시작해야 한다.
+
+- 페이지 로딩, 마커 생성, 검색/필터 변경, GPS 조회에는 날씨 API를 호출하지 않는다. 실제 포인트 팝업이 열릴 때만 그 기록의 확인된 위도/경도를 요청한다.
+- 요청은 `fishing-spots.js`의 좌표를 그대로 사용한다. 예: 서부두 ID 43 `(33.5227588, 126.5301222)`, 현사포구 ID 67 `(33.49753, 126.449588)`. 사용자 GPS를 날씨 API에 전달하지 않는다.
+- 육상: `https://api.open-meteo.com/v1/forecast`의 `models=kma_seamless`를 우선 사용한다. KMA 데이터가 전부 비어 있거나 요청이 실패하면 같은 공식 Forecast API의 자동 모델 선택으로 한 번만 대체한다. HTTP 429는 추가 대체 요청 없이 오류로 표시한다. 대체 여부는 팝업에 명시하며 서로 다른 모델의 항목을 임의로 혼합하지 않는다.
+- 해상: `https://marine-api.open-meteo.com/v1/marine`, `cell_selection=sea`, `length_unit=metric`. 요청 좌표와 실제 예보 격자 중심은 다를 수 있으며 방파제 안쪽의 실측 수치가 아니다.
+
+| API | current 요청 변수 | hourly 요청 변수 |
+| --- | --- | --- |
+| Forecast | `temperature_2m`, `apparent_temperature`, `wind_speed_10m`, `wind_direction_10m`, `wind_gusts_10m`, `precipitation`, `weather_code` | `wind_speed_10m` |
+| Marine | `wave_height`, `wave_direction`, `wave_period`, `sea_surface_temperature` | `wave_height` |
+
+육상 단위는 요청 옵션 `wind_speed_unit=ms`, `temperature_unit=celsius`, `precipitation_unit=mm`로 지정한다.
+응답 단위를 검사하며 바람이 km/h로 오면 3.6으로 나눠 m/s로 변환한다. 숫자가 아닌 값,
+누락값, 알 수 없는 단위는 `정보 없음`으로 표시한다. 0은 누락값으로 취급하지 않는다.
+풍향/파향은 공통 8방위 변환과 각도를 사용한다. 파향은 파도가 **오는 방향**이다.
+강수량은 API의 current 구간값이며 하루 총강수량이라고 표시하지 않는다.
+
+두 API에 `timezone=Asia/Seoul`, `timeformat=unixtime`, `forecast_hours=8`을 요청한다.
+UNIX 시간에 UTC 오프셋을 다시 더하지 않고 `Intl.DateTimeFormat`의 Asia/Seoul로 표시한다.
+현재 시각의 정시를 기준으로 +2/+4/+6시간 3행을 만들며 시간값으로 두 응답을 연결한다.
+한쪽 API가 실패하면 가능한 파고 또는 풍속만 표시하고 빠진 열은 `정보 없음`으로 둔다.
+현재 모델 기준 시각과 조회 시각을 각각 표시하며 예보 시간 제목의 tooltip에도 한국 날짜/시간을 둔다.
+
+`createSpotWeatherService()`는 API 종류와 정확한 좌표를 키로 성공 응답을 10분간 메모리에 저장한다.
+진행 중인 같은 요청은 하나의 Promise를 공유하고, 만료 후 팝업을 다시 열면 갱신한다.
+KMA 대체 결과도 캐시하며 실패한 요청은 다음 열기에서 다시 시도할 수 있다.
+각 HTTP 요청의 시간 제한은 12초이고, KMA 대체까지 진행하면 육상 조회는 최대 약 24초가 걸릴 수 있다.
+캐시는 새로고침 시 사라지며 localStorage나 원본 포인트/화장실 데이터에 저장하지 않는다.
+
+로딩/응답 갱신은 날씨 영역만 바꾼다. 팝업 이름, 어종, 메모, 화장실, 즐겨찾기를 재생성하지 않는다.
+실패한 API의 영역에만 한국어 오류를 표시하며 정상인 다른 API와 기존 기능은 계속 사용할 수 있다.
+현재 해상 변수들이 비어 있으면 `현재 이 위치의 해상 정보가 제공되지 않습니다.`를 표시한다.
+팝업 내부 스크롤 높이는 기존 지도 높이/헤더/버튼 및 실제 전체 높이를 고려하며 긴 이름과 GPS 거리도 수용한다.
+
+현재 값은 최신 **모델 기반 예보값**이지 현장 관측 실황이나 공식 안전 판단이 아니다.
+특히 연안/방파제의 실제 파고와 다를 수 있다. 참고용 안내 및 기상특보·해양경찰/현장 통제 확인 문구를 표시한다.
+출조 추천/안전 점수, 특보 자동 판단, 만조/간조, `sea_level_height_msl`은 구현하거나 요청하지 않았다.
+공식 물때 연동은 별도 미완료 TODO로 남겼다.
+
+무료 API는 비상업용 조건과 호출 제한이 있다. 현재 약관 기준 분당 600회, 시간당 5,000회,
+하루 10,000회 미만이며 광고/유료 서비스 등 상업 배포 시 무료 조건을 다시 확인해야 한다.
+팝업에 Open-Meteo, KMA 및 DWD 등 해상 자료 출처를 표시한다.
+문서: [Forecast](https://open-meteo.com/en/docs), [KMA](https://open-meteo.com/en/docs/kma-api),
+[Marine](https://open-meteo.com/en/docs/marine-weather-api), [이용 약관](https://open-meteo.com/en/terms).
+
+2026-10-02 확인한 KMA 공식 API 문서는 UM에서 KIM 모델로 전환하는 동안 Open-Meteo의
+KMA 데이터 갱신이 중단되었다고 안내한다. 개발 검증에서도 서부두/현사포구의 KMA current 값이
+비어 있어 자동 선택 예보로 대체됐으며,
+브라우저에서 기온/풍속과 Marine 파고/주기/표층 수온을 정상 수신했다. 앞으로 데이터 제공 상태는 바뀔 수 있다.
+
 ## Fishing Data
 
 `fishing-spots.js` contains static data reviewed on 2026-10-01.
@@ -439,7 +494,7 @@ ID 67을 그대로 수정하여 현사포구는 하나만 존재한다. 수마�
 ## Verification
 
 Run `node --test tests/*.test.cjs`
-for offline data, marker-eligibility, distance, search, filter, favorites and location tests.
+for offline data, marker-eligibility, distance, search, filter, favorites, location and weather tests.
 
 브라우저에서 확인할 사항:
 
@@ -468,3 +523,7 @@ for offline data, marker-eligibility, distance, search, filter, favorites and lo
 - 실제 휴대폰에서 위치 허용/거부, 정확도 안내와 한 개의 현재 위치 마커, GPS 오차 및 재시도를 확인한다.
 - 가까운 목록 최대 5곳, 거리순 정렬, 조건 변경/즐겨찾기 0개 상태, 결과 선택 시 이동/팝업/거리 표시를 확인한다.
 - 제주 밖의 위치와 `제주 전체` 복귀, 필터/위치/즐겨찾기 유지 및 모바일 목록 접기를 확인한다.
+- 첫 접속/검색/필터/내 위치에는 날씨 요청이 없고, 선택한 포인트 팝업을 열 때만 API를 호출하는지 확인한다.
+- 여러 팝업에서 현재 날씨/해상 상태까지 스크롤하고 m/s, 8방위, KST 기준 시각과 향후 3행 예보를 확인한다.
+- 같은 포인트 재열기에는 10분 캐시를 사용하고, 다른 포인트는 새 좌표로 요청하며 빠른 전환에도 정보가 섞이지 않는지 확인한다.
+- 실제 휴대폰에서 긴 이름/GPS 거리/날씨 내용의 내부 스크롤, 즐겨찾기와 닫기 버튼, 네트워크 실패 안내를 확인한다.

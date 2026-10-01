@@ -192,6 +192,7 @@ function createFishingSpotPopupContent(spot) {
   }
 
   details.append(createRestroomPopupSection(spot));
+  if (typeof createSpotWeatherSection === "function") details.append(createSpotWeatherSection());
   content.append(header, details);
   if (favoriteStore) {
     const actions = document.createElement("div");
@@ -239,14 +240,21 @@ function fitFishingSpotPopup(map, popup, spot) {
   const above = point.y - 32;
   const below = height - point.y - 32;
   const anchor = above >= below ? "bottom" : "top";
-  details.style.maxHeight = `${Math.max(actions ? 64 : 24, Math.max(above, below) - header.offsetHeight - actionsHeight - 48)}px`;
+  const weather = dialog.querySelector(".fishing-popup-weather");
+  const detailsHeight = weather
+    ? Math.min(280, height * 0.45, height - header.offsetHeight - actionsHeight - 64)
+    : Math.max(above, below) - header.offsetHeight - actionsHeight - 48;
+  details.style.maxHeight = `${Math.max(actions ? 64 : 24, detailsHeight)}px`;
+  if (weather && dialog.offsetHeight > height - 16) {
+    details.style.maxHeight = `${Math.max(24, details.offsetHeight - dialog.offsetHeight + height - 16)}px`;
+  }
 
   // Keep wide, scrollable popups within a narrow map without moving its camera.
   const halfWidth = dialog.offsetWidth / 2;
   const center = Math.max(halfWidth + 16, Math.min(width - halfWidth - 16, point.x));
   popup.options.anchor = anchor;
   let verticalOffset = anchor === "bottom" ? -16 : 16;
-  if (actions) {
+  if (actions || weather) {
     const popupHeight = dialog.offsetHeight;
     const minY = anchor === "bottom" ? popupHeight + 8 : 8;
     const maxY = anchor === "bottom" ? height - 8 : height - popupHeight - 8;
@@ -347,6 +355,11 @@ function addFishingSpotMarkers(map, maplibregl) {
       element.setAttribute("aria-expanded", "true");
       fitActivePopup();
       if (!popup.isOpen()) return;
+      if (typeof loadSpotWeather === "function") {
+        loadSpotWeather(spot, content.querySelector(".fishing-popup-weather"), () => {
+          if (popup.isOpen()) fitFishingSpotPopup(map, popup, spot);
+        });
+      }
 
       const dialog = popup.getElement();
       dialog.setAttribute("role", "dialog");
