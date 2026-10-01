@@ -1,5 +1,4 @@
-# jeju-fishing-map
-Jeju fishing spot map created with AI vibe coding
+# Jeju Fishing Map
 
 ## Run Locally
 
@@ -7,13 +6,194 @@ Run `node serve.cjs` from the project folder, then open http://127.0.0.1:8080.
 No build step or API key is required. An internet connection is needed for the
 MapLibre CDN and the OpenFreeMap Liberty style, vector tiles, and fonts.
 
-## Sample Fishing Spots
+## Fishing Data
 
-`fishing-spots.js` holds ten static sample points. Names, coordinates, and sample
-fish are referenced from [Badatime](https://www.badatime.com/67/spots).
-Jeju Port uses the listed red-lighthouse point; Hallim Port uses its outer
-breakwater point. Regional labels are shortened where appropriate.
-Descriptions are original summaries. No live Badatime requests are made.
+`fishing-spots.js` contains static data reviewed on 2026-10-01.
 
-Coordinates are for map display, not navigation or confirmation of permitted
-access. The sample fish list does not describe current catches or conditions.
+| 구분 | 개수 |
+| --- | ---: |
+| 개인 목록 (원래 이름과 메모 보존) | 51 |
+| 공개 낚시 자료에서 추가 | 15 |
+| 전체 기록 | 66 |
+| 지도에 표시하는 검증된 낚시 장소 | 35 |
+| 좌표 또는 실제 낚시 위치 확인 필요 | 31 |
+
+개인 목록은 카카오맵에서 가져오거나 크롤링하지 않고 사용자가 제공한 텍스트만 정리했다.
+개인 기록 20곳과 공개 자료 15곳에 마커를 표시한다. 미확인 기록에는
+`latitude: null`, `longitude: null`, `needsVerification: true`를 사용한다.
+음식점, 어촌계 시설, 주차장, 공원, 진입로 및 특정 주소는 `landmark` 또는
+`access-point`로 구분하며 낚시 마커를 만들지 않는다.
+
+### 정보 구분
+
+- `userNote`: 사용자가 제공한 메모 그대로. 어종이나 방법의 공개 검증 근거로 사용하지 않는다.
+- `safetyNote`: 과거 개인 메모에서 분리한 안전 관련 표현. 현재 안전 보증이 아니다.
+- `species`, `methods`: 해당 장소의 공개 낚시 자료에서 확인한 목록 또는 주요 항목.
+- `source`: 개인 기록은 `개인 즐겨찾기`, 새 공개 기록은 `바다타임`.
+- `externalSources`: 실제 참고한 공개 자료. 이름만 확인한 출처가 좌표 검증 출처가 되는 것은 아니다.
+- `coordinateSource`, `coordinateScope`: 좌표의 근거와 범위.
+- `fishingInfoSource`: 어종과 방법의 근거. 관광지 좌표 출처와 별개로 관리한다.
+- `verificationNote`: 확인 범위, 불확실성 또는 마커 제외 이유.
+
+좌표는 공개 자료의 방파제/포구/해변 **대표 위치**이며, 사용자가 저장한 개인 핀의
+정밀 위치를 복원한 것이 아니다. 출입 가능 여부, 낚시 허용, 현재 조황 및 안전을
+보장하지 않는다. 공개 자료에 없는 어종과 방법은 빈 배열로 남겼다.
+개인 메모만 있는 해수욕장, 용수포구, 용담포구, 북촌포구 등의 어종을 추정하지 않았다.
+미확인 동귀방파제의 어종과 방법은 피싱맵에서 확인했지만 좌표가 없어 마커는 만들지 않는다.
+
+## 확인된 개인 장소
+
+| 번호 | 원래 이름 | 위도 | 경도 | 좌표 근거 |
+| --- | --- | ---: | ---: | --- |
+| 3 | 신도포구 | 33.27683333 | 126.1691389 | [바다타임](https://www.badatime.com/317/spots) |
+| 16 | 덕돌포구 | 33.2905628 | 126.7606705 | [OpenStreetMap](https://www.openstreetmap.org/node/3739763534) |
+| 17 | 하예포구 | 33.23208333 | 126.3772222 | [바다타임](https://www.badatime.com/73/spots) |
+| 18 | 옹포리포구 | 33.40058 | 126.255325 | [제주관광공사](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021407) |
+| 19 | 운진항 | 33.20711111 | 126.257 | [바다타임](https://www.badatime.com/73/spots) |
+| 20 | 세천포구 | 33.26858333 | 126.6741944 | [바다타임](https://www.badatime.com/67/spots) |
+| 23 | 애월항 | 33.46897222 | 126.3264444 | [바다타임](https://www.badatime.com/67/spots) |
+| 24 | 고내포구 | 33.47138889 | 126.3376389 | [바다타임](https://www.badatime.com/67/spots) |
+| 27 | 협재포구 | 33.39913889 | 126.2418611 | [바다타임](https://www.badatime.com/67/spots) |
+| 28 | 세화포구 | 33.52991667 | 126.8583889 | [바다타임](https://www.badatime.com/67/spots) |
+| 32 | 연대포구 | 33.49597222 | 126.4278611 | [바다타임](https://www.badatime.com/67/spots) |
+| 33 | 화순항 | 33.23186111 | 126.3284444 | [바다타임](https://www.badatime.com/73/spots) |
+| 37 | 삼양해수욕장 | 33.525845 | 126.5863 | [제주관광공사](https://www.visitjeju.net/kr/detail/view?contentsid=CONT_000000000500301) |
+| 38 | 중문색달해수욕장 | 33.2473598 | 126.4066129 | [제주관광공사](https://www.visitjeju.net/kr/detail/view?contentsid=CONT_000000000500604) |
+| 40 | 용수포구 | 33.323494 | 126.16516 | [제주관광공사](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021514) |
+| 46 | 모슬포항 | 33.21558333 | 126.2490278 | [바다타임](https://www.badatime.com/73/spots) |
+| 47 | 금능포구 | 33.39202778 | 126.22725 | [바다타임](https://www.badatime.com/67/spots) |
+| 49 | 강정포구 | 33.22686111 | 126.4779444 | [바다타임](https://www.badatime.com/67/spots) |
+| 50 | 용담포구 | 33.5185608 | 126.5008844 | [OpenStreetMap](https://www.openstreetmap.org/node/3739793759) |
+| 51 | 북촌포구 | 33.5508844 | 126.6944545 | [OpenStreetMap](https://www.openstreetmap.org/node/3739786033) |
+
+덕돌포구, 용담포구, 북촌포구는 OpenStreetMap의 이름이 일치하는 포구 locality
+노드를 일회성으로 조회해 확인했다. 방파제 끝의 특정 발판을 의미하지 않는다.
+덕돌포구의 어종과 에깅은 [낚시춘추](https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18992)에서 별도 확인했다.
+OpenStreetMap 좌표의 출처는 [OpenStreetMap 기여자](https://www.openstreetmap.org/copyright)이며 ODbL을 따른다.
+조회는 개발 중에만 단일 요청 흐름으로 진행했고 앱에는 지오코딩 API를 연결하지 않았다.
+일회성 공개 위치 조회는 [Nominatim 사용 정책](https://operations.osmfoundation.org/policies/nominatim/)의
+단일 머신/단일 흐름, 초당 최대 1회, 식별 가능한 User-Agent 제한을 따랐다.
+
+## 확인이 필요한 포인트
+
+아래 31곳은 보류한 기록이며 지도에 표시하지 않는다. 개인 저장 핀의 공개 공유 링크
+또는 정확한 해안 위치를 확인한 뒤 갱신해야 한다. 장소 이름이 확인된 것과 좌표가
+확인된 것은 구분했다.
+
+| 번호 | 원래 이름 | 구분 | 보류 이유 |
+| --- | --- | --- | --- |
+| 1 | 동복방파제 | 방파제 | 동복리 방파제의 정확한 좌표 미확인. 바다타임의 동북리 방파제를 동일 장소로 단정하지 않음. |
+| 2 | 황우치해변 | 해변 | 공개 자료에 서로 다른 해변 좌표가 있어 저장한 해안 지점 확인 필요. |
+| 4 | 성산노외2공영주차장 | access-point | 주차장은 접근 기준점. 주차장 및 실제 낚시 해안의 정확한 위치 확인 필요. |
+| 5 | 차귀도선착장 | 선착장 | 차귀도행 선착장과 섬의 선착장을 구분할 저장 핀 필요. 고산리 방파제로 임의 대체하지 않음. |
+| 6 | 태흥1리어촌계 | landmark | 어촌계 시설과 실제 낚시 해안을 구분할 위치 확인 필요. |
+| 7 | 김녕불턱 | access-point | 불턱은 해녀 작업 기준점. 인근 실제 갯바위 낚시 지점의 좌표 확인 필요. |
+| 8 | 무거버거 | landmark | 음식점임을 확인. 조함해안로 356 1층의 주변 낚시 해안은 특정하지 않음. |
+| 9 | 신촌포구 빨간등대 | 방파제 | 신촌포구 방파제 자료는 있으나 사용자가 지정한 빨간등대의 위치와 일치하는지 미확인. |
+| 10 | 한수리방파제 | 방파제 | 한림항 한수리방파제 명칭은 확인. 공개 한림항 외측 테트라포트와 동일 지점인지 확인 필요. |
+| 11 | 정주항 | 항구 | 제주 장소명은 확인. 제주관광공사(33.531406, 126.66637)와 OpenStreetMap(33.5471723, 126.6607836) 좌표가 달라 보류. |
+| 12 | 평대포구 | 포구 | 평대포구의 정확한 대표 좌표 미확인. 마을 중심이나 인근 한동 방파제로 대체하지 않음. |
+| 13 | 서우봉입구 | access-point | 접근 기준점. 어느 진입로와 해안 낚시 위치를 의미하는지 확인 필요. |
+| 14 | 월령코지 | 갯바위 | 공개 자료에 갯바위, 구름다리, 월령포구 방파제가 별도 지점으로 나뉨. 저장한 위치 확인 필요. |
+| 15 | 수마포구 | 포구 | 성산 지역 포구의 정확한 좌표 미확인. 성산포항 외 방파제로 대체하지 않음. |
+| 21 | 백포포구 | 포구 | 제주시 이호동 해안의 정확한 포구 좌표 확인 필요. 다른 지역의 백포 방파제로 대체하지 않음. |
+| 22 | 하귀포구 | 포구 | 하귀방파제, 동귀항, 미수동포구 중 개인 저장 위치가 어느 지점인지 미확인. |
+| 25 | 신흥리포구 | 포구 | 조천읍과 남원읍의 신흥리 등 동일 지명 중 저장한 포구와 좌표 확인 필요. |
+| 26 | 하모 방파제 | 방파제 | 하모 해안의 정확한 방파제 위치 미확인. 모슬포항 또는 운진항으로 합치지 않음. |
+| 29 | 두모포구공원 | access-point | 공원은 접근 기준점. 공원 및 인근 실제 낚시 지점의 정확한 좌표 미확인. |
+| 30 | 제주 서귀포시 대정읍 노을해안로 | access-point | 도로 범위가 넓어 특정 갯바위 지점 확인 필요. |
+| 31 | 제주 서귀포시 안덕면 창천리 840-8 | access-point | 지번에 해당하는 해안의 실제 낚시 위치 미확인. 대평포구의 임의 좌표로 대체하지 않음. |
+| 34 | 제주특별자치도 제주시 내도동 465-3 | access-point | 지번 기준점과 실제 낚시 위치 미확인. 외도천 방파제 좌표로 대체하지 않음. |
+| 35 | 동귀방파제 | 방파제 | 제주콘텐츠진흥원과 피싱맵에서 하귀1리 1624-1의 명칭 확인. 정확한 방파제 좌표는 미확인. |
+| 36 | 제주 서귀포시 대정읍 영락리 2169-4 | access-point | 해당 지번의 정확한 낚시 위치 미확인. 인근 다른 지번 또는 낚시터로 대체하지 않음. |
+| 39 | 제주 제주시 삼봉로2길 34 1층 101호 주변 | landmark | 건물은 기준점. 주변 양식장 및 실제 구멍치기 해안의 정확한 위치 미확인. |
+| 41 | 미수포구입구교차로 | access-point | 정확한 제주 교차로 명칭과 좌표 미확인. 미수동포구나 다른 지역 지점으로 바꾸지 않음. |
+| 42 | 신칭항 | 항구 | 오타 가능성은 있지만 신창항과 동일한 저장 장소임을 입증하지 못함. 원래 이름 유지. |
+| 43 | 서부두 | 부두 | 항구 또는 주소가 없어 정확한 부두와 저장 지점 미확인. |
+| 44 | 조천항 | 항구 | 제주 조천항 명칭은 확인했으나 실제 포구 좌표 미확인. 인근 신촌포구 좌표로 대체하지 않음. |
+| 45 | 동부두 | 부두 | 항구 또는 주소가 없어 정확한 부두와 저장 지점 미확인. |
+| 48 | 도두등대 | 방파제 | 도두항 방파제 자료만으로 어느 등대를 저장했는지 입증하지 못함. 정확한 등대 위치 확인 필요. |
+
+정주항은 제주에 실제 존재하는 이름이지만 관광공사와 OpenStreetMap의 좌표가
+약 1.8km 떨어져 있어 어느 쪽도 임의 채택하지 않았다.
+용수포구는 관광공사가 용수항의 다른 이름이라고 명시한 자료의 대표 좌표를 사용했다.
+바다타임의 '용수마을 방파제' 좌표는 약 1.5km 떨어져 있어 합치거나 그 어종을 가져오지 않았다.
+'동복방파제'를 '동북리 방파제'로, '신칭항'을 '신창항'으로 고치지 않았다.
+
+## 공개 자료를 개인 항목에 연결한 명칭
+
+같은 포구/항구에 속하는 공개 방파제 대표 지점은 개인 항목 하나에 출처와
+`aliases`로 기록했다. 아래 공개 명칭으로 별도 마커를 중복 생성하지 않는다.
+이는 개인 저장 핀과 정확히 일치한다는 뜻이 아니다.
+
+| 개인 원래 이름 | 연결한 공개 명칭 |
+| --- | --- |
+| 신도포구 | 신도리등대 방파제 |
+| 하예포구 | 하예포구 방파제 |
+| 운진항 | 운진항 방파제 |
+| 세천포구 | 세천포구 방파제 |
+| 애월항 | 애월항 방파제 |
+| 고내포구 | 고내마을 방파제 |
+| 협재포구 | 협재포구 방파제 |
+| 세화포구 | 세화항 방파제 |
+| 연대포구 | 연대방파제 |
+| 화순항 | 화순항 방파제 |
+| 모슬포항 | 모슬포항 방파제 |
+| 금능포구 | 금능포구 방파제 |
+| 강정포구 | 강정포구 방파제 |
+
+이름 정정은 하지 않았다. 한수리방파제/한림항 외측 테트라포트,
+도두등대/도두항 방파제, 월령코지/월령곶 방파제 등은 동일 지점이라는 근거가
+부족해 합치지 않았다. 해당 개인 기록은 보류하고 중복 낚시 마커는 만들지 않았다.
+
+## 추가 공개 포인트
+
+모두 [바다타임 제주 낚시포인트](https://www.badatime.com/67/spots)의 좌표와
+어종/방법을 참고했다. 실시간 연동은 하지 않는다.
+
+| 번호 | 이름 | 위도 | 경도 |
+| --- | --- | ---: | ---: |
+| 52 | 제주항방파제 빨간등대 | 33.53277778 | 126.5408611 |
+| 53 | 화북포구 방파제 | 33.52727778 | 126.5655556 |
+| 54 | 별낭포구 방파제 | 33.52738889 | 126.5788333 |
+| 55 | 용두암 낚시터 | 33.51672222 | 126.5079722 |
+| 56 | 사수동 방파제 | 33.51144444 | 126.4788056 |
+| 57 | 이호등대 방파제 | 33.50186111 | 126.4518889 |
+| 58 | 김녕항 방파제 | 33.56097222 | 126.7404167 |
+| 59 | 월정 방파제 | 33.55802778 | 126.7961667 |
+| 60 | 귀덕마을 방파제 | 33.4465 | 126.2933333 |
+| 61 | 한림항 외측 테트라포트 | 33.41366667 | 126.2536111 |
+| 62 | 위미항 방파제 | 33.26872222 | 126.6606667 |
+| 63 | 법환포구 방파제 | 33.23638889 | 126.5166667 |
+| 64 | 서귀포항 방파제 | 33.23580556 | 126.5709444 |
+| 65 | 표선항 방파제 | 33.32766667 | 126.8470278 |
+| 66 | 온평리포구 방파제 | 33.40258333 | 126.9056667 |
+
+## 참고 자료
+
+- [바다타임 제주](https://www.badatime.com/67/spots), [모슬포](https://www.badatime.com/73/spots), [신도포구](https://www.badatime.com/317/spots): 공개 낚시 지점의 좌표와 어종/방법.
+- [제주관광공사 신도포구](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000020929): 신도포구 명칭 및 위치 교차 확인.
+- [제주관광공사 옹포리포구](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021407), [삼양해수욕장](https://www.visitjeju.net/kr/detail/view?contentsid=CONT_000000000500301), [중문색달해수욕장](https://www.visitjeju.net/kr/detail/view?contentsid=CONT_000000000500604), [용수항](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021514): 대표 좌표와 장소명.
+- [제주관광공사 정주항](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000021056): 장소명 확인, 좌표 불일치로 보류.
+- [제주관광공사 무거버거](https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_200000000012605): 음식점임을 확인, 주변 낚시 지점은 미확인.
+- [OpenStreetMap 덕돌포구](https://www.openstreetmap.org/node/3739763534), [용담포구](https://www.openstreetmap.org/node/3739793759), [북촌포구](https://www.openstreetmap.org/node/3739786033): 이름이 일치하는 공개 지도 노드.
+- [OpenStreetMap 정주항](https://www.openstreetmap.org/node/3739792594): 관광공사 자료와 좌표 대조, 보류.
+- [낚시춘추 세천포구·덕돌포구](https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18992): 덕돌포구의 공개 어종/에깅.
+- [제주콘텐츠진흥원 동귀방파제](https://www.ofjeju.kr/bussiness/location/locationsearch.htm?act=view&id=103&page=19), [피싱맵 동귀방파제](https://fishingmap.co.kr/mobile/m_map_view.php?no=6788&okok=1): 명칭/주소 확인, 피싱맵의 어종/방법 확인. 좌표는 보류.
+- [피싱맵 월령코지](https://fishingmap.co.kr/mobile/m_map_view.php?no=1044): 여러 세부 지점이 구분되어 있어 저장 위치를 특정하지 않음.
+- [해양수산부 한수리방파제 현장 사진](https://www.korea.kr/multi/policyPhotoView.do?bbsKey=62510): 제주 한림항의 실제 명칭 확인. 특정 방파제 좌표는 보류.
+
+## Verification
+
+Run `node --test tests/fishing-spots.test.cjs` for offline data and marker-eligibility tests.
+
+브라우저에서 확인할 사항:
+
+- 초기 제주도 전체 화면, 지도 이동/확대/축소, 출처 표시와 기존 바다 배경.
+- 파란 마커 35개. 가까운 항구는 확대해서 구분한다. 클러스터링은 아직 구현하지 않았다.
+- 클릭/터치/Enter/Space로 팝업 열기, 다른 마커 선택 시 기존 팝업 닫기.
+- 닫기 버튼/Escape로 닫기 및 키보드 포커스 복귀.
+- 개인 메모와 공개 어종/방법이 분리되어 있는지, 빈 항목이 숨겨지는지.
+- 안전 메모가 현재 안전 보증으로 보이지 않는지.
+- 좁은 모바일 화면에서 팝업 내부 스크롤과 닫기 버튼, 가로/세로 전환.
+- 미확인 장소, 음식점 및 접근 기준점의 낚시 마커가 없는지.

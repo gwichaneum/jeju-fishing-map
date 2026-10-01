@@ -207,8 +207,8 @@ h1 {
 }
 
 .fishing-marker-dot {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border: 2px solid #ffffff;
   border-radius: 50%;
   background: var(--blue);
@@ -217,7 +217,8 @@ h1 {
 }
 
 .fishing-marker:hover,
-.fishing-marker:focus-visible {
+.fishing-marker:focus-visible,
+.fishing-marker[aria-expanded="true"] {
   z-index: 1;
 }
 
@@ -233,14 +234,14 @@ h1 {
 
 .jeju-map .fishing-popup {
   z-index: 2;
-  width: min(200px, 60%);
+  width: min(280px, calc(100% - 32px));
   font-family: inherit;
 }
 
 .jeju-map .fishing-popup .maplibregl-popup-content {
   flex: 1;
   min-width: 0;
-  padding: 18px 44px 18px 18px;
+  padding: 18px;
   border: 1px solid rgba(29, 29, 31, 0.05);
   border-radius: 18px;
   background: #ffffff;
@@ -255,6 +256,52 @@ h1 {
   line-height: 1.4;
   overflow-wrap: break-word;
   word-break: keep-all;
+}
+
+.fishing-popup-header {
+  padding-right: 26px;
+}
+
+.fishing-popup-details {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.fishing-popup-details dl {
+  margin: 0;
+}
+
+.fishing-popup-details dt {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.fishing-popup-details dt:first-child {
+  margin-top: 0;
+}
+
+.fishing-popup-details dd {
+  margin: 3px 0 0;
+}
+
+.fishing-popup-caution,
+.fishing-popup-source {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.6875rem;
+}
+
+.fishing-popup-source a {
+  color: var(--blue);
+  text-underline-offset: 3px;
 }
 
 .fishing-popup-region,
