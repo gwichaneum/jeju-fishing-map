@@ -1,13 +1,13 @@
 :root {
   color-scheme: light;
-  --bg: #f5f5f7;
-  --surface: #ffffff;
   --ink: #1d1d1f;
   --muted: #6e6e73;
   --blue: #0071e3;
   --page-gutter: 16px;
-  --hero-height: 360px;
   --map-height: 440px;
+  --overlay-top: 0.52;
+  --overlay-shoulder: 220px;
+  --overlay-bottom: 0.3;
 }
 
 * {
@@ -28,7 +28,22 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  min-height: 100vh;
+  min-height: 100svh;
+  background-color: #326780;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(5, 25, 40, var(--overlay-top)) 0%,
+      rgba(5, 25, 40, var(--overlay-top)) var(--overlay-shoulder),
+      rgba(5, 25, 40, 0.06) max(55%, 440px),
+      rgba(5, 25, 40, var(--overlay-bottom)) 100%
+    ),
+    linear-gradient(100deg, rgba(5, 25, 40, 0.12), transparent 65%),
+    url("./assets/jeju-coast.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   color: var(--ink);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -51,8 +66,6 @@ p {
 }
 
 .page-shell {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
 }
@@ -66,45 +79,13 @@ p {
 }
 
 .main-content {
-  flex: 1;
-  padding-top: calc(16px + env(safe-area-inset-top));
-}
-
-.hero-map {
-  position: relative;
-  isolation: isolate;
-}
-
-.hero-background {
-  position: absolute;
-  inset: 0 0 auto;
-  height: var(--hero-height);
-  overflow: hidden;
-  border-radius: 28px;
-  background: #326780;
-}
-
-.hero-background img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 58%;
-}
-
-.hero-background::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background:
-    linear-gradient(90deg, rgba(6, 27, 43, 0.62), rgba(6, 27, 43, 0.1) 85%),
-    linear-gradient(180deg, rgba(6, 27, 43, 0.12), transparent 75%);
+  padding-top: calc(40px + env(safe-area-inset-top));
 }
 
 .hero-copy {
-  position: relative;
-  padding: 32px 24px 28px;
+  padding: 0 4px 32px;
   color: #ffffff;
+  text-shadow: 0 1px 8px rgba(5, 25, 40, 0.12);
 }
 
 .kicker {
@@ -119,14 +100,14 @@ h1 {
   max-width: 760px;
   font-size: 2.25rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.12;
   text-wrap: balance;
 }
 
 .intro {
   max-width: 520px;
   margin-top: 16px;
-  color: #f1f6fa;
+  color: rgba(255, 255, 255, 0.95);
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.7;
@@ -135,13 +116,12 @@ h1 {
 
 .map-frame {
   position: relative;
-  margin-inline: 8px;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 24px;
-  background: var(--surface);
-  box-shadow: 0 8px 28px rgba(21, 42, 60, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 28px;
+  background: #c1dce9;
+  box-shadow: 0 16px 48px rgba(5, 25, 40, 0.18);
 }
 
 .jeju-map {
@@ -215,18 +195,15 @@ h1 {
 }
 
 .site-footer {
-  padding-top: 24px;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
-  color: var(--muted);
+  padding-top: 28px;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.75rem;
   text-align: center;
+  text-shadow: 0 1px 6px rgba(5, 25, 40, 0.18);
 }
 
 @media (max-width: 359px) {
-  .hero-copy {
-    padding-inline: 18px;
-  }
-
   h1 {
     font-size: 1.875rem;
   }
@@ -234,21 +211,18 @@ h1 {
 
 @media (min-width: 640px) {
   :root {
-    --page-gutter: 24px;
-    --hero-height: 400px;
+    --page-gutter: 32px;
     --map-height: 500px;
+    --overlay-shoulder: 260px;
+    --overlay-bottom: 0.28;
   }
 
   .main-content {
-    padding-top: calc(24px + env(safe-area-inset-top));
-  }
-
-  .hero-background {
-    border-radius: 32px;
+    padding-top: calc(56px + env(safe-area-inset-top));
   }
 
   .hero-copy {
-    padding: 40px 40px 32px;
+    padding: 0 8px 36px;
   }
 
   h1 {
@@ -258,29 +232,24 @@ h1 {
   .intro {
     font-size: 1.125rem;
   }
-
-  .map-frame {
-    margin-inline: 24px;
-  }
 }
 
 @media (min-width: 960px) {
   :root {
-    --page-gutter: 32px;
-    --hero-height: 420px;
+    --page-gutter: 64px;
     --map-height: 560px;
   }
 
+  .main-content {
+    padding-top: calc(64px + env(safe-area-inset-top));
+  }
+
   .hero-copy {
-    padding: 48px 48px 36px;
+    padding-bottom: 40px;
   }
 
   h1 {
-    font-size: 3.5rem;
-  }
-
-  .map-frame {
-    margin-inline: 32px;
+    font-size: 3.75rem;
   }
 }
 
