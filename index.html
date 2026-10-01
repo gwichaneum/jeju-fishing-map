@@ -2,7 +2,10 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Jeju Fishing Map</title>
     <link rel="stylesheet" href="./styles.css" />
     <script defer src="./script.js"></script>
@@ -13,32 +16,29 @@
         <p class="kicker">Jeju Coast Archive</p>
         <h1>Jeju Fishing Map</h1>
         <p class="intro">
-          제주도의 바다 낚시 포인트를 차분하게 정리해 나가는 모바일 친화형 웹앱입니다.
+          제주의 바다, 나만의 낚시 포인트를 찾아보세요.
         </p>
       </header>
 
       <main class="main-content">
         <section class="coast-hero" aria-labelledby="main-heading">
-          <div class="hero-copy">
-            <p class="section-label">Main</p>
-            <h2 id="main-heading">제주 바다를 기록하는 첫 화면</h2>
-            <p>
-              해안선을 따라 쌓일 낚시 장소와 현장 기록이 자연스럽게 담길 수 있도록
-              읽기 쉬운 구조와 여백을 먼저 준비했습니다.
-            </p>
+          <div class="coast-scene" aria-hidden="true">
+            <img
+              src="./assets/jeju-coast.jpg"
+              alt=""
+              width="1536"
+              height="1024"
+              fetchpriority="high"
+            />
           </div>
 
-          <div class="coast-scene" aria-hidden="true">
-            <div class="sun"></div>
-            <div class="cloud cloud-one"></div>
-            <div class="cloud cloud-two"></div>
-            <div class="island"></div>
-            <div class="water water-one"></div>
-            <div class="water water-two"></div>
-            <div class="boat">
-              <div class="sail"></div>
-              <div class="hull"></div>
-            </div>
+          <div class="hero-copy">
+            <p class="section-label">Jeju Island</p>
+            <h2 id="main-heading">바다와 가까워지는 시간</h2>
+            <p>
+              푸른 해안선과 잔잔한 파도.<br />
+              제주에서의 낚시는 바다를 천천히 바라보는 일에서 시작됩니다.
+            </p>
           </div>
         </section>
       </main>

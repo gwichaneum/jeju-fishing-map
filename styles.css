@@ -1,85 +1,110 @@
 :root {
-  --bg: #f5faf7;
+  color-scheme: light;
+  --bg: #f5f5f7;
   --surface: #ffffff;
-  --ink: #183238;
-  --muted: #5c7175;
-  --line: #d8e5e0;
-  --sea: #0f8f95;
-  --deep-sea: #0c6570;
-  --leaf: #487a4a;
-  --coral: #ef8354;
-  --sun: #f5c35b;
-  --shadow: 0 18px 45px rgba(24, 50, 56, 0.12);
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --blue: #0071e3;
+  --line: rgba(29, 29, 31, 0.06);
+  --shadow: 0 4px 24px rgba(29, 29, 31, 0.045);
+  --page-gutter: 20px;
+  --header-space: 48px;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(15, 143, 149, 0.12), transparent 340px),
-    var(--bg);
-  color: var(--ink);
+html {
   font-family:
-    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     "Apple SD Gothic Neo",
     "Malgun Gothic",
-    system-ui,
     sans-serif;
+  letter-spacing: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #d9eaff;
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
 }
 
 .page-shell {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .site-header,
 .main-content,
 .site-footer {
-  width: min(100%, 1080px);
-  margin: 0 auto;
-  padding-right: 20px;
-  padding-left: 20px;
+  width: min(100%, 1040px);
+  margin-inline: auto;
+  padding-left: max(var(--page-gutter), env(safe-area-inset-left));
+  padding-right: max(var(--page-gutter), env(safe-area-inset-right));
 }
 
 .site-header {
-  padding-top: 38px;
-  padding-bottom: 24px;
-}
-
-.kicker,
-.section-label {
-  margin: 0 0 12px;
-  color: var(--deep-sea);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: uppercase;
+  padding-top: calc(var(--header-space) + env(safe-area-inset-top));
+  padding-bottom: 32px;
+  text-align: center;
 }
 
 h1,
 h2,
 p {
-  margin-top: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.kicker,
+.section-label {
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.kicker {
+  margin-bottom: 16px;
 }
 
 h1 {
-  margin-bottom: 14px;
-  font-size: 2.45rem;
-  line-height: 1.05;
-  letter-spacing: 0;
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
 .intro {
-  max-width: 620px;
-  margin-bottom: 0;
+  max-width: 560px;
+  margin: 16px auto 0;
   color: var(--muted);
   font-size: 1rem;
-  line-height: 1.7;
+  font-weight: 400;
+  line-height: 1.75;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 
 .main-content {
@@ -88,186 +113,69 @@ h1 {
 }
 
 .coast-hero {
-  display: grid;
-  gap: 24px;
-  align-items: center;
-  padding: 24px;
+  overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.84);
+  border-radius: 20px;
+  background: var(--surface);
   box-shadow: var(--shadow);
-}
-
-.hero-copy h2 {
-  margin-bottom: 14px;
-  font-size: 1.65rem;
-  line-height: 1.25;
-  letter-spacing: 0;
-}
-
-.hero-copy p:last-child {
-  margin-bottom: 0;
-  color: var(--muted);
-  font-size: 0.98rem;
-  line-height: 1.75;
+  transition: box-shadow 0.25s ease;
 }
 
 .coast-scene {
-  position: relative;
-  min-height: 260px;
+  aspect-ratio: 1.5;
   overflow: hidden;
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, #a7dbe1 0 48%, #39a9a8 49% 64%, #0f8f95 65% 100%);
-  isolation: isolate;
+  background: #e8f1f8;
 }
 
-.sun {
-  position: absolute;
-  top: 28px;
-  right: 34px;
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: var(--sun);
-  box-shadow: 0 0 0 14px rgba(245, 195, 91, 0.18);
+.coast-scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-.cloud {
-  position: absolute;
-  height: 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.74);
+.hero-copy {
+  padding: 28px 24px 30px;
 }
 
-.cloud::before,
-.cloud::after {
-  position: absolute;
-  bottom: 4px;
-  content: "";
-  border-radius: 50%;
-  background: inherit;
+.section-label {
+  margin-bottom: 10px;
 }
 
-.cloud::before {
-  left: 14px;
-  width: 24px;
-  height: 24px;
+.hero-copy h2 {
+  margin-bottom: 12px;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: keep-all;
+  text-wrap: balance;
 }
 
-.cloud::after {
-  right: 18px;
-  width: 30px;
-  height: 30px;
-}
-
-.cloud-one {
-  top: 54px;
-  left: 24px;
-  width: 92px;
-}
-
-.cloud-two {
-  top: 96px;
-  right: 86px;
-  width: 78px;
-  opacity: 0.72;
-}
-
-.island {
-  position: absolute;
-  right: -18px;
-  bottom: 88px;
-  width: 74%;
-  height: 92px;
-  border-radius: 58% 42% 0 0;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.24), transparent 36%),
-    linear-gradient(180deg, #5d924f, var(--leaf));
-}
-
-.island::before {
-  position: absolute;
-  bottom: 0;
-  left: -42px;
-  width: 54%;
-  height: 62px;
-  content: "";
-  border-radius: 70% 38% 0 0;
-  background: #6b9e59;
-}
-
-.water {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.56);
-}
-
-.water-one {
-  bottom: 64px;
-}
-
-.water-two {
-  bottom: 42px;
-  left: 76px;
-}
-
-.boat {
-  position: absolute;
-  bottom: 70px;
-  left: 44px;
-  width: 82px;
-  height: 74px;
-}
-
-.sail {
-  position: absolute;
-  bottom: 18px;
-  left: 32px;
-  width: 0;
-  height: 0;
-  border-bottom: 58px solid rgba(255, 255, 255, 0.92);
-  border-left: 30px solid transparent;
-}
-
-.sail::after {
-  position: absolute;
-  top: 4px;
-  left: -2px;
-  width: 3px;
-  height: 58px;
-  content: "";
-  background: var(--deep-sea);
-}
-
-.hull {
-  position: absolute;
-  bottom: 4px;
-  left: 10px;
-  width: 72px;
-  height: 20px;
-  border-radius: 0 0 42px 42px;
-  background: var(--coral);
+.hero-copy p:last-child {
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  word-break: keep-all;
 }
 
 .site-footer {
-  padding-top: 6px;
-  padding-bottom: 26px;
+  padding-top: 8px;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom));
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.8125rem;
+  text-align: center;
 }
 
 .js-ready .coast-hero {
-  animation: fade-up 560ms ease both;
+  animation: fade-up 0.28s ease-out both;
 }
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
 
   to {
@@ -276,36 +184,92 @@ h1 {
   }
 }
 
-@media (min-width: 760px) {
-  .site-header {
-    padding-top: 58px;
-    padding-bottom: 36px;
+@media (hover: hover) and (pointer: fine) {
+  .coast-hero:hover {
+    box-shadow: 0 8px 32px rgba(29, 29, 31, 0.065);
+  }
+}
+
+@media (max-width: 359px) {
+  :root {
+    --page-gutter: 16px;
   }
 
   h1 {
-    font-size: 3.7rem;
+    font-size: 2rem;
   }
 
-  .intro {
-    font-size: 1.08rem;
-  }
-
-  .coast-hero {
-    grid-template-columns: minmax(0, 0.92fr) minmax(340px, 0.78fr);
-    gap: 36px;
-    padding: 36px;
+  .hero-copy {
+    padding-inline: 20px;
   }
 
   .hero-copy h2 {
-    font-size: 2.1rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-gutter: 32px;
+    --header-space: 64px;
+  }
+
+  .site-header {
+    padding-bottom: 40px;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .intro {
+    font-size: 1.0625rem;
+  }
+
+  .coast-hero {
+    border-radius: 24px;
   }
 
   .coast-scene {
-    min-height: 360px;
+    aspect-ratio: 2.4;
+  }
+
+  .hero-copy {
+    padding: 32px 36px 36px;
+  }
+
+  .hero-copy h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 960px) {
+  :root {
+    --header-space: 80px;
+  }
+
+  .site-header {
+    padding-bottom: 48px;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  .hero-copy {
+    padding-inline: 40px;
+  }
+
+  .main-content {
+    padding-bottom: 40px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .coast-hero {
+    transition: none;
+  }
+
   .js-ready .coast-hero {
     animation: none;
   }
