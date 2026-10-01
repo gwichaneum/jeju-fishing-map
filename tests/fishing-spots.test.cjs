@@ -384,6 +384,44 @@ test("a personal popup near the map center can compact its scroll area without m
   assert.equal(popup.options.anchor, "top");
 });
 
+test("a favorite button reserves space without reducing mobile details to one line", () => {
+  const fitPopup = vm.runInNewContext(
+    fs.readFileSync(path.join(root, "script.js"), "utf8") + "\nfitFishingSpotPopup;",
+    { document: { querySelector: () => null } }
+  );
+  const details = { style: {} };
+  const dialog = {
+    offsetWidth: 280, offsetHeight: 300,
+    querySelector: selector => ({
+      ".fishing-popup-header": { offsetHeight: 112 },
+      ".fishing-popup-details": details,
+      ".fishing-popup-actions": { offsetHeight: 44 },
+    })[selector] || null,
+  };
+  let offset;
+  const popup = { options: {}, getElement: () => dialog, setOffset: value => { offset = value; } };
+  const map = { project: () => ({ x: 200, y: 219 }), getContainer: () => ({ clientWidth: 341, clientHeight: 440 }) };
+  fitPopup(map, popup, spots.find(spot => spot.id === 68));
+  assert.equal(details.style.maxHeight, "64px");
+  assert.equal(popup.options.anchor, "top");
+  assert.equal(offset[1], -87);
+});
+
+test("a temporarily hidden map keeps its selected popup until layout returns", () => {
+  const fitPopup = vm.runInNewContext(
+    fs.readFileSync(path.join(root, "script.js"), "utf8") + "\nfitFishingSpotPopup;",
+    { document: { querySelector: () => null } }
+  );
+  let removed = 0;
+  const popup = { remove: () => { removed++; } };
+  for (const [clientWidth, clientHeight] of [[0, 440], [341, 0], [0, 0]]) {
+    fitPopup({ project: () => ({ x: 200, y: 200 }), getContainer: () => ({ clientWidth, clientHeight }) }, popup, spots[0]);
+  }
+  assert.equal(removed, 0);
+  fitPopup({ project: () => ({ x: 400, y: 200 }), getContainer: () => ({ clientWidth: 341, clientHeight: 440 }) }, popup, spots[0]);
+  assert.equal(removed, 1);
+});
+
 test("personal coastal reference pins describe the building, not a fishing venue", () => {
   for (const [id, latitude, longitude] of [[8, 33.5488969, 126.6550619], [39, 33.5197092, 126.5844851]]) {
     const spot = spots.find(spot => spot.id === id);

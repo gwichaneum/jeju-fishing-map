@@ -143,7 +143,7 @@ test("resetting filter conditions does not delete favorites or change point data
   const original = JSON.stringify(spots);
   const storage = storageWith("[3,67]");
   const store = createStore(spots, () => storage);
-  filter(spots, { query: "現", favoritesOnly: true }, store.getFavorites());
+  filter(spots, { query: "현사포구", favoritesOnly: true }, store.getFavorites());
   filter(spots, {}, store.getFavorites());
   assert.equal(storage.getItem(key), "[3,67]");
   assert.equal(JSON.stringify(spots), original);

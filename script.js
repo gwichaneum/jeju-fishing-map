@@ -142,6 +142,10 @@ function createFishingSpotPopupContent(spot) {
   };
   type.textContent = `유형: ${referenceTypes[spot.kind] || spot.category}`;
   header.append(name, region, type);
+  const distance = document.createElement("p");
+  distance.className = "fishing-popup-distance";
+  distance.hidden = true;
+  header.append(distance);
 
   const details = document.createElement("div");
   details.className = "fishing-popup-details";
@@ -220,6 +224,8 @@ function updateFavoriteButton(button, id) {
 function fitFishingSpotPopup(map, popup, spot) {
   const point = map.project([spot.longitude, spot.latitude]);
   const { clientWidth: width, clientHeight: height } = map.getContainer();
+  // Preserve selection while the map is temporarily hidden.
+  if (!width || !height) return;
   if (point.x < 0 || point.x > width || point.y < 0 || point.y > height) {
     popup.remove();
     return;
@@ -233,7 +239,7 @@ function fitFishingSpotPopup(map, popup, spot) {
   const above = point.y - 32;
   const below = height - point.y - 32;
   const anchor = above >= below ? "bottom" : "top";
-  details.style.maxHeight = `${Math.max(24, Math.max(above, below) - header.offsetHeight - actionsHeight - 48)}px`;
+  details.style.maxHeight = `${Math.max(actions ? 64 : 24, Math.max(above, below) - header.offsetHeight - actionsHeight - 48)}px`;
 
   // Keep wide, scrollable popups within a narrow map without moving its camera.
   const halfWidth = dialog.offsetWidth / 2;
@@ -321,7 +327,7 @@ function addFishingSpotMarkers(map, maplibregl) {
       .setLngLat([spot.longitude, spot.latitude])
       .setPopup(popup)
       .addTo(map);
-    markers.set(spot.id, { spot, marker, popup, favoriteButton, visible: true });
+    markers.set(spot.id, { spot, marker, popup, favoriteButton, distance: content.querySelector(".fishing-popup-distance"), visible: true });
 
     const focusMarker = () => element.focus({ preventScroll: true });
 
@@ -373,7 +379,35 @@ function addFishingSpotMarkers(map, maplibregl) {
     favoriteStore.subscribe(updateFavoriteMarkers);
   }
 
+  let locationMarker = null;
   return {
+    showLocation(position) {
+      cancelPendingFocus();
+      activePopup?.remove();
+      map.stop();
+      if (!locationMarker) {
+        const element = document.createElement("div");
+        element.className = "current-location-marker";
+        element.setAttribute("role", "img");
+        locationMarker = new maplibregl.Marker({ element })
+          .setLngLat([position.longitude, position.latitude]).addTo(map);
+      }
+      const label = `현재 위치 · ${locationAccuracyLabel(position)}`;
+      locationMarker.getElement().setAttribute("aria-label", label);
+      locationMarker.getElement().title = label;
+      locationMarker.setLngLat([position.longitude, position.latitude]);
+      for (const entry of markers.values()) {
+        entry.distance.textContent = `현재 위치에서 ${formatLocationDistance(haversineDistanceMeters(position, entry.spot))} (직선)`;
+        entry.distance.hidden = false;
+      }
+      map.flyTo({
+        center: [position.longitude, position.latitude],
+        zoom: 11,
+        bearing: 0,
+        pitch: 0,
+        duration: 650,
+      });
+    },
     renderMarkers(spots) {
       cancelPendingFocus();
       const visibleIds = new Set(spots.map(spot => spot.id));
@@ -494,7 +528,8 @@ async function initializeJejuMap() {
       mapStatus.hidden = true;
       mapElement.setAttribute("aria-busy", "false");
       const markers = addFishingSpotMarkers(map, maplibregl);
-      if (typeof initializeSpotControls === "function") initializeSpotControls(markers, favoriteStore);
+      const location = typeof initializeLocationControls === "function" ? initializeLocationControls(markers) : null;
+      if (typeof initializeSpotControls === "function") initializeSpotControls(markers, favoriteStore, location);
       else {
         const count = document.querySelector(".spot-result-count");
         if (count) count.textContent = "검색을 불러오지 못했습니다.";

@@ -58,7 +58,7 @@ function filterSpots(spots, { query = "", species = "", method = "", type = "", 
   );
 }
 
-function initializeSpotControls(markerController, favorites = null) {
+function initializeSpotControls(markerController, favorites = null, location = null) {
   const form = document.querySelector(".spot-controls");
   if (!form || typeof fishingSpots === "undefined" || !markerController) return;
   const search = form.querySelector("#spot-search");
@@ -115,6 +115,9 @@ function initializeSpotControls(markerController, favorites = null) {
       meta.className = "spot-search-result-meta";
       meta.textContent = `${spot.region} · ${SPOT_TYPE_LABELS[getSpotFilterType(spot)] || spot.category}`;
       if (button.disabled) meta.append(" · 위치 확인 필요");
+      else if (location?.getPosition()) {
+        meta.append(` · 직선 ${formatLocationDistance(haversineDistanceMeters(location.getPosition(), spot))}`);
+      }
       button.append(name, meta);
       button.addEventListener("click", () => selectSpot(spot));
       item.append(button);
@@ -128,6 +131,7 @@ function initializeSpotControls(markerController, favorites = null) {
     matches = filterSpots(fishingSpots, state, favorites?.getFavorites());
     const visible = matches.filter(isDisplayableFishingSpot);
     markerController.renderMarkers(visible);
+    location?.setSpots(visible);
     const active = normalizeSpotSearch(state.query) || state.species || state.method || state.type || state.favoritesOnly;
     count.textContent = `${active ? "" : "전체 "}${visible.length}개 포인트`;
     const noFavorites = state.favoritesOnly && favorites?.getFavoriteCount() === 0;
@@ -191,6 +195,7 @@ function initializeSpotControls(markerController, favorites = null) {
     }
   });
   reset.addEventListener("click", resetFilters);
+  location?.subscribe(renderSearchResults);
   document.addEventListener("click", event => { if (!form.contains(event.target)) closeResults(); });
   applyFilters();
 }
