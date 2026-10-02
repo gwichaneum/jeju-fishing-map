@@ -2,15 +2,39 @@
 
 ## Run Locally
 
-Run `node serve.cjs` from the project folder, then open http://127.0.0.1:8080.
-No build step or API key is required. An internet connection is needed for the
-MapLibre CDN and the OpenFreeMap Liberty style, vector tiles, and fonts.
+Use Node.js 22 or newer. Run `npm install` once, then `npm start` from the project
+folder and open http://127.0.0.1:8080. No frontend build step is required.
+MapLibre, OpenFreeMap and Open-Meteo need an internet connection, but no API key.
+Official KHOA tides additionally require the ServiceKey configuration below.
+Without that key, the rest of the app continues working.
+`node serve.cjs` still starts the same Express server; `npm run dev` enables Node's watcher.
 
-If port 8080 is already in use, PowerShell can run `$env:PORT = "8081"; node serve.cjs`
+If port 8080 is already in use, PowerShell can run `$env:PORT = "8081"; npm start`
 and open http://127.0.0.1:8081 instead.
 
-`serve.cjs`의 제공 파일 목록을 바꾼 뒤에는 실행 중인 서버를 종료하고 다시 실행한다.
-HTML/CSS/JS는 디스크에서 읽지만 서버의 파일 목록은 자동으로 갱신되지 않는다.
+PowerShell에서 `npm.ps1` 실행 정책 오류가 나면 `npm.cmd install`, `npm.cmd start`를 사용한다.
+실행 정책 변경은 필요 없다. 서버 코드/제공 파일 목록 또는 `.env`를 바꾸면 서버를 재시작한다.
+HTML/CSS/JS는 디스크에서 읽는다. 기존 서버가 이미 실행 중이면 같은 프로젝트 서버를 종료한 뒤 시작한다.
+
+## 공식 물때 API 설정
+
+1. [공공데이터포털의 해양수산부 국립해양조사원_조석예보(고, 저조)](https://www.data.go.kr/data/15156018/openapi.do)에서 활용신청한다.
+2. 승인된 ServiceKey를 준비한다. 일반 인증키 **Decoding** 값을 권장한다.
+3. 프로젝트 루트의 `.env`를 연다. 파일이 없으면 `.env.example`을 `.env`로 복사한다.
+4. `DATA_GO_KR_SERVICE_KEY=발급받은키`로 설정한다. 이번 작업에서는 실제 키가 없는 빈 `.env`만 준비했다.
+5. `npm install`로 Express와 dotenv를 설치한다.
+6. `npm start`로 실행한다. 키를 변경한 후에도 서버 재시작이 필요하다.
+
+키는 대화, 스크린샷, frontend 파일 또는 Git에 넣지 않는다. `.env`와 `.env.*`는 Git에서
+제외하며 `.env.example`만 예외로 공개한다. `node_modules/`도 제외한다.
+서버는 프로젝트 `.env`에서 dotenv로 키를 읽으며, 브라우저에 키/상위 API URL/원본 오류를 반환하지 않는다.
+Encoded 키도 서버가 한 번만 디코딩/인코딩하지만 Decoding 값을 사용하면 중복 인코딩을 피할 수 있다.
+
+키가 없으면 시작 시 `DATA_GO_KR_SERVICE_KEY가 설정되지 않았습니다.`를 출력하고
+`/api/tides`는 HTTP 503 JSON을 반환한다. 지도/검색/즐겨찾기/GPS/날씨 등은 계속 작동한다.
+서버는 브라우저용 파일만 명시적으로 제공하며 `.env`, 서버 코드, 테스트, `.git`, 의존성은 제공하지 않는다.
+기존 단순 정적 서버나 GitHub Pages/Live Server만으로는 프록시가 실행되지 않는다.
+Public GitHub에는 코드를 공개할 수 있지만 물때를 배포하려면 Node 서버 실행 환경이 필요하다.
 
 ## 검색 및 필터
 
@@ -117,8 +141,8 @@ Geolocation은 보안 컨텍스트와 사용자 허용이 필요하다.
 ## 포인트별 날씨 및 해상 상태
 
 `weather.js`에서 브라우저 `fetch`로 Open-Meteo 공식 공개 API를 직접 호출한다.
-API 키, 회원가입, 프레임워크, 프록시 서버, 데이터베이스는 추가하지 않았다.
-기존 정적 파일 서버에는 `weather.js` 제공 경로만 추가했으므로 실행 중인 서버는 재시작해야 한다.
+날씨에는 API 키, 회원가입, 프레임워크, 데이터베이스가 필요하지 않다.
+별도의 공식 물때 프록시와 달리 날씨 요청은 기존대로 브라우저에서 직접 처리한다.
 
 - 페이지 로딩, 마커 생성, 검색/필터 변경, GPS 조회에는 날씨 API를 호출하지 않는다. 실제 포인트 팝업이 열릴 때만 그 기록의 확인된 위도/경도를 요청한다.
 - 요청은 `fishing-spots.js`의 좌표를 그대로 사용한다. 예: 서부두 ID 43 `(33.5227588, 126.5301222)`, 현사포구 ID 67 `(33.49753, 126.449588)`. 사용자 GPS를 날씨 API에 전달하지 않는다.
@@ -155,8 +179,8 @@ KMA 대체 결과도 캐시하며 실패한 요청은 다음 열기에서 다시
 
 현재 값은 최신 **모델 기반 예보값**이지 현장 관측 실황이나 공식 안전 판단이 아니다.
 특히 연안/방파제의 실제 파고와 다를 수 있다. 참고용 안내 및 기상특보·해양경찰/현장 통제 확인 문구를 표시한다.
-출조 추천/안전 점수, 특보 자동 판단, 만조/간조, `sea_level_height_msl`은 구현하거나 요청하지 않았다.
-공식 물때 연동은 별도 미완료 TODO로 남겼다.
+출조 추천/안전 점수, 특보 자동 판단, `sea_level_height_msl`은 구현하거나 요청하지 않았다.
+만조/간조는 Open-Meteo 값으로 만들지 않으며 아래 별도 KHOA 조석예보 영역에서만 표시한다.
 
 무료 API는 비상업용 조건과 호출 제한이 있다. 현재 약관 기준 분당 600회, 시간당 5,000회,
 하루 10,000회 미만이며 광고/유료 서비스 등 상업 배포 시 무료 조건을 다시 확인해야 한다.
@@ -168,6 +192,65 @@ KMA 대체 결과도 캐시하며 실패한 요청은 다음 열기에서 다시
 KMA 데이터 갱신이 중단되었다고 안내한다. 개발 검증에서도 서부두/현사포구의 KMA current 값이
 비어 있어 자동 선택 예보로 대체됐으며,
 브라우저에서 기온/풍속과 Marine 파고/주기/표층 수온을 정상 수신했다. 앞으로 데이터 제공 상태는 바뀔 수 있다.
+
+## 공식 조석예보
+
+공식 API 이름은 **해양수산부 국립해양조사원_조석예보(고, 저조)**이다.
+[공공데이터포털의 활용명세/Swagger](https://www.data.go.kr/data/15156018/openapi.do)와
+[KHOA 공식 API 조회 화면](https://khoa.go.kr/oceandata/openapi/odmi/odmiApiViewData.do?apiId=SV_AP_04_006)의
+지점 목록 및 응답을 2026-10-02 확인했다. 비공식 물때 사이트 크롤링이나 지점 코드 추정은 하지 않는다.
+
+- 고정 upstream endpoint: `https://apis.data.go.kr/1192136/tideFcstHghLw/GetTideFcstHghLwApiService`
+- GET 파라미터: `serviceKey` (서버에서만 추가), `obsCode`, `reqDate=yyyyMMdd`, `type=json`, `pageNo=1`, `numOfRows=300`.
+- frontend는 같은 서버의 `/api/tides?station=DT_0004&date=20261002`처럼 지점/날짜만 전달한다. 좌표나 GPS, 외부 URL, 키는 보내지 않는다.
+- 프록시는 아래 4개 코드와 한국 날짜 기준 오늘/내일만 허용한다. 중복/추가 query나 잘못된 날짜를 거부하며 외부 리다이렉트도 따라가지 않는다.
+
+| 기준지점 | 공식 코드 | 위도 | 경도 |
+| --- | --- | ---: | ---: |
+| 제주 | `DT_0004` | 33.52750 | 126.54305 |
+| 성산포 | `DT_0022` | 33.47472 | 126.92777 |
+| 서귀포 | `DT_0010` | 33.24000 | 126.56166 |
+| 모슬포 | `DT_0023` | 33.21444 | 126.25111 |
+
+코드/좌표는 `tide-utils.js`에서 공개 메타데이터로 관리한다. `tides.js`는 기존
+`haversineDistanceMeters()`로 낚시 포인트에서 가장 가까운 기준지점을 선택한다.
+지역 이름으로 하드코딩하지 않으므로 모든 서부 포인트가 반드시 모슬포에 연결되는 것은 아니다.
+예: 서부두는 제주, 온평리포구는 성산포, 서귀포항은 서귀포, 신도포구는 모슬포에 연결된다.
+포인트 자체의 실측 정보처럼 표시하지 않고 반드시 `기준지점 · 이름`을 표시한다.
+
+공식 JSON의 `header.resultCode === "00"`와 `body.items.item`을 읽는다.
+`obsvtrNm` (예보지점명), `lat`/`lot` (위도/경도), `predcDt` (예측일시),
+`predcTdlvVl` (**cm**), `extrSe`를 사용한다. 공식 극치 구분은
+**1: 오전 고조, 2: 오전 저조, 3: 오후 고조, 4: 오후 저조**이며 1/3은 만조, 2/4는 간조로 표시한다.
+명세와 공식 조회 응답의 날짜 문자열은 한국 시간으로 파싱해 epoch 밀리초로 변환한다.
+시간순으로 정렬하고 단위를 cm로 유지한다. 0과 음수 조위도 유효한 실제 값이면 그대로 표시한다.
+잘못된 일시/지점/단위/숫자, 누락값이나 불완전 페이지는 추정해서 채우지 않고 오류로 처리한다.
+
+물때 영역은 기존 팝업의 날씨 아래 별도로 추가하며 해상 파고/수온과 섞지 않는다.
+기존 팝업/즐겨찾기를 재생성하지 않으며 내부 스크롤과 44px 이상 오늘/내일 버튼을 유지한다.
+기본은 오늘, 내일 탭 선택 시에만 내일을 추가 요청한다. 단 오늘 마지막 극치가 지났거나
+오늘 예보가 비어 다음 물때를 찾을 수 없으면 다음 물때 표시를 위해 내일도 한 번 요청한다.
+오늘 데이터 요청 실패만으로 내일의 이벤트를 현재의 다음 물때라고 단정하지 않는다.
+다음 물때는 현재 timestamp 이상인 가장 빠른 이벤트이며, 남은 시간은 분 단위로 올림한다.
+팝업이 열린 동안 1분마다 남은 시간/한국 날짜를 다시 계산하고 닫으면 타이머를 해제한다.
+자정에는 새 오늘/내일을 사용하며 미리 받은 날짜는 재사용한다.
+
+브라우저와 서버 모두 `stationCode:date`로 성공 응답과 진행 중인 요청을 공유한다.
+같은 지점/날짜의 데이터는 해당 한국 날짜가 끝날 때까지 재사용한다. 내일 미리 받은 값도
+그 날짜가 오늘이 됐을 때 유지한다. 지난 날짜 캐시는 제거한다.
+브라우저 새로고침/서버 재시작 시 각각의 메모리 캐시는 사라지고 파일/DB/localStorage에는 저장하지 않는다.
+서버 HTTP 시간 제한은 12초, 브라우저는 15초다. 서버 실패는 30초 동안 재사용해 반복 실패 호출을 줄인다.
+키 미설정, 인증/통신 오류, 시간 초과, XML 오류 응답, 잘못된 JSON에는 물때 영역만 한국어 오류를 표시한다.
+upstream 오류/URL/키는 출력하거나 클라이언트에 보내지 않는다. 재조회는 잠시 후 팝업을 다시 연다.
+
+출처 링크와 `국립해양조사원 조석예보 기준이며, 실제 현장 조위와 차이가 있을 수 있습니다.`를 표시한다.
+기존 기상특보·해양경찰·현장 통제 확인 문구도 유지한다. `몇 물`, 조금/무시, 추천 시간,
+낚시 성과/안전 점수 등은 계산하지 않는다.
+
+공식 공개 조회 응답은 `tests/fixtures/khoa-tides.json`에 **파서 테스트 자료로만** 보관한다.
+실행 앱에서는 테스트 자료/샘플 물때를 실제 예보 대신 보여주지 않는다.
+현재 실제 ServiceKey가 없어 인증된 운영 endpoint의 실연결 확인은 미완료 TODO로 남긴다.
+키 설정 후 오늘 데이터 수신, 오늘/내일 전환, 기준지점, 조위/시간을 공식 조회 화면과 대조해야 한다.
 
 ## Fishing Data
 
@@ -494,7 +577,8 @@ ID 67을 그대로 수정하여 현사포구는 하나만 존재한다. 수마�
 ## Verification
 
 Run `node --test tests/*.test.cjs`
-for offline data, marker-eligibility, distance, search, filter, favorites, location and weather tests.
+for offline data, marker-eligibility, distance, search, filter, favorites, location, weather,
+KHOA response parsing, tide caching, time handling and proxy security tests.
 
 브라우저에서 확인할 사항:
 
@@ -527,3 +611,7 @@ for offline data, marker-eligibility, distance, search, filter, favorites, locat
 - 여러 팝업에서 현재 날씨/해상 상태까지 스크롤하고 m/s, 8방위, KST 기준 시각과 향후 3행 예보를 확인한다.
 - 같은 포인트 재열기에는 10분 캐시를 사용하고, 다른 포인트는 새 좌표로 요청하며 빠른 전환에도 정보가 섞이지 않는지 확인한다.
 - 실제 휴대폰에서 긴 이름/GPS 거리/날씨 내용의 내부 스크롤, 즐겨찾기와 닫기 버튼, 네트워크 실패 안내를 확인한다.
+- `.env`에 승인된 ServiceKey를 넣고 서버를 재시작한 뒤 제주/성산포/서귀포/모슬포의 오늘 조석예보를 공식 자료와 대조한다. 실제 키 인증 검증은 아직 남아 있다.
+- 기준지점 이름, 시간순 만조/간조와 cm 조위, 오늘/내일 전환, 다음 물때 및 오늘 마지막 물때 이후의 내일 표시를 확인한다.
+- 같은 기준지점/날짜의 다른 포인트에서 캐시를 재사용하며, 키 미설정이나 API 실패에도 기존 팝업/날씨/즐겨찾기가 유지되는지 확인한다.
+- 실제 휴대폰에서 물때까지 내부 스크롤하고 오늘/내일 버튼의 터치, 긴 오류 문구와 닫기 버튼 접근성을 확인한다.

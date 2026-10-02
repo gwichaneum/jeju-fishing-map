@@ -193,6 +193,7 @@ function createFishingSpotPopupContent(spot) {
 
   details.append(createRestroomPopupSection(spot));
   if (typeof createSpotWeatherSection === "function") details.append(createSpotWeatherSection());
+  if (typeof createSpotTideSection === "function") details.append(createSpotTideSection());
   content.append(header, details);
   if (favoriteStore) {
     const actions = document.createElement("div");
@@ -240,7 +241,7 @@ function fitFishingSpotPopup(map, popup, spot) {
   const above = point.y - 32;
   const below = height - point.y - 32;
   const anchor = above >= below ? "bottom" : "top";
-  const weather = dialog.querySelector(".fishing-popup-weather");
+  const weather = dialog.querySelector(".fishing-popup-weather") || dialog.querySelector(".fishing-popup-tides");
   const detailsHeight = weather
     ? Math.min(280, height * 0.45, height - header.offsetHeight - actionsHeight - 64)
     : Math.max(above, below) - header.offsetHeight - actionsHeight - 48;
@@ -321,6 +322,7 @@ function addFishingSpotMarkers(map, maplibregl) {
 
     const content = createFishingSpotPopupContent(spot);
     const favoriteButton = content.querySelector(".fishing-popup-favorite");
+    let stopTides = null;
 
     const popup = new maplibregl.Popup({
       className: "fishing-popup",
@@ -360,6 +362,11 @@ function addFishingSpotMarkers(map, maplibregl) {
           if (popup.isOpen()) fitFishingSpotPopup(map, popup, spot);
         });
       }
+      if (typeof loadSpotTides === "function") {
+        stopTides = loadSpotTides(spot, content.querySelector(".fishing-popup-tides"), () => {
+          if (popup.isOpen()) fitFishingSpotPopup(map, popup, spot);
+        });
+      }
 
       const dialog = popup.getElement();
       dialog.setAttribute("role", "dialog");
@@ -379,6 +386,8 @@ function addFishingSpotMarkers(map, maplibregl) {
     });
 
     popup.on("close", () => {
+      stopTides?.();
+      stopTides = null;
       element.setAttribute("aria-expanded", "false");
       if (activePopup === popup) {
         activePopup = null;

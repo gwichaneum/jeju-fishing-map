@@ -1014,6 +1014,134 @@ h1 {
   text-underline-offset: 3px;
 }
 
+.fishing-popup-tides {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(29, 29, 31, 0.08);
+}
+
+.fishing-popup-tides h3,
+.tide-next-heading {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.tide-station {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.tide-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 12px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #f3f5f7;
+}
+
+.tide-tab {
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease;
+}
+
+.tide-tab:hover {
+  color: var(--blue);
+}
+
+.tide-tab[aria-pressed="true"] {
+  background: #ffffff;
+  color: #005bb5;
+  box-shadow: 0 1px 4px rgba(29, 29, 31, 0.05);
+}
+
+.tide-tab:focus-visible {
+  outline-offset: -3px;
+}
+
+.tide-tab:active {
+  background: #e5effb;
+}
+
+.tide-date,
+.tide-status,
+.tide-caution,
+.tide-source,
+.tide-next-meta {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1.6;
+}
+
+.tide-date,
+.tide-results {
+  margin-top: 10px;
+}
+
+.tide-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tide-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(29, 29, 31, 0.06);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tide-kind {
+  color: var(--muted);
+}
+
+.tide-high .tide-kind {
+  color: #005bb5;
+}
+
+.tide-time {
+  text-align: center;
+}
+
+.tide-height {
+  text-align: right;
+}
+
+.tide-next-heading {
+  margin-top: 16px;
+}
+
+.tide-next-countdown {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.tide-caution {
+  margin-top: 14px;
+}
+
+.tide-source {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--blue);
+  text-underline-offset: 3px;
+}
+
 .site-footer {
   padding-top: 28px;
   padding-bottom: calc(28px + env(safe-area-inset-bottom));
