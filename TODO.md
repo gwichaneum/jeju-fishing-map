@@ -69,3 +69,131 @@
 - [ ] 기기 간 즐겨찾기 동기화·PWA 전환 검토 (별도 설계·보안 검토 필요)
 
 최종 문서 검토와 Git Commit/Push는 사용자가 직접 진행합니다.
+
+# 낚시 도감 확장
+
+2026-10-28 추가. 위 지도 Completed/Future Improvements는 기존 기록을 보존했다.
+출조 기록·사진 후보는 아래 C04~C05로 구체화하며 사용자 제보·계정·동기화는 이번 확장에 포함하지 않는다.
+PRD 11장의 F1~F8을 추적하며, Phase 1만 완료했다. 다음 단계는 사용자의 “다음 Phase 진행” 요청 후 진행한다.
+권장 Commit 메시지는 사용자용 제안이며 이 작업에서 commit/push하지 않는다.
+
+## C01. 문서와 Skill 준비 — Phase 1
+
+PRD 연결: 11.1~11.3, 11.10 / F1~F8 전체 설계, 기존 FR-01~FR-09 보호.
+
+- [x] 기존 README·PRD·TODO·서버·HTML/CSS/JS·포인트·화장실·assets·Git/배포 설정 분석
+- [x] 기존 지도 명세를 보존한 통합 PRD 작성
+- [x] 도감 Todo와 단계·인수 기준 작성
+- [x] Agent Skills 4개와 필요한 references/scripts 생성
+- [x] Skill 구조·Frontmatter·name/폴더명 및 참조 링크 검증
+- [x] Skill 스크립트 syntax·제작 자체 검사와 기존 테스트 실행
+- [x] Skill 사용 기록 초기 문서 생성 (제작 사실과 검사만 기록)
+
+완료 확인: 네 Skill의 첫 줄/닫는 `---`, name/폴더명, 무엇을/언제 하는지 담긴 description을 검사한다.
+`node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1`과 각 스크립트 `--self-test`를 실행한다.
+도감 기능 미구현으로 건너뛴 검사를 PASS로 기록하지 않는다.
+
+권장 Git Commit: `docs: expand PRD todo and agent skills`
+
+## C02. 도감 데이터와 이미지 — Phase 2
+
+PRD 연결: F1·F2·F3·F6, 11.5~11.6.
+
+- [ ] fish-catalog-manager SKILL.md를 명시적으로 읽고 데이터·이미지 정책 적용
+- [ ] 최소 20종 데이터 생성, 기존 10종과 한치·무늬오징어·갈치 포함; 지도 데이터의 후보 우선
+- [ ] 어류 / 두족류 분류, 확인 필요 정보와 학명은 추정하지 않고 보류
+- [ ] mapSpeciesKey를 실제 필터에 연결; `학공치`/`학꽁치`, `광어` 메모 출처, null 키 검토
+- [ ] 정보·이미지 출처 URL·라이선스·Attribution·verified 필드 추가
+- [ ] 권한이 확인된 어종별 고유 이미지를 assets에 준비 (hotlink·가짜 대체 금지)
+- [ ] 같은 원본의 회색/컬러 상태와 형태가 보이는 CSS 설계
+- [ ] 실제 도감 경로를 정한 후 서버 허용 목록에 필요한 파일·이미지만 추가
+- [ ] validate-catalog.mjs 실제 데이터 검증 통과, 미확인·이미지 미준비 목록 별도 보고
+
+완료 확인: 최소 20종 구조 검증, 갈치·광어·한치·무늬오징어 등의 형태 차이 수동 확인.
+같은 src·크기·회전·위치로 회색/컬러를 전환하며 권한 미확인 이미지를 사용하지 않는다.
+
+권장 Git Commit: `feat: add fish catalog data and species assets`
+
+## C03. 도감 목록과 상세 UI — Phase 2
+
+PRD 연결: F1·F2·F3·F8, 11.7.
+
+- [ ] 도감 파일·화면 구조와 지도에 맞는 공통 Navigation·스타일 준비 (실제 양방향 연결은 C06)
+- [ ] 수집한 종/전체 종과 Progress 표시; Phase 3 전에는 저장된 기록이 있는 것처럼 표시하지 않음
+- [ ] 종별 둥근 frame·이름·상태·누적 수치가 있는 Grid
+- [ ] 전체 / 미수집 / 수집완료 필터와 빈 결과 처리
+- [ ] 어류 / 두족류 필터
+- [ ] 미수집에서도 열리는 어종 상세·방법·채비·시기·출처·확인 필요 상태
+- [ ] 모바일 2~3열·Tablet 4열·넓은 PC 5~6열, 키보드 focus·alt·터치 영역 검증
+
+완료 확인: 미수집 카드도 상세를 열며, 기존 바다 배경·밝은 Glass Card·system font와 일관된다.
+아직 처리하지 않는 지도 파라미터 링크를 활성화하지 않는다.
+
+권장 Git Commit: `feat: add fish collection interface`
+
+## C04. 조과 기록과 IndexedDB — Phase 3
+
+PRD 연결: F4·F7, 11.6.
+
+- [ ] catch-record-manager SKILL.md를 명시적으로 읽고 저장소·입력 계약 적용
+- [ ] 사진 선택·형식/크기 검사·미리보기 및 object URL 정리
+- [ ] 잡은 날짜·양의 정수 마릿수·장소·개인 메모 입력
+- [ ] IndexedDB DB/store/index·버전 업그레이드·Blob 저장·읽기 구현
+- [ ] 기록 추가·수정·삭제, 없는 삭제 대상 처리
+- [ ] transaction 완료 후 UI 갱신, 열기 실패·용량 초과·blocked 오류와 입력 보존 안내
+- [ ] validate-record-logic.mjs를 실제 모듈에 연결하고 새로고침 사진·기록 보존 확인
+
+완료 확인: 0·음수·소수 마릿수, 존재하지 않는 speciesId, 잘못된 날짜/사진 차단.
+사진 전체를 LocalStorage에 저장하지 않으며 저장 실패 후 거짓 성공·해금이 없다.
+
+권장 Git Commit: `feat: add IndexedDB catch records`
+
+## C05. 잠금/해금과 집계 — Phase 3
+
+PRD 연결: F1·F5·F7.
+
+- [ ] 첫 유효 기록 저장 시 컬러 해금
+- [ ] 같은 speciesId 총 마릿수·기록 횟수 계산
+- [ ] 수집 완료 종 수·전체 완성률 계산
+- [ ] 수정 시 집계 재계산, 다른 종 기록과 격리
+- [ ] 마지막 기록 삭제 시 잠금 복귀
+- [ ] 잠금/집계를 중복 영구 상태로 저장하지 않고 기록에서 파생
+
+완료 확인: 2마리 + 3마리 = 총 5마리 / 기록 2회, 수정 후 재계산, 하나 삭제 시 남은 수치,
+마지막 기록 삭제 후 회색 복귀. 재실행 후 같은 집계인지 확인한다.
+
+권장 Git Commit: `feat: add collection unlock and progress`
+
+## C06. 지도와 도감 연결 — Phase 4
+
+PRD 연결: F3·F6·F8, 기존 FR-01~FR-09, 11.7.
+
+- [ ] map-catalog-integrator SKILL.md를 명시적으로 읽고 실제 주소·키 계약 확인
+- [ ] 도감 → 관련 지도 포인트 이동과 실제 쿼리 파서 구현
+- [ ] 지도 Popup → 매핑된 도감 상세 이동 구현
+- [ ] speciesId / mapSpeciesKey 통일, 지원 키만 필터 적용, null/알 수 없는 키 안내
+- [ ] 공통 Navigation 완성, 현재 화면 표시·뒤로 가기·직접 접속·모바일 이동 확인
+- [ ] 관련 포인트에 기존 필터·표시 가능 좌표 규칙 적용, 메모/제보를 공개 확정 정보와 구분
+- [ ] fishing-app-tester를 명시적으로 적용해 기존 지도 회귀 및 T01~T14 전체 테스트
+
+완료 확인: 무늬오징어 상세 → 실제 지도 필터·관련 마커 → Popup의 같은 도감 상세.
+이동 후 뒤로 가기·필터 초기화·즐겨찾기·날씨·물때·현재 위치·화장실·모바일 Popup이 정상이다.
+
+권장 Git Commit: `feat: integrate fish collection with fishing map`
+
+## C07. 최종 테스트와 문서 — Phase 4 검증 / Phase 5 문서
+
+PRD 연결: F1~F8, FR-01~FR-09, 11.8~11.10.
+
+- [ ] 네 Skill을 각 단계에서 실제 읽고 적용한 증거만 docs/SKILL_USAGE.md에 기록
+- [ ] fishing-app-tester의 T01~T14, console·모바일·IndexedDB·집계·지도 회귀 검증 (Phase 4)
+- [ ] README를 기능·실제 화면·사용 흐름·문서/네 Skill 링크·실행·방법론 장단점·개선·결론·주의사항 중심으로 축약 (Phase 5)
+- [ ] 실제 서비스 URL을 확인해 README 최상단 바로가기 연결; 임의 주소/저장소 주소 대체 금지
+- [ ] Node 프록시·HTTPS·환경변수·정적 허용 경로와 배포 사이트 실제 접근 검증
+- [ ] 원격 GitHub Public 여부 확인 (package.json private 값과 구분)
+- [ ] 전체 완성 기준·문서 링크·이미지 사용 조건·미확인 항목 최종 정리
+
+완료 확인: PRD 11.9 전체 기준과 T01~T14의 실제 결과를 대조한다. URL이 없거나 브라우저·현장 검증을 하지 못했으면
+그 부분을 미완료로 보고하며 과거 테스트나 스크립트 SKIP을 새 검증 성과로 쓰지 않는다.
+
+권장 Git Commit: `docs: simplify README and add live site link`
