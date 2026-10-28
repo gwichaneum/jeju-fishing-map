@@ -2,7 +2,7 @@
 
 [PRD 확장](../PRD.md#11-낚시-도감-확장-요구사항) · [TODO](../TODO.md#낚시-도감-확장)
 
-현재 상태는 문서 끝의 **Phase 2 전체 상세 정보 감사·인수** 기록을 따른다. 이전 24종·13이미지·이미지 준비 대기·엄격 실패 기록은 각 실행 당시의 이력이다. 현재 31종·이미지 31종·정보 31종, needsAsset/needsVerification 0이며 C02·C03 완료다. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md)
+현재 상태는 문서 끝의 **Phase 3 도감 초기화 오류 수정** 기록을 따른다. 이전 구현·검증 기록은 당시의 이력이다. 31종 정보·이미지를 유지하고 기본 실행 주소의 초기화 문제를 수정한 뒤 C04·C05를 재검증했다. 지도 양방향 연동은 Phase 4 미구현이다. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md)
 
 ## Phase 1 — 생성 기록 (2026-10-28, KST)
 
@@ -347,3 +347,153 @@ needsAsset 18종: 감성돔·벵에돔·농어·돌돔·한치·무늬오징어�
 - T04~T09(IndexedDB·기록·집계), T10~T11(어종 query/Popup 양방향 연결)은 미구현 단계로 SKIP이다. 실제 휴대폰·다른 브라우저·현장 출입·실제 GPS·공식 API 응답 재조회·배포는 이번 검증에 포함하지 않았다.
 
 검증 스크립트·자료 캐시·스크린샷은 Git 제외된 .verify 아래에만 생성했다. 도감 결과는 .verify/artifacts/phase2-info/browser-results.json, 지도 결과는 이번 실행이 기록한 .verify/artifacts/phase2-final/map-results.json이다. TODO의 요청된 정보 확인 6항목과 엄격 인수를 완료 표시하고 PRD·이미지 감사 문서의 현재 상태를 맞췄다. 이전 실패 이력은 보존했다. Phase 2 범위 완료 후 멈추며 Phase 3·commit·push는 수행하지 않았다.
+
+## Phase 3 조과 저장·집계·해금 (2026-10-28, KST)
+
+사용자 요청: Phase 3만 구현하고 catch-record-manager·fishing-app-tester를 명시적으로 사용해 사진 포함 IndexedDB 저장·수정/삭제·해금·집계·복원을 검증한다. Phase 4 자동 지도 연결·서버 DB·로그인·동기화·일괄 삭제·README 최종 축약·commit/push는 제외한다.
+
+### 실제 Skill 사용과 구조 조사
+
+| 항목 | 실제 수행 |
+| --- | --- |
+| catch-record-manager 명시적 사용 | 작업 시작 전 [SKILL.md](../skills/catch-record-manager/SKILL.md)를 직접 읽었다. 기존 IndexedDB 코드가 없음을 조사한 뒤 저장·입력·집계 변경 전에 [indexeddb-schema.md](../skills/catch-record-manager/references/indexeddb-schema.md)를 읽었다. 인터페이스 확인 후 validate-record-logic.mjs를 읽고 실제 공유 모듈에 연결했다. |
+| fishing-app-tester 명시적 사용 | 작업 시작 전 [SKILL.md](../skills/fishing-app-tester/SKILL.md)를 읽었다. 실제 브라우저 실행 전에 [test-cases.md](../skills/fishing-app-tester/references/test-cases.md)를 읽고 사용자 첨부의 T번호와 구분했다. |
+| 기존 구조 확인 | species-catalog.json의 31개 speciesId·고유 이미지, catalog.html/js/css의 상세/회색 CSS·고정 미수집 상태·Progress·필터·dialog, package.json·서버 허용 목록·실제 지도 숫자 ID·기존 즐겨찾기 LocalStorage를 확인했다. 기존 DB·store·version 구현은 없었다. |
+| 코드 분리 | [catch-records.js](../catch-records.js)는 순수 검증·집계와 IndexedDB 저장소를 브라우저/Node에서 함께 사용한다. [catch-record-ui.js](../catch-record-ui.js)는 사진 미리보기·등록/수정 Form·통계·기록 목록·개별 삭제를 담당한다. catalog.js가 기록에서 수집 상태·상세·필터·Progress를 계산한다. |
+| 보호 범위 | 어종 JSON과 이미지 경로·실제 SHA-256을 작업 전후 비교했다. 공개 어종 정보에 사용자 사진·마릿수·해금 flag를 쓰지 않는다. package.json/lock과 기존 지도 로직·즐겨찾기 키는 변경하지 않았다. |
+
+### 실제 저장 계약
+
+- Database: jejuFishingCollection, DB_VERSION=1.
+- Store: catchRecords, keyPath=recordId, autoIncrement=false.
+- Index: speciesId, caughtAt, createdAt (모두 unique=false). Phase 3에서 사용하지 않는 지도 선택 UI·mapSpotId 인덱스는 추가하지 않았다.
+- Record 필드: recordId, speciesId, caughtAt, count, photoBlob, photoName, photoType, locationName, mapSpotId, memo, createdAt, updatedAt.
+- recordId는 crypto.randomUUID(), 미지원 시 crypto.getRandomValues() 기반 UUID v4다. add는 기존 ID를 덮어쓰지 않는다. 수정은 같은 ID/speciesId/createdAt을 유지하고 updatedAt을 증가시킨다. 새 사진이 없으면 기존 Blob·파일명·MIME을 유지한다.
+- 사진은 원본 Blob(0 초과·10MiB 이하), JPEG/PNG/WebP만 직접 저장한다. MIME·용량·파일 시그니처·브라우저 디코딩을 확인하고 저장소에서 읽을 때도 검사한다. 자동 압축·EXIF 분석·재인코딩을 하지 않으며 HEIC/HEIF는 변환 안내를 한다. JPEG 방향 fixture의 120×80 원본이 브라우저에서 80×120으로 표시됨을 확인했다.
+- 날짜는 현재 지역의 YYYY-MM-DD, 미래 날짜는 오류다. Form의 정수 숫자 문자열은 Number로 바꾸고 저장된 문자열 count는 집계에서 제외한다. 장소 최대 120자·메모 최대 2,000자이며 textContent로 표시한다. mapSpotId는 null 기본값, 지정 시 실제 지도 숫자 ID인지 검증한다.
+- totalCount=sum(count), recordCount=유효 기록 수, collected=recordCount>0. firstCaughtAt/min·lastCaughtAt/max는 caughtAt 기준이다. 수집 종 수/전체 종 수×100의 내부 정밀도를 유지하고 UI만 반올림한다. 목록은 caughtAt 내림차순, 동률이면 createdAt 내림차순·recordId 오름차순이다.
+- transaction complete 후에만 화면을 갱신한다. 요청 success 후 실제 abort를 주입해 조기 성공·해금이 없음을 확인했다. 쓰기 완료 후 다시 읽기가 실패해도 이미 완료된 저장을 실패로 되돌려 알리지 않고 마지막 확인 상태와 재조회 안내를 유지한다.
+- onupgradeneeded는 없는 store/index만 추가한다. versionchange에서는 연결을 닫고 안내하며 blocked에서는 다른 탭 닫기·재시도를 안내한다. 불량 기록은 자동 삭제하지 않고 제외 개수를 표시한다. 저장소 불가 시 확인 중/마지막 snapshot을 표시하며 0종으로 단정하지 않는다.
+- 사진·미리보기 URL·해금 flag를 LocalStorage에 저장하지 않는다. object URL은 사진 교체·Form/상세 닫기·목록 교체에서 해제한다. 서버 업로드·외부 API 전송·Cloud 저장은 없다. 브라우저 검증 중 POST 등 데이터 전송 요청 0을 확인했다.
+
+### 실제 실행 명령
+
+| 명령 | 결과 |
+| --- | --- |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | PASS: 실제 함수의 9개 집계 시나리오·정상 입력·25개 거부 입력. 중복 ID/불량 저장 값 제외와 정확한 1/31 비율도 확인 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --self-test | PASS: 검증기 자체 fixture·25개 거부 입력. 실제 IndexedDB 검증과 구분 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS·0 FAIL. 이 모드의 도감/기록 SKIP은 Phase 3 완료 성과로 세지 않음 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=3 --catalog species-catalog.json --record-module catch-records.js | 29 PASS·0 FAIL, 실제 도감 엄격 검사·실제 기록 모듈 포함 |
+| npm.cmd test | 92 PASS·0 FAIL (기존 83개 + 실제 수집 필터 1개 + 기록 모듈 8개) |
+| node .verify/phase3-browser.cjs | 아래 사용자 T01~T12·9개 viewport PASS |
+| node .verify/phase3-errors.cjs | 저장소 오류·손상 데이터·버전·사진 교체/방향·지역 날짜의 11개 결과 그룹 PASS |
+| node .verify/phase3-photo-console.cjs | WebP 저장·실제 디코딩·새로고침 복원, 위장된 JPEG 헤더 거부 PASS. 해당 실제 흐름 console error/pageerror 0 |
+| node .verify/phase3-map.cjs | 지도 12조합·위치 거부 별도 1건 PASS |
+
+검증기는 사진 파일명/MIME·미래 날짜·숫자 문자열/NaN/Infinity·6마리 수정 시나리오·첫/마지막 삭제·불량 중복 기록·내부 정밀도 검사를 보강했다. 별도 adapter에 집계를 복제하지 않고 실제 catch-records.js export를 호출한다. 바이트 fixture만으로 실제 사진 디코딩·IndexedDB 영속성을 주장하지 않는다.
+
+### 사용자 첨부 순서의 T01~T14 실제 결과
+
+실제 Chrome headless, 별도 origin 127.0.0.1:8087·새 context 또는 .verify/profiles의 전용 profile, 합성 테스트 사진만 사용했다. 개인 브라우저 기록을 삭제하거나 실제 사용자 사진을 사용하지 않았다.
+
+| 사용자 ID | 결과·관찰값 |
+| --- | --- |
+| T01 | PASS: 최초 31종 회색·0/31·0%, 수집완료 필터 빈 결과 |
+| T02 | PASS: 참돔 상세·낚시법·채비·출처와 등록 버튼 접근 |
+| T03 | PASS: 사진+날짜+2마리 → 컬러·2마리/1회·1/31. 첫 add 요청 success 순간에는 수집 수 0. 이중 submit에도 DB 1건 |
+| T04 | PASS: 같은 참돔 3마리 추가 → 5마리/2회·수집 종 수 1 유지 |
+| T05 | PASS: 새로고침 후 두 사진의 실제 바이트·날짜·마릿수·장소·메모·ID·시각·컬러 복원. 브라우저를 닫고 같은 profile/origin의 새 Chrome 프로세스로 재접속해 동일 상태 확인 |
+| T06 | PASS: 3마리 기록을 4마리로 변경 → 6마리/2회, ID/createdAt/미교체 사진 유지·updatedAt 증가 |
+| T07 | PASS: 4마리 기록 삭제 → 2마리/1회·컬러 유지. 삭제 취소도 원본 보존 |
+| T08 | PASS: 마지막 2마리 삭제 → 0마리/0회·미수집 회색·수집 종 수 0. 어종 Card와 낚시 안내 유지·다시 등록 가능 |
+| T09 | PASS: 브라우저에서 0·음수·소수·빈 값 차단. 실제 모듈에서 문자·NaN·Infinity·없는 어종 등 거부. 미래 날짜도 차단 |
+| T10 | PASS: 텍스트·빈 PNG·손상 PNG·SVG·HEIC·10MiB 초과 사진 차단. 위장 image/png 시그니처도 실제 함수 검사에서 거부 |
+| T11 | PASS: 참돔 2마리/1회·한치 3마리/2회 독립, 수집 종 수 2. 수집 상태·분류·검색 AND와 필터 초기화 후 DB 3건 유지 |
+| T12 | PASS(에뮬레이션): 320/375/390/430/768/1024/1440/1920px·812×375 가로의 9개 viewport. 입력·Form/목록·2,000자 메모·120자 장소·저장/수정/삭제·44px 입력/터치 영역·ESC/닫기/focus 복귀·가로 넘침 없음 |
+| T13 | PASS(회귀 범위): 4개 viewport×성공 fixture/Marine만 실패/기상·해상·물때 동시 실패=12조합. 마커44→무늬오징어14→초기화44, 검색·즐겨찾기 재접속·에뮬레이션 GPS/주변5곳·화장실·Popup·물때 오늘/내일·도감 Navigation. 위치 권한 거부도 별도 PASS |
+| T14 | PASS(관찰 범위): 정상/예외 흐름 pageerror·미처리 rejection 없음, 정상 흐름 필수 자원 404 없음·데이터 전송 요청 없음. 추가 WebP 등록/복원 흐름은 console error 0도 직접 계측 |
+
+Skill 참고 표의 T01~T09·T12~T14를 Phase 3 범위에 적용했다. T07 숫자 예시는 사용자가 지정한 3→4(6/2회)를 브라우저에서 실행했고, 2→4(7/2회)도 실제 순수 모듈에서 확인했다. **Skill 참고 표의 T10~T11(최종 지도 query/Popup 연동)은 Phase 4 미구현이므로 SKIP**이다. 위 사용자 T10~T11(잘못된 파일·다른 어종 격리)과 혼동하지 않는다.
+
+### 저장 예외·사진·복원 추가 검증
+
+- IndexedDB 미지원·open 실패·getAll 실패에도 31종과 기본 정보가 열렸다. 수집 수는 확인 중으로 남고 open/read 복구 후 재조회가 성공했다.
+- QuotaExceededError 및 add success 뒤의 실제 transaction.abort()에서 사진/날짜/count/장소/메모를 유지했다. DB 0건·회색·수집 수 0, 실패 후 재시도 저장은 1건이었다. 상세/Form을 닫은 뒤 계측한 live object URL은 0개였다.
+- 저장된 불량 기록 8개(count 문자열/0·없는 종·없는 Blob·불가능/미래 날짜·깨진 사진·MIME 불일치)를 주입했다. 유효 기록만 2마리/1회로 집계했고 DB의 전체 9개 원본은 유지했다.
+- 다른 연결에서 삭제한 기록의 수정은 오류로 안내하고 Form 값을 유지했으며 기록이 되살아나지 않았다. 없는 ID 삭제는 false·미변경이었다.
+- native versionchange와 기존 store/index에 대한 v1→v2 schema 추가 호출에서 원본이 유지됐다. 미래 버전 DB는 삭제/재생성 없이 오류 안내했다. v1 연결을 유지해 native blocked를 만든 별도 test factory에서도 다른 탭 안내·차단 연결 닫기 후 재시도가 성공했다.
+- 기존 사진 미교체·교체 저장을 각각 확인했다. 교체는 같은 recordId/1건을 유지하고 새 Blob이 새로고침 후 표시됐다. JPEG orientation=6 fixture는 원본 120×80에서 브라우저 표시 80×120이며 원본 용량이 유지됐다. UTC 15:30/14:30 경계 두 경우 모두 한국 지역 날짜를 기본값으로 표시했다.
+
+### 발견·수정과 증거·남은 범위
+
+초기 검토에서 저장 후 disabled 버튼으로 focus를 돌리거나 재조회 때 성공 안내/focus가 사라질 수 있는 흐름을 고쳤다. 완료 후 버튼을 복원한 다음 focus를 돌리고, 상세 재렌더링에서 안내/focus를 유지했다. 파일명·MIME만 믿지 않도록 파일 시그니처 확인도 추가했다. 첫 스크린샷에서 lazy thumbnail이 로드되기 전 촬영된 부분은 현재 DOM 이미지 decode 완료를 기다린 후 다시 촬영했다. 브라우저 전체·예외 검증과 92개 자동 테스트를 최종 코드로 다시 통과했다.
+
+- .verify/artifacts/phase3/browser-results.json: 사용자 흐름·9개 viewport.
+- .verify/artifacts/phase3/error-results.json: 저장 예외·불량 원본 보존·버전·사진·날짜.
+- .verify/artifacts/phase3/console-photo-results.json: WebP·MIME/시그니처 불일치·console error 0.
+- .verify/artifacts/phase3-map/map-results.json: 기존 지도 12조합·위치 거부.
+- .verify/artifacts/phase3/desktop-records.png, form-375.png, records-375.png, form-1440.png: 실제 렌더링. 모바일 Form과 PC 기록 화면을 직접 열어 시각 확인했다.
+
+미확인 범위는 실제 휴대폰의 소프트 키보드/파일 선택·Safari/Firefox·브라우저별 HEIC 변환·실제 저장 공간 한도·실제 GPS·외부 공식 API 실응답·배포다. 사진은 자동 압축하지 않아 용량을 사용할 수 있고, 기기·브라우저·origin이 다르거나 사이트 데이터를 지우면 기록이 공유/보존되지 않는다. .verify의 profile·사진은 합성 검증 자료이며 앱이 사용자 사진을 프로젝트 파일이나 GitHub에 저장하는 기능은 없다.
+
+현재 C04·C05 Phase 3 완료. README 축약·지도 자동 필터/Popup/최종 query 연결·서버 업로드·로그인·동기화·일괄 삭제·commit/push는 하지 않았다. 다음 Phase는 사용자 요청 후 진행한다.
+
+구현 시 확인한 Web API 근거: [MDN transaction complete](https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/complete_event), [MDN blocked](https://developer.mozilla.org/en-US/docs/Web/API/IDBOpenDBRequest/blocked_event), [MDN image decode](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decode). 실제 앱의 동작 증거는 위 테스트 결과와 구분한다.
+
+## Phase 3 도감 초기화 오류 수정 (2026-10-28, KST)
+
+사용자 증상: “저장된 조과 기록을 확인하고 있어요.”가 남고 전체 도감 로드 오류·Grid 0개가 표시된다. 새로운 기능 없이 실제 원인을 확인해 수정하고 기존 데이터·이미지·지도·키·환경 설정을 보호한다.
+
+### 실제 원인과 재현
+
+- 작업 시작 전 catch-record-manager/SKILL.md·fishing-app-tester/SKILL.md를 직접 읽어 명시적으로 적용했다. 저장·집계 변경 전 catch-record-manager/references/indexeddb-schema.md, 브라우저 실행 전 fishing-app-tester/references/test-cases.md를 읽었다.
+- package.json의 실제 명령은 npm.cmd start → node server.js다. 최초 실행은 이미 사용 중인 8080 때문에 시작 실패했다. 실행 중인 8080과 8086은 catch-records.js·catch-record-ui.js를 404/application/json으로, 새 검증 서버 8087은 200/JavaScript로 반환하는 차이를 확인했다.
+- 실제 8080 Chrome Console의 최초 오류는 catch-records.js HTTP 404다. 이어 “Refused to execute script … MIME type ('application/json') is not executable”이 발생했고 catch-record-ui.js도 같은 상태였다. 모듈 import/export 방식 불일치나 정적 JSON 누락은 없었다. species-catalog.json은 HTTP 200·31종이었다.
+- CDP의 caught-exception 일시정지로 **ReferenceError: CatchRecords is not defined, at load (catalog.js:391:7)**를 확인했다. 원문과 호출 위치는 .verify/artifacts/startup-fix/before.json에 기록했다. 일반 Console에 이 예외가 보이지 않은 이유는 기존 load의 catch가 삼키고 도감 전체 오류 문구로 바꿨기 때문이다.
+- 기존 load는 JSON을 읽은 뒤 Grid 렌더링 전에 CatchRecords.summarizeCollection([], …)를 호출했다. 정적 데이터와 기록 모듈 초기화가 같은 try/catch에 있었고, 기록 스크립트가 없으면 아직 숨겨진 Grid를 렌더링하지 못했다. 이 재현에서는 IndexedDB 연결 시도 전 예외였으며 DB 버전/사용자 기록을 추정 원인으로 쓰지 않았다. 초기화에 catalog/DB를 묶은 Promise.all은 없었다. 사진 디코딩용 Promise.all과 구분했다.
+- 이전 Phase 3 검증은 별도로 새로 시작한 8087 서버를 사용해 기본 8080의 오래된 허용 목록 프로세스를 놓쳤다. 이번에는 8080의 HTML·JS·JSON 응답 해시가 현재 작업 폴더와 같은지, 포트 소유 PID가 node.exe의 server.js인지 확인한 뒤 해당 장기 실행 서버만 재시작했다. npm.cmd start가 같은 8080에서 정상 실행되며 두 기록 파일은 현재 200/text/javascript다. .env·키·브라우저 데이터를 직접 읽거나 변경하지 않았다.
+
+### 수정 범위와 현재 초기화
+
+1. catalog.html에서 기록 스크립트의 선행 defer 의존을 제거했다. catalog.js는 정적 JSON만 먼저 검증하고 독립적인 빈 집계로 31종 회색 Grid·0/31·0%·필터·상세를 렌더링한다.
+2. 그 뒤 기록 JS를 로드하고 API를 검증해 IndexedDB와 기록 UI를 초기화한다. 원본 경로·파일 이름·공개 어종 데이터는 유지했다. DB/store/index/버전도 jejuFishingCollection v1 / catchRecords / recordId / speciesId·caughtAt·createdAt 그대로다. 기존 store/index는 없는 경우에만 만드는 로직을 보존했다.
+3. 기록 실패는 기록 영역의 비차단 경고로 한정한다. 미조회 상태는 회색 기본 도감으로 유지하고, 이미 확인한 snapshot이 있으면 보존한다. 검색·분류·수집 상태 필터·상세를 차단하지 않는다. 기록 없음은 정상 0종이며 오류가 아니다.
+4. 정적 실패는 “도감 기본 데이터를 불러오지 못했습니다”, 기록 실패는 “저장된 조과 기록을 불러오지 못했습니다. 도감은 미수집 상태로 계속 사용할 수 있습니다”와 실제 원인별 안내로 구분한다. 오류를 인터넷 연결 문제로 통합하지 않는다. Console에는 stage와 오류 code/name만 남기며 사진·메모·파일명은 출력하지 않는다.
+5. 재시도는 정적 JSON 재검증 → 필요한 기록 파일 재시도 → 같은 저장소 재조회다. 중복 실행을 막고 기존 기록 UI를 재사용한다. 모듈 실패는 재시도 가능하며 JS 로드 10초·기록 조회 15초 제한 뒤에도 기본 Grid를 유지한다.
+6. catch-records.js의 records/speciesIds가 null·undefined·비배열인 경우 빈 집계를 반환하도록 보강했다. 잘못된 행·null 사진·문자열 count·없는 speciesId는 안전하게 제외한다. 미지원 오류의 기본 code 문자열 대신 한국어 안내를 표시한다. 기록·DB를 삭제하거나 초기화하지 않았다.
+
+이번 수정 파일은 catalog.html·catalog.js·catch-records.js·tests/catalog.test.cjs·tests/catch-records.test.cjs·TODO.md·PRD.md·이 문서·catch-record-manager/references/indexeddb-schema.md다. server.js의 기존 Phase 3 허용 목록은 이미 올바르므로 이번에는 추가 수정 없이 실행 프로세스를 갱신했다. 공개 JSON·31종 이미지 경로와 바이트의 작업 전후 해시가 모두 일치한다.
+
+### 실제 명령·검증 결과
+
+| 명령 / 검사 | 결과 |
+| --- | --- |
+| npm.cmd start | 최초는 기존 8080 점유로 실패. 확인한 기존 프로젝트 서버 재시작 뒤 같은 8080에서 정상 실행 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | PASS: 실제 모듈 9개 집계 시나리오·정상 입력·25개 거부 입력. 별도 IndexedDB 검증과 구분 |
+| npm.cmd test | 94 PASS·0 FAIL. 정적 도감의 기록 모듈 독립성과 null/undefined 집계 회귀 2개 추가 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS·0 FAIL. 이 모드의 도감/기록 SKIP은 완료 성과로 세지 않음 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=3 --catalog species-catalog.json --record-module catch-records.js | 29 PASS·0 FAIL, 실제 도감 엄격 검사와 실제 기록 모듈 포함 |
+| node .verify/catalog-startup-diagnose.cjs | 수정 전 실제 Console/Network/미정의 모듈·caught ReferenceError 재현 |
+| node .verify/startup-old-server-fallback.cjs | 서버가 여전히 기록 JS를 404로 반환하는 상태에서도 31종·회색·0%·검색·상세·출처 유지, pageerror 0 |
+| node .verify/startup-restart-recovery.cjs | 같은 8080의 별도 테스트 context에 보관한 합성 기존 기록·사진 바이트를 서버 재시작 후 재시도만으로 복원. 정적 JSON 재검증·새로고침도 PASS |
+| node .verify/startup-boundaries.cjs | 아래 11개 경계 결과 그룹 PASS |
+| node .verify/startup-crud.cjs | 실제 8080의 조과 등록·수정/삭제·사진/필드/컬러 복원·브라우저 재실행·9개 viewport PASS |
+| node .verify/startup-map.cjs | 실제 8080의 기존 지도 12조합·위치 거부 1건 PASS (API/GPS는 fixture/에뮬레이션) |
+
+### 브라우저 결과와 인수
+
+| 사용자 요청 테스트 | 실제 결과 |
+| --- | --- |
+| Test 1 기록 없음 | PASS: 31종·전체 미수집·0/31·0%, 기록 안내는 제거되고 전체 오류 화면 없음 |
+| Test 2 정상 IndexedDB | PASS: 실제 기록의 컬러·통계·사진 표시. 2+3=5마리/2회, 수정 후 6/2회, 삭제 후 2/1회→마지막 삭제 0/0회·회색 |
+| Test 3 강제 실패 | PASS: 기록 core/UI JS 404·잘못된 모듈 export·open 오류·미지원·미래 DB 버전·기록 조회 지연에도 Grid 31종 유지. 각 경우 검색·분류/상태 필터·상세/방법/채비/출처와 이미지 디코딩 PASS |
+| Test 4 새로고침 | PASS: 정상 0개 상태, 기존 사진/기록 상태 모두 복원. 같은 profile/origin으로 Chrome 프로세스를 재실행해 사진 바이트·메타데이터·수집 상태 복원 |
+| Test 5 다시 불러오기 | PASS: 모듈/open/조회 실패를 복구한 뒤 JSON 재검증과 기록 재조회 성공. 반복 실패 재시도 후에도 UI factory 초기화 1회·단일 제출 DB 1건·Card 31개 |
+
+11개 경계 그룹은 core JS 누락·UI JS 누락·잘못된 모듈·open 오류·미지원·미래 버전·조회 timeout·정상 빈 기록·느린 기록 JS·정적 JSON 실패 구분/복구·반복 재시도다. 모듈 로드를 일부러 지연시켜 CatchRecords가 아직 undefined인 동안에도 Grid·검색·상세를 조작했다. 정적 JSON 자체가 실패한 경우에만 기본 데이터 오류를 표시하고 기록 초기화 요청은 하지 않았다. 이들 통제된 404에는 예상된 브라우저 resource/MIME 오류와 안전한 경고가 있으나 미처리 JS 예외/pageerror는 없었다. 정상 초기화에서는 필수 파일 404·치명적 JS 오류가 없었다.
+
+CRUD는 초기화 수정 후 8080에서 다시 실행했다. 수정·삭제·재등록·서로 다른 종 격리·필터 초기화 후 기록 보존·잘못된 입력/사진 차단과 9개 viewport의 긴 메모·44px 입력·닫기/ESC/focus·가로 넘침을 확인했다. 단순 단위 검사만으로 사진 영속성을 주장하지 않는다. SKILL 참고 표 T01~T09·T12~T14의 현재 범위를 적용했고 T10~T11 최종 지도 query/Popup 연결은 미구현 Phase 4로 SKIP이다. 실제 휴대폰·Safari/Firefox·실제 GPS/공식 API 재조회·배포는 이번 실행 범위 밖이다.
+
+증거는 Git 제외된 .verify/artifacts/startup-fix/before.json, server-recovery.json, boundaries.json, crud/browser-results.json, map/map-results.json 및 empty-mobile.png·restored-8080.png에 있다. PC 복원 화면·모바일 기본 화면을 직접 열어 시각 확인했다. 모바일 전체 스크린샷은 .verify/startup-visual.cjs로 31개 lazy 이미지의 실제 decode 완료를 기다린 뒤 촬영했다. 자동화 초기 한 건은 dialog 닫기 focus 복귀 전에 다음 검색 입력을 시작한 검증 순서 문제였으며, close/focus 완료를 기다리도록 검증 코드를 고친 뒤 전체 경계 검사를 통과했다. 이 검증 순서 문제를 실제 404/ReferenceError 원인으로 기록하지 않는다.
+
+원본 사용자 브라우저 DB를 열어 수정/삭제하지 않았다. DB/schema 버전을 올리거나 deleteDatabase/clear로 해결하지 않았고 공개 데이터·이미지·.env·API Key·지도 로직·Framework를 변경하지 않았다. 테스트용 합성 기록은 격리된 브라우저 context/profile에만 사용했다. 재검증 완료 후 TODO의 현재 Phase 3 인수를 완료 표시하며, commit/push 없이 오류 수정 범위에서 멈춘다.

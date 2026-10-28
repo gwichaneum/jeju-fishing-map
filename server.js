@@ -6,7 +6,7 @@ const speciesCatalog = require("./species-catalog.json");
 
 const staticFiles = new Map([
   ["/", "index.html"], ["/index.html", "index.html"],
-  ...["styles.css", "script.js", "catalog.html", "catalog.css", "catalog.js", "species-catalog.json", "spot-filters.js", "favorites.js", "location.js", "weather.js",
+  ...["styles.css", "script.js", "catalog.html", "catalog.css", "catalog.js", "catch-records.js", "catch-record-ui.js", "species-catalog.json", "spot-filters.js", "favorites.js", "location.js", "weather.js",
     "tide-utils.js", "tides.js", "fishing-spots.js", "restrooms.js"].map(file => [`/${file}`, file]),
   ...["jeju-coast.jpg", "search.svg", "rotate-ccw.svg", "heart.svg", "heart-filled.svg",
     "locate-fixed.svg", "map.svg"].map(file => [`/assets/${file}`, `assets/${file}`]),

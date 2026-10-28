@@ -4,12 +4,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 버전 | 1.5 (Phase 2 전체 상세 정보 인수) |
+| 문서 버전 | 1.6.1 (Phase 3 초기화 오류 격리) |
 | 작성·검토 기준일 | 지도 검증 기록 2026-10-02 / 확장 설계 2026-10-28 |
 | 프로젝트 버전 | 0.1.0 (`package.json` 기준) |
 | 문서 기준 | 1~10장은 기존 지도 명세·검증 기록, 11장은 단계별 도감 확장 요구사항 |
 | 개발 방식 | Codex를 활용한 AI Vibe Coding, 기능 단위 구현·검증·Git 관리 |
-| 현재 상태 | 기존 지도 유지, 읽기 전용 도감 31종·이미지 31종·상세 정보 31종. C02·C03 완료, 엄격 검증 오류 0·경고 0. 조과·IndexedDB·해금·어종별 자동 지도 연동은 미구현 |
+| 현재 상태 | 기존 지도와 31종 도감 정보·이미지 유지. C02~C05 완료: IndexedDB 조과·원본 사진 저장, 기록 수정/삭제·집계·수집 해금/잠금 복귀 구현·검증. 어종별 자동 지도 연동은 Phase 4 미구현 |
 
 [프로젝트 보고서](./README.md) · [작업 현황](./TODO.md) · [상세 구현·데이터 검증 기록](./docs/TECHNICAL_NOTES.md)
 
@@ -338,7 +338,7 @@ Marine 실패 시 다른 영역은 유지된다. 모델 해상 정보를 공식 
 | --- | --- | --- | --- |
 | 1 | 기존 구조 분석, 통합 PRD·TODO, Skill 4개와 references/scripts, 사용 기록 초기 문서 | C01 | 완료 |
 | 2 | 필수 30종 데이터·이미지 출처 정책·고유 이미지, 도감 목록·상세·회색 상태 | C02·C03 | 완료. 31종 이미지·특징·방법·채비·시기·서식·출처 준비. 일반·엄격 검증 오류 0·경고 0, Phase 2 정적 검사·브라우저·지도 회귀 통과 |
-| 3 | 조과 Form·IndexedDB·추가/수정/삭제, 누적 집계·잠금/해금 | C04·C05 | 미구현 |
+| 3 | 조과 Form·IndexedDB·추가/수정/삭제, 누적 집계·잠금/해금 | C04·C05 | 완료. 기본 실행 주소의 초기화 수정 후 실제 모듈 검증·자동 테스트 94개·실제 Chrome 저장/재실행/삭제·9개 viewport·지도 회귀 통과 |
 | 4 | 지도↔도감 이동·실제 필터 연결·공통 UI 완성·전체 회귀 테스트 | C06·C07 일부 | 미구현 |
 | 5 | README 축약·실제 사이트 링크·Public 저장소 확인·최종 문서 | C07 나머지 | 미구현 |
 
@@ -419,7 +419,7 @@ FR-01~FR-09 전체와 모바일 UI를 회귀 기준으로 유지한다. 새 파�
 | --- | --- |
 | speciesCatalog | speciesId, nameKo, nameEn, category, imageSrc, imageAlt, mapSpeciesKey, description, methods, rigs, seasonNote, habitatNote, sourceUrl, license, attribution, verified, needsAsset, needsVerification |
 | 이미지·검증 필드 | scientificName(출처 확인 후만), verificationNote, mapMatchStatus(matched/unavailable/pending), informationSources, imageSourceUrl, imageLicense, imageAttribution, imageVerified, imageQualityVerified, imageBackground, assetNote, imageScale, imageRotation |
-| catchRecords | recordId, speciesId, caughtAt, count, photoBlob, locationName, mapSpotId, memo, createdAt, updatedAt |
+| catchRecords | recordId, speciesId, caughtAt, count, photoBlob, photoName, photoType, locationName, mapSpotId, memo, createdAt, updatedAt |
 
 - `speciesId`는 영문 소문자·숫자·하이픈의 안정적인 ID이며 이름 변경으로 바꾸지 않는다. 지도 키는 실제 한국어 필터 값 또는 null이다.
 - 미확인 설명·방법·채비·시기는 null/빈 배열과 확인 필요 이유로 남긴다. 그럴듯한 문장·학명·이미지를 만들지 않는다.
@@ -430,7 +430,7 @@ FR-01~FR-09 전체와 모바일 UI를 회귀 기준으로 유지한다. 새 파�
 - 예시 filter는 `grayscale(1) saturate(0) brightness(0.42) contrast(1.15)`, opacity는 0.65~0.8에서 형태가 보이도록 조정한다.
 - 갈치·광어·한치·무늬오징어·갑오징어·문어·주꾸미·학공치 등 형태 구분은 수동 시각 검증한다. 권한·정확성 미확인은 이미지 준비 필요로 보고한다.
 - 사용자가 제공한 모바일 참고 화면 3장을 확인했다. Grid·원형 frame·이름·상태·모바일 밀도만 참고하며 브랜드·입질확률·시간표·색상/아이콘·원본 어종 이미지를 복사하지 않는다.
-- IndexedDB 제안: `jejuFishingCollection` v1, `catchRecords` store(keyPath `recordId`), speciesId·caughtAt·mapSpotId 인덱스. 브라우저 저장소 초기화·비공개 모드·용량 제한으로 소실될 수 있음을 안내한다.
+- IndexedDB 실제 구현: `jejuFishingCollection` v1, `catchRecords` store(keyPath `recordId`), speciesId·caughtAt·createdAt 인덱스. mapSpotId는 선택 필드로 유지하며 자동 지도 연동은 하지 않는다. 브라우저 저장소 초기화·비공개 모드·용량 제한으로 소실될 수 있음을 안내한다.
 
 ### 11.7 UI와 지도 연동 설계
 
@@ -508,3 +508,20 @@ Phase 1은 Skill 생성과 제작 검증만 기록한다. 스크립트 자체 �
 - 일반 지도 열기와 대응 필터 선택 안내를 제공한다. 어종 자동 필터 쿼리·Popup 역방향 연결은 Phase 4의 C06에 남는다.
 - 이미지 31종의 경로와 실제 파일 SHA-256을 보존했다. 기존 자동 테스트 83개, Phase 1/2 정적 검사, 9개 viewport·모바일/PC 전체 31종 상세, 미확인 정보 fixture, 지도 12조합·위치 거부 회귀를 통과했다. 실제 휴대폰·공식 API 실응답 재조회·현장 검증은 수행하지 않았다.
 - C02·C03의 Phase 2 범위 완료. Phase 3 저장·조과·집계·실제 해금은 구현하지 않았고 commit/push하지 않았다.
+
+### 11.13 Phase 3 조과 저장·집계·해금 인수 (2026-10-28)
+
+- 실제 저장 모듈 catch-records.js와 입력/목록 UI catch-record-ui.js를 기존 catalog.html·catalog.js·catalog.css에 연결했다. Framework·외부 런타임 의존성을 추가하지 않았다. 어종 JSON과 31종 이미지 경로·바이트는 그대로 유지했다.
+- 사진·날짜·마릿수를 필수로 받고 장소·메모를 선택 입력한다. 원본 JPEG/PNG/WebP Blob을 IndexedDB에 저장하며 10MiB 한도·파일 시그니처·실제 디코딩을 검사한다. HEIC/HEIF는 변환 안내, 날짜는 현재 지역 기준 기본값·미래 날짜 차단, count는 양의 안전한 정수다.
+- transaction complete 뒤 기록·상세·Card·Progress를 즉시 갱신한다. 같은 recordId 수정, 사진 미교체 유지, createdAt 고정·updatedAt 갱신, 확인 후 개별 삭제, 마지막 삭제 시 0마리·0회·회색 복귀를 구현했다. 기본 정보는 항상 열람 가능하다.
+- 총 마릿수·기록 수·첫/최근 잡은 날짜·수집한 서로 다른 종 수·정확한 완성률을 유효 기록에서 계산한다. 별도 해금 flag를 저장하지 않는다. 수집완료 필터도 실제 기록에서 파생한다.
+- 저장소 열기/읽기 실패·용량 초과·transaction abort·blocked/versionchange·없는 수정 대상·없는 삭제 대상·손상된 기록을 처리한다. 실패 후 입력을 보존하고, 불량 기록은 삭제 없이 집계에서 제외하며, 저장소를 읽지 못할 때 0종으로 단정하지 않는다.
+- 실제 공유 모듈의 9개 집계 시나리오·25개 거부 입력, npm.cmd test 92개, Phase 3 정적 검사 29개를 통과했다. 실제 Chrome의 2+3=5/2회·3→4 수정 후 6/2회·마지막 삭제·새로고침/같은 profile 재실행 후 사진 복원, 9개 viewport·저장 예외 주입과 지도 12조합 회귀를 확인했다.
+- 기록은 현재 브라우저·기기·origin에만 저장된다. 원본 사진 자동 압축·서버 업로드·동기화·일괄 삭제·최종 지도 query 연동은 구현하지 않았다. 실제 휴대폰의 소프트 키보드와 Safari/Firefox, 실제 GPS/공식 API 실응답은 이번 검증 범위 밖이다. 전체 증거·한계는 SKILL_USAGE의 마지막 기록을 따른다. C04·C05 완료 후 Phase 3에서 멈춘다.
+
+### 11.14 Phase 3 초기화 오류 수정 (2026-10-28)
+
+- 실제 기본 실행 주소 8080의 장기 실행 서버가 새 기록 JS 두 개를 404/JSON으로 반환했다. CatchRecords 미정의 예외가 정적 도감과 같은 초기화 try/catch에서 처리되어 Grid가 비어 있는 오류를 재현했다. 같은 프로젝트임을 확인한 서버를 npm.cmd start로 재시작해 기존 8080 origin과 브라우저 저장소를 유지했다.
+- 정적 JSON 검증·회색 Grid·검색·분류·상세·0% 표시는 기록 모듈과 독립적으로 먼저 처리한다. 기록 모듈은 이후 로드하며 JS/IndexedDB 오류는 기록 영역에 한정한다. 이미 읽은 안전한 snapshot은 유지한다. 정적 데이터 실패와 조과 실패의 안내를 구분한다.
+- 재시도는 정적 JSON을 재검증하고 기록 파일·같은 IndexedDB를 재조회한다. Form은 한 번만 초기화한다. 응답 지연에는 비차단 경고를 표시하고 기본 Grid를 유지한다. DB/store/index 버전과 사용자 데이터는 초기화하거나 삭제하지 않았다.
+- 같은 8080에서 빈 기록·정상 기록·강제 open 오류·JS 누락/지연·버전 충돌·재시도·사진 바이트 보존, CRUD/브라우저 재실행, 9개 viewport·지도 회귀를 다시 확인했다. 자동 테스트 94개·Phase 3 정적 검사 29개가 통과했다. 상세 원인·증거는 SKILL_USAGE의 마지막 기록을 따른다.

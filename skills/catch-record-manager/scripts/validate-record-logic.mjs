@@ -18,16 +18,23 @@ function validTimestamp(value) {
   return Number.isFinite(date.getTime()) && date.toISOString() === value;
 }
 
-// This validates the planned contract only. It is not used by the application.
+// Validator fixture checks only. Actual application checks import the shared runtime module below.
 export function validateRecordShape(record, speciesIds, mapSpotIds = []) {
   const errors = [];
   if (!record || typeof record !== 'object' || Array.isArray(record)) return ['Record must be an object.'];
   if (!nonempty(record.recordId)) errors.push('recordId is required.');
   if (!speciesIds.includes(record.speciesId)) errors.push('Unknown speciesId.');
   if (!validDate(record.caughtAt)) errors.push('caughtAt must be a real YYYY-MM-DD date.');
+  else {
+    const today = new Date();
+    const localToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    if (record.caughtAt > localToday) errors.push('caughtAt cannot be in the future.');
+  }
   if (!Number.isSafeInteger(record.count) || record.count <= 0) errors.push('count must be a positive safe integer.');
   if (!(record.photoBlob instanceof Blob) || !photoTypes.has(record.photoBlob.type)
     || record.photoBlob.size <= 0 || record.photoBlob.size > maxPhotoBytes) errors.push('Invalid photo Blob/type/size.');
+  if (!nonempty(record.photoName)) errors.push('photoName is required.');
+  if (record.photoType !== record.photoBlob?.type) errors.push('photoType must match the Blob.');
   if (record.mapSpotId !== null && (!Number.isSafeInteger(record.mapSpotId) || !mapSpotIds.includes(record.mapSpotId))) errors.push('Unknown mapSpotId.');
   for (const field of ['locationName', 'memo']) if (typeof record[field] !== 'string') errors.push(`${field} must be a string.`);
   for (const field of ['createdAt', 'updatedAt']) if (!validTimestamp(record[field])) errors.push(`${field} must be an ISO UTC timestamp.`);
@@ -40,6 +47,7 @@ function fixtures() {
   const first = {
     recordId: 'fixture-1', speciesId: 'fixture-a', caughtAt: '2026-10-28', count: 2,
     photoBlob: new Blob(['fixture photo bytes'], { type: 'image/png' }),
+    photoName: 'fixture.png', photoType: 'image/png',
     locationName: '', mapSpotId: 1, memo: '',
     createdAt: '2026-10-28T00:00:00.000Z', updatedAt: '2026-10-28T00:00:00.000Z',
   };
@@ -58,6 +66,11 @@ function invalidCases(first) {
     ['negative count', { ...first, count: -1 }],
     ['fractional count', { ...first, count: 1.5 }],
     ['unsafe count', { ...first, count: Number.MAX_SAFE_INTEGER + 1 }],
+    ['numeric string count policy', { ...first, count: '2' }],
+    ['blank count', { ...first, count: '' }],
+    ['text count', { ...first, count: 'two' }],
+    ['NaN count', { ...first, count: NaN }],
+    ['infinite count', { ...first, count: Infinity }],
     ['unknown species', { ...first, speciesId: 'missing' }],
     ['unknown spot', { ...first, mapSpotId: 999 }],
     ['not Blob', { ...first, photoBlob: 'data:image/png;base64,AA==' }],
@@ -66,6 +79,9 @@ function invalidCases(first) {
     ['oversized photo', { ...first, photoBlob: new Blob([new Uint8Array(maxPhotoBytes + 1)], { type: 'image/png' }) }],
     ['impossible date', { ...first, caughtAt: '2026-02-30' }],
     ['missing date', { ...first, caughtAt: '' }],
+    ['future date', { ...first, caughtAt: '9999-12-31' }],
+    ['missing photo name', { ...first, photoName: '' }],
+    ['photo type mismatch', { ...first, photoType: 'image/jpeg' }],
     ['timestamp not date', { ...first, caughtAt: first.createdAt }],
     ['invalid createdAt', { ...first, createdAt: '2026-02-30T00:00:00.000Z' }],
     ['reversed timestamps', { ...first, updatedAt: '2026-10-27T00:00:00.000Z' }],
@@ -95,7 +111,9 @@ export async function checkRecordModule(moduleFile) {
     ['first catch', [first], 2, 1, true, 1, 50],
     ['2 + 3', [first, second], 5, 2, true, 1, 50],
     ['edit 2 to 4', [{ ...first, count: 4 }, second], 7, 2, true, 1, 50],
+    ['edit 3 to 4', [first, { ...second, count: 4 }], 6, 2, true, 1, 50],
     ['delete first', [second], 3, 1, true, 1, 50],
+    ['delete second', [first], 2, 1, true, 1, 50],
     ['delete last', [], 0, 0, false, 0, 0],
     ['isolate other species', [first, second, other], 5, 2, true, 2, 100],
   ];
@@ -115,6 +133,11 @@ export async function checkRecordModule(moduleFile) {
   assert.equal(empty.totalSpecies, 0);
   assert.equal(empty.collectedSpecies, 0);
   assert.equal(empty.progress, 0);
+  const corrupt = await api.summarizeCollection([first, first, { ...second, count: '3' }, { ...other, speciesId: 'missing' }], speciesIds);
+  assert.equal(corrupt.bySpecies['fixture-a'].totalCount, 2, 'ignore duplicate IDs and invalid stored rows');
+  assert.equal(corrupt.collectedSpecies, 1);
+  const accurate = await api.summarizeCollection([first], Array.from({ length: 31 }, (_, i) => i ? `unused-${i}` : 'fixture-a'));
+  assert.equal(accurate.progress, 100 / 31, 'keep full progress precision internally');
   console.log(`PASS actual record module: ${scenarios.length} aggregate scenarios, valid inputs and ${invalidCases(first).length} rejected inputs. IndexedDB/browser I/O not tested.`);
 }
 
@@ -123,7 +146,7 @@ function selfTest() {
   assert.deepEqual(validateRecordShape(first, speciesIds, mapSpotIds), []);
   assert.deepEqual(validateRecordShape({ ...first, mapSpotId: null }, speciesIds, mapSpotIds), []);
   for (const [label, record] of invalidCases(first)) assert.ok(validateRecordShape(record, speciesIds, mapSpotIds).length > 0, label);
-  console.log(`PASS validator self-test: planned record schema, ${invalidCases(first).length} invalid inputs. App aggregates/IndexedDB not tested.`);
+  console.log(`PASS validator self-test: record schema fixtures, ${invalidCases(first).length} invalid inputs. App aggregates/IndexedDB not tested.`);
 }
 
 async function main() {

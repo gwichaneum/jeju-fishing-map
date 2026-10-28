@@ -38,6 +38,12 @@
             </div>
           </div>
 
+          <p id="catalog-notice" class="catalog-notice" role="status" aria-live="polite" aria-atomic="true"></p>
+          <div id="record-storage-status" class="record-storage-status" role="status">
+            <p id="record-storage-message">저장된 조과 기록을 확인하고 있어요.</p>
+            <button id="record-storage-retry" class="catalog-button" type="button" hidden>기록 다시 불러오기</button>
+          </div>
+
           <form id="catalog-filters" class="catalog-filters" role="search" aria-label="도감 검색 및 필터">
             <fieldset class="collection-status-filter">
               <legend class="visually-hidden">수집 상태</legend>
@@ -67,7 +73,7 @@
             <p id="catalog-empty-message">검색어나 분류를 바꿔보세요.</p>
             <button id="catalog-reset" class="catalog-button" type="button">전체 어종 보기</button>
           </div>
-          <p class="collection-footnote">사진과 조과를 남기는 기록 기능을 준비하고 있어요.<br class="small-screen-break" /> 자료의 범위와 정보·이미지 출처는 각 어종 상세에서 안내합니다.</p>
+          <p class="collection-footnote">등록한 사진과 기록은 현재 기기와 브라우저에만 저장됩니다.<br />서버로 전송하거나 다른 기기로 동기화하지 않습니다. 사이트 데이터를 지우면 기록이 사라질 수 있어요.<br />자료의 범위와 정보·이미지 출처는 각 어종 상세에서 안내합니다.</p>
         </section>
       </main>
       <footer class="site-footer">Jeju Fishing Map · 바다의 발견을 모으다</footer>
@@ -79,6 +85,52 @@
         <button type="button" id="species-detail-close" class="detail-close" aria-label="어종 상세 닫기">닫기 <span aria-hidden="true">×</span></button>
       </div>
       <div id="species-detail-content"></div>
+    </dialog>
+    <dialog id="catch-record-dialog" class="species-detail catch-record-dialog" aria-labelledby="catch-form-title" aria-describedby="catch-form-privacy">
+      <div class="species-detail-toolbar">
+        <span class="species-detail-eyebrow">MY FISHING RECORD</span>
+        <button type="button" id="catch-form-close" class="detail-close" aria-label="조과 기록 입력 닫기">닫기 <span aria-hidden="true">×</span></button>
+      </div>
+      <h2 id="catch-form-title">조과 기록 등록</h2>
+      <p id="catch-form-privacy" class="catch-form-caption">사진과 기록은 현재 기기와 브라우저에만 저장됩니다.</p>
+      <form id="catch-record-form" class="catch-record-form" novalidate>
+        <div class="catch-field">
+          <label for="catch-photo">사진 <span>(필수)</span></label>
+          <input id="catch-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="catch-photo-hint catch-photo-error" />
+          <p id="catch-photo-hint" class="catch-form-caption">JPEG·PNG·WebP, 10MiB 이하. 원본 사진을 저장합니다. HEIC/HEIF는 변환한 뒤 선택해 주세요.</p>
+          <button type="button" id="catch-keep-photo" class="catalog-button" hidden>기존 사진 유지</button>
+          <p id="catch-photo-status" class="catch-form-caption" role="status"></p>
+          <img id="catch-photo-preview" class="catch-photo-preview" alt="저장할 조과 사진 미리보기" hidden />
+          <p id="catch-photo-error" class="catch-field-error" role="alert" hidden></p>
+        </div>
+        <div class="catch-form-pair">
+          <div class="catch-field">
+            <label for="catch-date">잡은 날짜 <span>(필수)</span></label>
+            <input id="catch-date" name="caughtAt" type="date" required aria-describedby="catch-date-error" />
+            <p id="catch-date-error" class="catch-field-error" role="alert" hidden></p>
+          </div>
+          <div class="catch-field">
+            <label for="catch-count">잡은 마릿수 <span>(필수)</span></label>
+            <input id="catch-count" name="count" type="number" inputmode="numeric" min="1" step="1" required aria-describedby="catch-count-error" />
+            <p id="catch-count-error" class="catch-field-error" role="alert" hidden></p>
+          </div>
+        </div>
+        <div class="catch-field">
+          <label for="catch-location">장소 <span>(선택)</span></label>
+          <input id="catch-location" name="locationName" type="text" maxlength="120" autocomplete="off" placeholder="예: 도두항 방파제" aria-describedby="catch-location-error" />
+          <p id="catch-location-error" class="catch-field-error" role="alert" hidden></p>
+        </div>
+        <div class="catch-field">
+          <label for="catch-memo">메모 <span>(선택)</span></label>
+          <textarea id="catch-memo" name="memo" rows="3" maxlength="2000" placeholder="채비와 현장에서 느낀 점을 남겨보세요." aria-describedby="catch-memo-error"></textarea>
+          <p id="catch-memo-error" class="catch-field-error" role="alert" hidden></p>
+        </div>
+        <p id="catch-form-error" class="catch-field-error" role="alert" tabindex="-1" hidden></p>
+        <div class="catch-form-actions">
+          <button type="button" id="catch-form-cancel" class="catalog-button">취소</button>
+          <button type="submit" id="catch-form-submit" class="catalog-button catalog-primary-button">기록 저장</button>
+        </div>
+      </form>
     </dialog>
     <noscript><p class="catalog-noscript">도감을 검색하고 상세 정보를 보려면 브라우저에서 JavaScript를 허용해 주세요.</p></noscript>
   </body>
