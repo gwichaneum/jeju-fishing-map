@@ -75,7 +75,7 @@
 2026-10-28 추가. 위 지도 Completed/Future Improvements는 기존 기록을 보존했다.
 출조 기록·사진 후보는 아래 C04~C05로 구체화하며 사용자 제보·계정·동기화는 이번 확장에 포함하지 않는다.
 PRD 11장의 F1~F8을 추적한다. 2026-10-28 전체 정보 감사와 브라우저 검증으로 C02·C03의 Phase 2 범위를 완료했다. 31종 이미지와 상세 정보가 준비되었고 일반·엄격 검증은 오류 0·경고 0이다. 검증 범위와 지역별 자료의 한계는 [어종 정보 출처](./docs/SPECIES_INFO_SOURCES.md)에 기록한다.
-Phase 3의 기본 실행 서버에서 확인된 기록 스크립트 404·도감 초기화 결합 오류를 수정하고, 같은 8080 주소에서 기본 도감·기록 CRUD·복원·지도 회귀를 재검증했다. C04·C05의 현재 인수는 완료이며 아래 과거 검증 이력과 구분한다. 다음 Phase 4는 추가 요청 후 진행한다.
+Phase 3 초기화 수정 후 C04·C05를 완료했다. Phase 4의 현재 확정 범위는 공통 Navigation·도감→지도 필터 연결·Popup 기존 정보 보존이다. 이전 양방향 요청의 Popup 도감 기능은 가독성을 위해 제거했다. 현재 결과는 문서 끝의 범위 변경 기록과 SKILL_USAGE를 따른다. Phase 5 미진행.
 권장 Commit 메시지는 사용자용 제안이며 이 작업에서 commit/push하지 않는다.
 
 ## C01. 문서와 Skill 준비 — Phase 1
@@ -135,7 +135,7 @@ PRD 연결: F1·F2·F3·F6, 11.5~11.6.
 
 PRD 연결: F1·F2·F3·F8, 11.7.
 
-- [x] 도감 파일·화면 구조와 지도에 맞는 공통 Navigation·스타일 준비 (실제 양방향 연결은 C06)
+- [x] 도감 파일·화면 구조와 지도에 맞는 공통 Navigation·스타일 준비 (실제 도감→지도 연결은 C06)
 - [x] 데이터 기반 수집한 종/전체 종·Progress 계산, HTML 고정 수치 제거; 초기 0/31·0%, 저장된 기록이 있는 것처럼 표시하지 않음
 - [x] 차분한 원형 링·실제 이미지·이름·미수집 상태 Grid 유지, 정상 화면 Placeholder 및 관련 분기/CSS 제거
 - [x] 전체 / 미수집 / 수집완료 필터와 빈 결과 처리
@@ -148,7 +148,7 @@ PRD 연결: F1·F2·F3·F8, 11.7.
 - [x] 미수집 상세에서 일반 지도 열기 제공·대응 필터 안내·연결 불가 9종의 “현재 등록된 관련 포인트 없음” 표시
 
 완료 확인: 미수집 카드도 상세를 열며, 기존 바다 배경·밝은 Glass Card·system font와 일관된다.
-아직 처리하지 않는 지도 파라미터 링크를 활성화하지 않는다. 상세의 지도 버튼은 일반 지도 이동이며 어종 필터 선택을 안내한다. 자동 필터·양방향 연결은 C06에 남긴다.
+위 Phase 2 인수 당시에는 일반 지도 이동/필터 선택 안내만 제공했다. 현재 C06은 자동 어종 필터를 지원하며 연결 범위는 도감→지도다.
 
 2026-10-28 추가 확인: 320px 2열, 375px 3열, 390/430px 4열, 768px·812px 가로 5열, 1024px 6열, 1440px 7열, 1920px 8열. 9개 viewport에서 31개 실제 이미지·가로 넘침 없음·0/31 수집을 확인했다.
 모바일 390px·PC 1440px에서 31종 전체 상세 src/filter 일치, CSS 컬러 비교 시 크기·위치 불변, 검색·분류·빈 결과·키보드/닫기/focus·요청 오류 재시도·이미지 오류 안내를 확인했다. 지도는 4개 viewport × API 성공 fixture/부분 실패/동시 실패 12조합과 위치 거부를 새로 검사했다. 실제 GPS·외부 API 재조회는 미수행이다. npm test 83개 PASS.
@@ -212,15 +212,24 @@ PRD 연결: F1·F5·F7.
 
 PRD 연결: F3·F6·F8, 기존 FR-01~FR-09, 11.7.
 
-- [ ] map-catalog-integrator SKILL.md를 명시적으로 읽고 실제 주소·키 계약 확인
-- [ ] 도감 → 관련 지도 포인트 이동과 실제 쿼리 파서 구현
-- [ ] 지도 Popup → 매핑된 도감 상세 이동 구현
-- [ ] speciesId / mapSpeciesKey 통일, 지원 키만 필터 적용, null/알 수 없는 키 안내
-- [ ] 공통 Navigation 완성, 현재 화면 표시·뒤로 가기·직접 접속·모바일 이동 확인
-- [ ] 관련 포인트에 기존 필터·표시 가능 좌표 규칙 적용, 메모/제보를 공개 확정 정보와 구분
-- [ ] fishing-app-tester를 명시적으로 적용해 기존 지도 회귀 및 T01~T14 전체 테스트
+- [x] map-catalog-integrator SKILL.md와 integration-contract를 직접 읽고 실제 주소·키 계약 확인
+- [x] 공통 Navigation·aria-current·hover/focus·44px·공통 여백/Footer
+- [x] 도감 → 지도 이동, URLSearchParams로 실제 지도 키 전달
+- [x] 지도 species Query 처리, 옵션 준비 후 검증·자동 선택
+- [x] 관련 마커 자동 Filter·결과 개수·0/1/복수 범위·기존 AND 필터 재사용
+- [x] 지도 Popup의 기존 정보/일반 어종 문자열 유지, 도감 버튼·링크·Chip·수집 상태 없음 확인
+- [x] speciesId / mapSpeciesKey Mapping을 도감 JSON 한 곳에서 관리, 검토된 메모 aliases 공유
+- [x] 관련 포인트 없음 처리·정확한 안내·잘못된 필터 없는 일반 지도 링크
+- [x] 잘못된 Parameter·빈 값·중복 값 안전 처리
+- [x] Browser History·직접 접속·새로고침·Form 이탈 보호 테스트
+- [x] 모바일 Navigation·가로 화면·Popup/Form focus와 스크롤 테스트
+- [x] 기존 지도 회귀: 검색·필터·초기화·즐겨찾기·위치·화장실·날씨/Marine/물때
+- [x] 기존 도감/IndexedDB 회귀: Grid·상세·등록/수정/삭제·해금/재잠금·진행률·사진 복원
+- [x] fishing-app-tester를 명시적으로 적용해 현재 A~J·T01~T14·오류 경계·console 검증, Skill 기록 갱신
 
-완료 확인: 무늬오징어 상세 → 실제 지도 필터·관련 마커 → Popup의 같은 도감 상세.
+제외: Popup 정보량과 가독성을 고려해 Popup→도감 링크·어종 Chip 연결·도감 상태 표시는 구현 범위에서 제외하고 제거했다. 미완료 TODO로 남기지 않는다. 기존 도감 상세 직접 query는 호환 기능으로 유지한다.
+
+완료 확인: 무늬오징어/한치 상세 → 실제 지도 필터·관련 마커 → Back으로 도감 복귀. 화면 전환은 공통 Navigation을 사용한다.
 이동 후 뒤로 가기·필터 초기화·즐겨찾기·날씨·물때·현재 위치·화장실·모바일 Popup이 정상이다.
 
 권장 Git Commit: `feat: integrate fish collection with fishing map`
@@ -229,8 +238,8 @@ PRD 연결: F3·F6·F8, 기존 FR-01~FR-09, 11.7.
 
 PRD 연결: F1~F8, FR-01~FR-09, 11.8~11.10.
 
-- [ ] 네 Skill을 각 단계에서 실제 읽고 적용한 증거만 docs/SKILL_USAGE.md에 기록
-- [ ] fishing-app-tester의 T01~T14, console·모바일·IndexedDB·집계·지도 회귀 검증 (Phase 4)
+- [x] 네 Skill의 각 단계 실사용 증거를 docs/SKILL_USAGE.md에 기록 (Phase 2/3 이력과 이번 Phase 4 실행 구분)
+- [x] fishing-app-tester의 T01~T14, console·모바일·IndexedDB·집계·지도 회귀 검증 (Phase 4, 아래/사용 기록의 실제 범위)
 - [ ] README를 기능·실제 화면·사용 흐름·문서/네 Skill 링크·실행·방법론 장단점·개선·결론·주의사항 중심으로 축약 (Phase 5)
 - [ ] 실제 서비스 URL을 확인해 README 최상단 바로가기 연결; 임의 주소/저장소 주소 대체 금지
 - [ ] Node 프록시·HTTPS·환경변수·정적 허용 경로와 배포 사이트 실제 접근 검증
@@ -241,3 +250,16 @@ PRD 연결: F1~F8, FR-01~FR-09, 11.8~11.10.
 그 부분을 미완료로 보고하며 과거 테스트나 스크립트 SKIP을 새 검증 성과로 쓰지 않는다.
 
 권장 Git Commit: `docs: simplify README and add live site link`
+
+## 이전 Phase 4 인수 기록 — 2026-10-28 (현재 범위 변경 전 이력)
+
+실제 `http://127.0.0.1:8080`에서 A~M·Skill T01~T14를 검증했다. 지도/도감의 species query 값 구분, null/무효 query, 관련 수 23/14(무늬)·20/18(한치), 0/1/복수 범위, 뒤로가기·직접 접속·새로고침, dirty Form 보호가 정상이다.
+97개 자동 검사와 Phase 4 정적 검사 29개, 실제 사진/IndexedDB CRUD·같은 profile 재실행·저장 예외, 지도 12개 API fixture 조합+위치 거부, 9개 viewport·console/초기화 경계를 통과했다.
+API 실응답 성공·실제 GPS·실기기·배포 검증은 미확인으로 구분한다. 세부 결과·증거·검증 중 고친 가정은 [SKILL_USAGE](./docs/SKILL_USAGE.md)의 마지막 Phase 4 기록을 따른다. 데이터·이미지·좌표·README를 보존하고 commit/push 없이 Phase 4에서 멈춘다.
+
+## 현재 Phase 4 범위 변경·인수 — 2026-10-28
+
+확정 범위는 공통 Navigation과 도감→지도 query/어종 필터다. Popup→도감 기능은 정보량과 가독성을 위해 제외하고 제거했다. Popup 도감 링크·Chip을 미완료 TODO로 남기지 않는다.
+이번 변경 후 실제 8080에서 A~J·T01~T14(현재 T11은 Popup 보존 검사), 자동 97개·정적 29개·Skill YAML, 9개 viewport·지도 12개 API fixture 조합+위치 거부·사진/기록 CRUD/브라우저 재실행·저장 오류/복구를 다시 검증했다.
+69개 Popup 생성 내용과 원본 함수를 비교해 기존 정보 구조/일반 문자열이 동일하고 도감 링크가 없음을 확인했다. 지도에서 도감 JSON/기록 초기화 요청 0회, 기록 UI factory 1회·단일 제출 1건을 확인했다. 관련 수는 무늬 23/14·한치 20/18이다.
+C06의 현재 범위를 완료했다. 실제 휴대폰/GPS·공식 API 실응답·배포는 미확인으로 구분하며 상세 증거는 SKILL_USAGE 마지막 기록을 따른다. Phase 5와 commit/push는 진행하지 않는다.

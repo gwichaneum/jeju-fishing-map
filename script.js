@@ -403,6 +403,20 @@ function addFishingSpotMarkers(map, maplibregl) {
 
   let locationMarker = null;
   return {
+    fitSpots(spots) {
+      cancelPendingFocus();
+      activePopup?.remove();
+      map.stop();
+      if (!spots.length) { this.resetView(); return; }
+      if (spots.length === 1) {
+        map.flyTo({ center: [spots[0].longitude, spots[0].latitude], zoom: 11.5, bearing: 0, pitch: 0, duration: 500 });
+        return;
+      }
+      const longitudes = spots.map(spot => spot.longitude);
+      const latitudes = spots.map(spot => spot.latitude);
+      map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]],
+        { padding: map.getContainer().clientWidth < 640 ? 32 : 48, maxZoom: 11.5, bearing: 0, pitch: 0, duration: 500 });
+    },
     showLocation(position) {
       cancelPendingFocus();
       activePopup?.remove();

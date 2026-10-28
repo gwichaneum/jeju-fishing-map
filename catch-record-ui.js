@@ -22,6 +22,14 @@
     let suppressRestore = false;
     let returnRecordId = null;
     const thumbnailUrls = new Set();
+    let initialValues = '';
+    const formValues = () => JSON.stringify([fields.date.value, fields.count.value, fields.location.value, fields.memo.value]);
+    const isDirty = () => dialog.open && (formValues() !== initialValues || photo.files.length > 0);
+    root.addEventListener('beforeunload', event => {
+      if (!isDirty()) return;
+      event.preventDefault();
+      event.returnValue = '';
+    });
 
     function element(tag, className, text) {
       const node = document.createElement(tag);
@@ -84,6 +92,7 @@
       fields.count.value = record?.count ?? 1;
       fields.location.value = record?.locationName || '';
       fields.memo.value = record?.memo || '';
+      initialValues = formValues();
       keepPhoto.hidden = !record;
       form.querySelector('#catch-photo-status').textContent = record ? '사진을 바꾸지 않으면 기존 사진이 유지됩니다.' : '';
       setPreview(record?.photoBlob);
@@ -273,6 +282,6 @@
       return section;
     }
 
-    return { mount, cleanup, isBusy: () => busy, isEditing: () => dialog.open };
+    return { mount, cleanup, isBusy: () => busy, isEditing: () => dialog.open, isDirty, cancelEditing: cancelForm };
   };
 })(globalThis);

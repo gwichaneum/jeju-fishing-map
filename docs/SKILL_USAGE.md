@@ -2,7 +2,7 @@
 
 [PRD 확장](../PRD.md#11-낚시-도감-확장-요구사항) · [TODO](../TODO.md#낚시-도감-확장)
 
-현재 상태는 문서 끝의 **Phase 3 도감 초기화 오류 수정** 기록을 따른다. 이전 구현·검증 기록은 당시의 이력이다. 31종 정보·이미지를 유지하고 기본 실행 주소의 초기화 문제를 수정한 뒤 C04·C05를 재검증했다. 지도 양방향 연동은 Phase 4 미구현이다. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md)
+현재 상태는 문서 끝의 **Phase 4 도감→지도 범위 변경** 기록을 따른다. 이전 양방향 구현·검증은 당시의 이력이며 Popup 도감 기능은 가독성을 위해 제거했다. 공통 Navigation·도감→지도 query·기존 Popup/지도/도감/IndexedDB 회귀가 현재 인수 범위다. Phase 5 미진행. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md)
 
 ## Phase 1 — 생성 기록 (2026-10-28, KST)
 
@@ -497,3 +497,167 @@ CRUD는 초기화 수정 후 8080에서 다시 실행했다. 수정·삭제·재
 증거는 Git 제외된 .verify/artifacts/startup-fix/before.json, server-recovery.json, boundaries.json, crud/browser-results.json, map/map-results.json 및 empty-mobile.png·restored-8080.png에 있다. PC 복원 화면·모바일 기본 화면을 직접 열어 시각 확인했다. 모바일 전체 스크린샷은 .verify/startup-visual.cjs로 31개 lazy 이미지의 실제 decode 완료를 기다린 뒤 촬영했다. 자동화 초기 한 건은 dialog 닫기 focus 복귀 전에 다음 검색 입력을 시작한 검증 순서 문제였으며, close/focus 완료를 기다리도록 검증 코드를 고친 뒤 전체 경계 검사를 통과했다. 이 검증 순서 문제를 실제 404/ReferenceError 원인으로 기록하지 않는다.
 
 원본 사용자 브라우저 DB를 열어 수정/삭제하지 않았다. DB/schema 버전을 올리거나 deleteDatabase/clear로 해결하지 않았고 공개 데이터·이미지·.env·API Key·지도 로직·Framework를 변경하지 않았다. 테스트용 합성 기록은 격리된 브라우저 context/profile에만 사용했다. 재검증 완료 후 TODO의 현재 Phase 3 인수를 완료 표시하며, commit/push 없이 오류 수정 범위에서 멈춘다.
+
+## 이전 Phase 4 지도·도감 양방향 연결 이력 (2026-10-28, KST)
+
+이 절은 이전 요청의 당시 실행 기록이다. 이후 단방향 범위 변경으로 Popup 도감 기능을 제거했으며 최신 인수는 문서 마지막 기록을 따른다.
+
+사용자 요청: Phase 4만 구현하여 지도↔도감 연결, query 직접 접근, History·모바일·기존 지도/도감/IndexedDB 전체 회귀를 검증한다. README 최종 축약·배포 URL·발표 자료·commit/push는 수행하지 않는다.
+
+### 명시적으로 적용한 Skill과 실제 조사
+
+- [map-catalog-integrator](../skills/map-catalog-integrator/SKILL.md)를 작업 전에 직접 읽었다. 구현 전에 [integration-contract](../skills/map-catalog-integrator/references/integration-contract.md)를 읽고 실제 HTML·필터·Popup·서버 allowlist를 확인했다. 실제 경로/키 확인→양방향 연결→query/History/공통 UI→회귀 순서로 적용했다.
+- [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 작업 전에 직접 읽고 브라우저 검증 전에 [T01~T14](../skills/fishing-app-tester/references/test-cases.md)를 읽었다. 실제 데이터/기록 모듈 인자로 정적 검사, Node 자동 검사, 격리된 Chrome 브라우저 검증을 실행했다.
+- `package.json`은 Node >=22·Express·순수 HTML/CSS/JS이며 `npm.cmd start`는 `node server.js`다. 실제 실행 중인 같은 프로젝트의 8080 프로세스와 HTTP 응답을 확인했다. 새 브라우저 자원이 없어 allowlist 확장/서버 재시작이 필요하지 않았다. 별도 배포 설정 파일은 발견하지 않았고 실제 배포는 하지 않았다.
+- MapLibre fitBounds 옵션 확인에는 read-docs/Firecrawl 지침도 읽었다. Firecrawl developer search가 402로 실패하여 웹 도구로 [MapLibre 공식 옵션 문서](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FitBoundsOptions/)를 확인했다. 문서는 버전 고정 URL이 아니며 실제 앱의 기존 6.11.2에서 범위 이동을 따로 브라우저 검증했다.
+
+### 구현·식별자·URL
+
+| 항목 | 실제 결과 |
+| --- | --- |
+| 지도 | `http://127.0.0.1:8080/`, `/index.html` |
+| 도감 | `http://127.0.0.1:8080/catalog.html` |
+| 지도 query | `species=<mapSpeciesKey>`, 예 `/index.html?species=%EB%AC%B4%EB%8A%AC%EC%98%A4%EC%A7%95%EC%96%B4` |
+| 도감 query | `species=<speciesId>`, 예 `/catalog.html?species=patterned-squid` |
+| 단일 Mapping 원본 | `species-catalog.json`: 고유 ID 31개, 실제 지도 키 22개/null 9개. 빈/중복 ID·누락/불일치 키 없음. 지도 옵션 30개 중 도감 대응이 없는 값은 일반 텍스트 |
+| 표기 차이 | 학공치 ID→지도 학꽁치, 조피볼락 ID→지도 우럭. 무늬오징어/한치는 각각 patterned-squid/local-hanchi이며 한글 표시명 추정으로 ID를 만들지 않음 |
+| 메모 축약어 | 기존 spot-filters에 무늬→무늬오징어, 벵에→벵에돔의 명시적 용어 경계만 보충. 임의 메모 단어를 어종으로 변환하지 않음 |
+| 관련 수 | 기존 filterSpots를 공유해 전체 기록/위치 확인 수 분리. 무늬 23/14, 한치 20/18, 전체 69/44. 좌표 미확인은 마커·bounds 제외 |
+| 공통 UI | 동일 Navigation·aria-current·44px·Glass·font·hover/focus·상단/좌우 여백·Footer, 기존 Hero/지도/Grid 유지 |
+| 지도 URL 동기화 | 옵션 준비 뒤 query 자동 선택, 다른 조건 기본값. 어종 변경 replaceState, 전체 선택/초기화 species 제거. 다른 필터는 기존 AND |
+| Popup | JSON의 mapSpeciesKey로 종별 ID 링크. 공개/제보/메모 근거 유지, 미매핑 종은 일반 텍스트. 기존 포인트/화장실/날씨/해상/물때/즐겨찾기 보존 |
+| 없는 포인트 | 정확한 “현재 등록된 관련 포인트가 없습니다.” 안내. null/무매칭은 query 없는 일반 지도 링크. 0마커 제주 전체, 1마커 zoom 11.5, 복수 fitBounds/최대 11.5/모바일 32px·PC 48px padding |
+| 무효 query | 빈/중복/미지원 값 제거. 지도 전체 포인트와 안내, 도감 목록과 해당 어종 없음 안내. 삽입 문자열로 실행되지 않음 |
+| History | 상세 pushState·닫기 replaceState·popstate 반영. HTML 사이는 일반 링크. 뒤로 가기 후 같은 상세/지도 어종 복원. Popup 자체 열린 상태/임의 camera 영속화는 보장하지 않음 |
+| 기록 보호/실행 경계 | dirty Form beforeunload 및 같은 문서 Back 확인 취소 시 입력 보존, 저장 후 경고 없음. 지도 DB open 0회·기록 모듈 없음, 도감 MapLibre/지도 인스턴스 없음 |
+
+도감은 JSON 기본 상세를 먼저 열고 뒤이어 기록을 갱신한다. 기존 기록 모듈 지연 로드와 초기화 1회 원칙을 유지한다. DB 실패도 query 상세/방법/채비/지도 링크를 막지 않는다. 지도에서 도감 JSON 조회 실패 시 어종은 일반 텍스트로 남고 지도 기능은 유지된다.
+
+### 명령·정적 검사
+
+| 명령 | 결과 |
+| --- | --- |
+| `npm.cmd test` | 97개 PASS, 실패/건너뜀 0. 기존 94개와 신규 query/관련 수/메모 경계 검사 3개 |
+| `node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1` | 27개 PASS. 이 모드의 실제 도감/기록 검사는 SKIP이며 아래 Phase 4 명령으로 별도 확인 |
+| `node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=4 --catalog species-catalog.json --record-module catch-records.js` | 29개 PASS, 필수 인자/네 Skill frontmatter/로컬 링크/JS syntax/HTML/자원 경로/실제 도감/실제 기록 모듈 검사 |
+| 위 명령 내부의 도감 strict validator | 오류 0·미확인 경고 0, 고유 ID/실제 필터 키/31종 이미지 SHA 검사 |
+| 위 명령 내부의 기록 logic validator | 실제 모듈 9개 집계 시나리오·25개 잘못된 입력 거부 PASS. 이 결과만으로 IndexedDB I/O 성공을 주장하지 않음 |
+| `py -X utf8 .verify/check-phase4-yaml.py` | PyYAML로 네 Skill의 두 delimiter·YAML 파싱·name/description 검사 PASS. description의 기능과 사용 시점을 직접 읽어 확인. python 명령 별칭 실패 후 실제 py 실행기로 복구 |
+| `git diff --check` 및 보존 비교 | 공백 오류 없음. 도감 JSON·낚시 포인트 데이터·README·31종 이미지 총 34개 SHA-256 동일 |
+
+### 사용자 A~M 브라우저 결과
+
+실제 기본 origin의 Chrome에서 별도 context/profile과 합성 사진을 사용했다. 다음은 이번 Phase에서 새로 실행한 결과다.
+
+| Test | 결과와 관찰 |
+| --- | --- |
+| A 무늬 상세→지도 | PASS: 미수집 상세의 링크, 지도 무늬 자동 선택, 14마커/14개, 23기록과 좌표 확인 수 구분, 모든 관련 마커 범위 |
+| B Popup→무늬 상세 | PASS: 표선항 방파제 65번 Popup의 실제 종 링크→patterned-squid 상세. 처음 미수집, 합성 2마리 저장 후 왕복 시 컬러/2마리·1회/사진 복원 |
+| C 한치 | PASS: local-hanchi 상세→한치 18마커, 관련 20기록/위치 18곳 |
+| D 없는 포인트 | PASS: 쏨뱅이 null 키의 정확한 안내와 query 없는 일반 지도 링크. 광어 1마커/zoom 11.5와 해당 좌표만 미확인으로 만든 브라우저 fixture의 0마커/제주 전체 보기 별도 확인. 원본 데이터 미수정 |
+| E 잘못된 지도 query | PASS: 없는어종/도감 ID/스크립트 모양 문자열/빈 값도 44마커·안내·필터 제거, 코드 실행 없음 |
+| F 잘못된 도감 ID | PASS: 목록 31종·안내·상세 닫힘, 전체 오류 없음 |
+| G 상세→지도→Back | PASS: 모바일/PC 모두 같은 상세 ID 복귀, 조과/사진/해금 상태 유지 |
+| H Popup→도감→Back | PASS: 원래 지도 URL/어종/마커 복귀 |
+| I 지도 회귀 | PASS: 아래 지도 12조합·위치 거부, 기본 44마커, 검색/필터/즐겨찾기/화장실/날씨/물때 유지 |
+| J 도감 회귀 | PASS: 아래 CRUD·사진·진행률·상태/분류/검색·마지막 삭제 재잠금, 9개 viewport |
+| K 직접 URL/새로고침 | PASS: 기본 지도/도감, 루트 /?species=무늬오징어, index/catalog query 모두 복원 |
+| L 모바일 Navigation | PASS: 320/375/390/430/768/1024/1440/1920px 및 812×375, 44px/aria-current/같은 높이·너비·font/넘침·겹침 없음 |
+| M console/초기화 | PASS: 치명적 예외/pageerror/미처리 rejection 없음. 정상 자원 404 없음, 기록 UI factory 1회·한 제출 1건, 지도 canvas 1개·Popup Enter/ESC 5회에 중복 열림 없음 |
+
+T01~T14 전체를 실제 적용했다. T01~T03은 빈 도감·Enter/Space·ESC/focus·동일 이미지/geometry·상세/출처, T04~T09는 아래 실제 CRUD/저장 예외, T10~T11은 A~H/K, T12~T14는 지도/모바일/오류·console 검사로 확인했다.
+T07의 2→4 수정도 별도 실행하여 2+3=5/2회→7/2회와 query 새로고침 복원을 확인했다. 기본 CRUD 회귀에서는 3→4 수정 후 6/2회도 확인했다. T03의 기존 이미지 라이선스·형태를 새로 재감사한 것은 아니며, 교체 없이 검증된 원본 31종의 SHA/디코딩/회색·컬러 geometry를 확인했다.
+
+### 기존 기능·실패 회귀와 증거
+
+- `.verify/phase4-browser.cjs`: 375/1440px A~H/K/M, 0/1마커, 기록 실패/query 상세, 지도 도감 JSON 실패, 9개 Navigation 크기. `integration-results.json` 14그룹 PASS.
+- `.verify/phase4-crud.cjs`: 실제 Form·IndexedDB·사진. 최초 2/1→2+3=5/2→3→4 수정 후 6/2→삭제 2/1→마지막 삭제 0/0·회색, 다른 종 격리/필터, 잘못된 마릿수 4종/사진 6종/미래 날짜, 중복 제출 1건. 같은 profile의 Chrome 프로세스 재시작과 새로고침 후 원본 Blob 바이트/모든 필드 복원. 모바일 9크기와 2,000자 메모·44px 입력·Tab/ESC/focus. `crud/browser-results.json` 13그룹 PASS.
+- `.verify/phase4-map.cjs`: 320/375/768/1440px×날씨/Marine/물때 성공 fixture·Marine 실패·세 API 동시 실패 12조합과 위치 거부. 기본 44/무늬 14마커, 검색·초기화·즐겨찾기 저장/재조회·모의 GPS/가까운 5곳·화장실·오늘/내일 물때·Popup fit PASS. `map/map-results.json` 13그룹 PASS.
+- `.verify/phase4-boundaries.cjs`: core/UI JS 404·잘못된 export·open 오류·미지원·미래 DB 버전·조회 timeout·정상 빈 DB·느린 모듈·도감 JSON 실패/복구·반복 재시도. 정적 도감 31종과 검색/분류/상세 유지, UI factory 1회/단일 제출 1건. `boundaries.json` 11그룹 PASS.
+- `.verify/phase4-storage-errors.cjs`: 미지원/open/read 실패, quota/요청 성공 뒤 실제 transaction abort에서 입력·사진 보존/거짓 해금 없음, 손상 8건 제외하되 DB 보존, stale edit로 삭제 기록 부활 금지, 없는 ID 삭제 false, versionchange/future version, native blocked upgrade/해제 후 재시도, EXIF 회전 JPEG 80×120와 원본 바이트/사진 교체 동일 ID/새로고침, KST 자정 경계. `storage-errors/error-results.json` 11그룹 PASS.
+- `.verify/phase4-finish-probes.cjs`: 375/1440px 공개/제보/개인 메모 링크 구분·미매핑 일반 텍스트·학꽁치 표기·다금바리 오매핑 없음·69개 전체 Popup 링크 감사, 정상 console error 0. MapLibre 강제 실패 뒤 Navigation으로 도감 정상 사용. `finish-probes.json` 3그룹 PASS.
+- `.verify/phase4-keyboard.cjs`: 카드 Enter/Space·ESC/focus, 2→4 수정 7/2회, 루트 query, 어종/방법/유형 AND, Popup 키보드 반복 5회·지도 인스턴스 1개. `keyboard.json` PASS.
+
+모든 증거는 Git 제외된 `.verify/artifacts/phase4/`에 있다. collection-375/1440은 31개 lazy 이미지 디코딩 완료 후 촬영했다. 모바일 관련 링크·공개/메모 Popup·도감 컬러/통계·지도 필터 화면을 직접 열어 시각 확인했다.
+초기 브라우저 검증은 현사포구 67번에 무늬가 있다고 잘못 가정해 Popup 대기 timeout이 났다. 실제 67번은 농어/한치이며 무늬 필터에서 제외되는 것이 정상이다. 실제 공개 무늬 포인트인 65번으로 검증 대상을 고쳐 통과했다. 새 순수 검사도 무늬에 제보가 있다고 가정했다가 실패하여 실제 제보가 있는 종의 근거 검사를 사용했다. 데이터나 앱을 가정에 맞춰 수정하지 않았다.
+보조 Popup 검사에서는 3번의 공개 어종 전체가 비었다고 가정했던 검증을 무늬 링크만 공개 영역에 없는지 검사하도록 바로잡았다. 셸 인용 오류는 검증 준비 코드를 별도 CJS로 작성해 복구했다. 위 검증 문제를 앱 결함으로 기록하지 않는다.
+
+예상한 API/모듈 실패 fixture에는 브라우저 network/MIME error와 제어된 경고가 있을 수 있다. 치명적 JS 예외/무한 초기화와 구분한다. API 회귀의 성공/부분/동시 실패 판정은 fixture 기준이며 실제 공식 API 실응답 성공·실제 GPS·현장 상태·휴대폰/Safari/Firefox는 확인하지 않았다. 브라우저 기본 이탈 경고의 문구·표시 조건도 기기별 확인이 필요하다.
+
+실제 조과 원본 사용자 profile은 열거나 지우지 않았고 테스트용 격리 profile만 사용했다. DB/schema 버전·어종 JSON·이미지·좌표 원본·의존성·서버/키/.env·README를 변경하지 않았다. PRD 현재 상태·TODO C06/Phase 4 검증·integration contract를 실제 결과로 갱신했고, SKILL.md는 기존 “파서 없음” 단정 한 문장만 재사용 가능한 조건문으로 고쳤다. Phase 4 완료 후 멈추며 Phase 5·commit/push는 진행하지 않는다.
+
+## Phase 4 도감→지도 범위 변경 (2026-10-28, KST)
+
+### 요청·Skill 적용·제외 결정
+
+이번 사용자 요청은 **공통 Navigation·도감→지도 이동·지도 species 필터·기존 기능 회귀**다. 이전 양방향 구현 중 Popup 도감 버튼/링크/Chip은 정보량과 가독성을 고려해 제외하고 제거한다. 기존 도감 상세 직접 query는 유지 가능하되 Popup에서 연결하지 않는다.
+
+- [map-catalog-integrator](../skills/map-catalog-integrator/SKILL.md)와 [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 작업 전에 직접 읽고 명시적으로 적용했다.
+- integrator 절차에 따라 구현 전에 [integration-contract](../skills/map-catalog-integrator/references/integration-contract.md)를 읽었다. 실제 HTML/script/style/JSON·기존 필터/query·Navigation·Express allowlist·package.json·8080 실행 프로세스를 확인했다.
+- tester 절차에 따라 브라우저 실행 전에 [test-cases](../skills/fishing-app-tester/references/test-cases.md)를 읽었다. 사용자 최신 범위가 기존 Skill의 역방향 요구보다 우선하므로 integrator 목적/description/절차/예제를 도감→지도로 수정하고 tester T11을 Popup 기존 정보/도감 기능 부재 검사로 변경한 뒤 검증했다. Skill name은 유지했다.
+- PRD F6·UI/URL 설계·완성 기준·Phase 표와 TODO C06을 단방향 범위로 정리했다. 초기 기획과 이전 실행 결과는 이력으로 구분하고 변경 이유를 기록했다. 제외된 기능을 미완료 항목으로 남기지 않았다.
+
+### 실제 구현 결과
+
+| 항목 | 현재 결과 |
+| --- | --- |
+| 지도 URL | `http://127.0.0.1:8080/`, `http://127.0.0.1:8080/index.html` |
+| 도감 URL | `http://127.0.0.1:8080/catalog.html` |
+| 지도 query | `species=<mapSpeciesKey>`, URLSearchParams로 생성. 예 `/index.html?species=%EB%AC%B4%EB%8A%AC%EC%98%A4%EC%A7%95%EC%96%B4` |
+| 식별자 | 기존 species-catalog.json이 단일 원본. speciesId 31개 고유/빈 값 없음, 지원 키 22개/null 9개, 실제 지도 옵션 30개와 불일치/누락 없음 |
+| 어종 검증 | 무늬오징어 patterned-squid, 한치 local-hanchi, 벵에돔 largescale-blackfish. 학공치→학꽁치·조피볼락→우럭은 검토된 키만 사용. 쏨뱅이/자바리/살오징어에 임의 키를 대신 연결하지 않음 |
+| 메모 | 무늬/벵에의 명시적 경계 규칙을 필터/관련 수에만 유지. 공개/제보/메모 근거 구분과 원본 배열 보존 |
+| 도감→지도 | 기존 필터·마커를 재사용해 관련 수/선택 상태/범위 적용. 무늬 23기록/14마커, 한치 20/18. 앱 수치는 데이터 계산값 |
+| 0개/무효 | null 9종은 정확한 없음 안내/일반 지도 링크. 무효·빈·중복 query는 제거하고 44개 전체 포인트와 안전 안내. 0마커는 제주 전체, 1마커 zoom 11.5, 복수 bounds/padding 유지 |
+| 초기화 | 검색/어종/방법/유형/즐겨찾기 조건과 species query를 비우고 전체 지도 복귀. 저장된 즐겨찾기 ID는 보존. 추가 필터 AND·수동 어종 URL 동기화 유지 |
+| Popup 제거 | updateFishingSpotCatalogLinks/loadMapCatalogLinks/setCatalogLinks, 메모 어종 추가 영역, 도감 링크/Chip CSS와 지도 도감 조회/오류 안내 제거 |
+| Popup 보존 | 기존 createFishingSpotPopupContent 함수와 69개 DOM이 Phase 3 원본과 동일. 이름/지역/유형/공개·제보 어종/방법/메모/출처/즐겨찾기/화장실/날씨/Marine/물때 유지 |
+| 실행 분리 | 지도에서 species-catalog.json/catalog.js/기록 모듈 요청 0회·DB open 0회·canvas 1개. 도감은 지도 JS/MapLibre를 실행하지 않음 |
+| 호환/History | 기존 도감 speciesId 상세 직접 URL 유지, Popup 연결 없음. 도감→지도→Back의 상세/이전 도감 복귀, 직접 지도 query/새로고침 유지 |
+
+앱 변경은 script.js와 styles.css의 Popup 연결 제거뿐이다. 기존 Navigation·Hero/Layout·도감/기록/필터 코드는 이번 요청에서 수정하지 않았다. Git HEAD 대비 script.js 차이는 기존 단방향 범위 이동 메서드뿐이며 Popup 생성 함수/CSS는 기존 상태다.
+
+### 이번 요청의 A~J 실행 결과
+
+실제 기본 origin에서 별도 Chrome context/profile과 합성 사진을 사용했다. 아래는 이전 결과를 복사한 것이 아니라 Popup 제거 후 다시 실행한 결과다.
+
+| Test | 결과 |
+| --- | --- |
+| A 무늬 상세→지도 | PASS, 375/1440px에서 링크→무늬 자동 선택·14마커/결과 개수·전체 관련 bounds, 다른 탐색 조건 기본값 |
+| B 한치 상세→지도 | PASS, local-hanchi→한치 필터·18마커·20기록/위치 18곳·범위 |
+| C 관련 포인트 없음 | PASS, 실제 null 9종 전부 정확한 안내와 query 없는 일반 지도 링크. 별도 광어 1마커 및 그 좌표만 미확인으로 만든 브라우저 fixture의 0마커/제주 전체 보기 확인. 원본 좌표/데이터 미변경 |
+| D 잘못된 query | PASS, 없는어종/도감 ID/빈 값/중복 값/스크립트 모양 문자열은 44마커 기본 상태·안내·query 제거·코드 실행 없음 |
+| E Back | PASS, 무늬 상세→지도→Back으로 상세/같은 ID 복귀. 지도 직접 URL·루트 URL·새로고침/초기화도 정상 |
+| F Popup 보호 | PASS, 69개 전체 Popup 생성 DOM과 기존 원본 비교 차이 0. 3/43/65/67번 실제 Popup에서 도감 문구/링크/Chip 없음, 원래 어종 문자열/공개·제보·메모·화장실·날씨/해상/물때·즐겨찾기 및 모바일 fit/스크롤 유지 |
+| G 지도 탐색 | PASS, 기존 검색/필터/AND/초기화·즐겨찾기 저장/새로고침·현재 위치/가까운 5곳·화장실·제주 전체 보기·API fixture 회귀 |
+| H 조과/IndexedDB | PASS, 사진/필드 등록·수정·삭제·컬러 해금/마지막 삭제 재잠금·집계/완성률·새로고침/같은 profile 브라우저 재시작 복원·저장 실패 입력 보존 |
+| I 모바일 Navigation | PASS, 320/375/390/430/768/1024/1440/1920px 및 812×375. 실제 link/aria-current·44px·같은 크기/font/radius·키보드 focus, 넘침/제목·검색·Control 겹침 없음 |
+| J Console/초기화 | PASS, 치명적 JS 예외/pageerror/미처리 rejection 없음·정상 자원 404 없음. 반복 재시도 UI factory 1회/한 제출 1건·지도 canvas 1개·Popup Enter/ESC 반복 5회 중복 없음 |
+
+### 회귀·명령·증거
+
+| 실행 | 실제 결과/증거 |
+| --- | --- |
+| `npm.cmd test` | 97 PASS, 실패·건너뜀 0. 기존 데이터/지도/기록 검사와 실제 키·관련 수·메모 경계 검사 |
+| `node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1` | 27 PASS. 도감/기록 항목 SKIP은 아래 Phase 4 명령으로 실제 확인 |
+| `node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=4 --catalog species-catalog.json --record-module catch-records.js` | 29 PASS. 실제 catalog strict 오류 0/경고 0, 실제 기록 모듈 9개 집계 시나리오/25개 거부 입력, 네 Skill frontmatter/참조/로컬 링크/syntax/자원 검사 |
+| `py -X utf8 .verify/check-phase4-yaml.py` | 네 Skill YAML 파싱·구분자·name/description PASS, description의 기능·사용 시점 직접 확인 |
+| `node .verify/phase4-oneway-browser.cjs` | A~G/J·0/1마커·Navigation, integration-results.json 12그룹 PASS |
+| `node .verify/oneway-map.cjs` | 320/375/768/1440px×성공 fixture/Marine 실패/세 API 동시 실패 12조합+GPS 거부, map/map-results.json 13그룹 PASS. 오늘/내일 물때·Popup fit·화장실·즐겨찾기/모의 GPS/가까운 5곳 유지 |
+| `node .verify/oneway-crud.cjs` | crud/browser-results.json 13그룹 PASS. 2+3=5/2회·3→4 수정 6/2회·삭제 2/1→0/0, 다른 종 격리/필터·잘못된 count 4종/사진 6종·미래 날짜 차단·중복 제출 1건·사진 바이트/필드 재시작 복원·9개 viewport/긴 메모/focus |
+| `node .verify/oneway-storage-errors.cjs` | storage-errors/error-results.json 11그룹 PASS. open/read/미지원·quota/요청 성공 뒤 실제 transaction abort 입력 보존·손상 8건 제외/DB 보존·stale edit·없는 ID 삭제·versionchange/future version/blocked·EXIF JPEG/사진 교체·KST 날짜 |
+| `node .verify/oneway-boundaries.cjs` | boundaries.json 11그룹 PASS. 모듈/DB 실패·모듈 지연에도 31종·검색/분류/상세 유지, JSON 실패 구분/복구·반복 재시도 factory 1회/단일 제출 1건 |
+| `node .verify/oneway-keyboard.cjs` | keyboard.json PASS. 카드 Enter/Space/ESC/focus, T07의 2→4 수정 7/2회/query 복원, 루트 지도 query, 3조건 AND, Popup 키보드 반복 5회 |
+| `node .verify/phase4-oneway-preservation.cjs` | preservation.json: 이번 요청 전후 44개 파일 SHA 동일, 기존 Popup 함수 동일, 실제 8080 자원 10개 HTTP 200/로컬 내용 동일 |
+| `git diff --check` | 공백 오류 없음 |
+
+증거는 Git 제외 `.verify/artifacts/phase4-oneway/`에 저장했다. 모바일 Popup·무늬 필터 지도·Navigation 스크린샷을 직접 열어 일반 문자열의 정보 밀도/fit/focus를 확인했다. T01~T14는 현재 T11(Popup 보호)을 기준으로 적용했으며 이전 Popup 역방향 이동 검사로 대체하지 않았다. 31종 이미지의 권리/형태를 새로 감사한 것은 아니고 기존 검토된 이미지 바이트/경로·실제 디코딩·회색/컬러 geometry를 유지했다.
+
+이번 검증에서 앱 실패는 없었다. 계약 문서 교체 준비 중 PowerShell ConvertTo-Json이 확장 객체를 반환해 문자열 처리에 실패한 도구 코드 한 건은 명시적 string 변환 뒤 복구했다. 최종 공백 검사에서 계약 문서 EOF의 추가 빈 줄 한 건을 제거한 뒤 재검사했다. 앱/데이터는 그 실패에서 변경되지 않았으며 브라우저 실패로 기록하지 않는다.
+
+### 수정 파일·보존·한계·다음 단계
+
+이번 요청에서 추가 수정한 파일은 script.js, styles.css, PRD.md, TODO.md, docs/SKILL_USAGE.md, integrator SKILL.md·integration-contract.md, tester SKILL.md·test-cases.md의 9개다. 이전 미커밋 변경은 보존했다. 새 배포 앱 파일/의존성/서버 경로는 추가하지 않았다. 검증용 CJS/증거는 .verify에만 추가했다.
+이번 요청 전후 보존한 44개에는 도감 JSON/31종 이미지/낚시 데이터·좌표/README/기록 core/UI/도감 UI/필터/서버/의존성 파일이 포함된다. 사용자 원본 브라우저 DB를 열어 지우거나 수정하지 않았고 schema 변경/.env·키 열람/수정·commit/push는 하지 않았다.
+실제 휴대폰·Safari/Firefox·실제 GPS/현장 상태·공식 API 실응답 성공·배포는 미확인이다. 날씨/해상/물때 성공·오류 판정은 통제된 fixture이며 API 실패 시 예상된 network/MIME 메시지를 치명적 JS 오류와 구분했다.
+확정 범위의 Phase 4/C06을 완료했다. Phase 5의 README 최종 축약·실제 배포 URL/공개 상태 확인·최종 문서/발표 정리는 이번에 수행하지 않고 멈춘다.

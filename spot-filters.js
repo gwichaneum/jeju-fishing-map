@@ -17,12 +17,35 @@ function noteHasFishingTerm(note, term) {
   return new RegExp(`(^|[\\s,·/])${escaped}(?=$|[\\s,·/]|낚시|포인트|갯바위)`).test(note || "");
 }
 
+// Only these reviewed abbreviations are species terms; arbitrary memo words are not.
+const SPOT_SPECIES_MEMO_ALIASES = { '무늬오징어': ['무늬'], '벵에돔': ['벵에'] };
+
+function getSpotSpeciesEvidence(spot, key) {
+  if (spot.species.includes(key)) return 'public';
+  if (spot.reportedSpecies?.includes(key)) return 'report';
+  return [key, ...(SPOT_SPECIES_MEMO_ALIASES[key] || [])]
+    .some(term => noteHasFishingTerm(spot.userNote, term)) ? 'memo' : null;
+}
+
+function readSpeciesQuery(search, supported) {
+  const values = new URLSearchParams(search).getAll('species');
+  if (!values.length) return { value: '', invalid: false };
+  const valid = values.length === 1 && supported.includes(values[0]);
+  return { value: valid ? values[0] : '', invalid: !valid };
+}
+
+function speciesPageUrl(page, key) {
+  const params = new URLSearchParams();
+  if (key) params.set('species', key);
+  return `${page}${params.size ? `?${params}` : ''}`;
+}
+
 function createSpotFilterOptions(spots) {
   const species = new Set(spots.flatMap(spot => [...spot.species, ...(spot.reportedSpecies || [])]));
   const methods = new Set(spots.flatMap(spot => spot.methods));
   // Recognize explicit memo terms without turning personal notes into verified data.
   for (const term of [...species, "광어", "오징어"]) {
-    if (spots.some(spot => noteHasFishingTerm(spot.userNote, term))) species.add(term);
+    if (spots.some(spot => getSpotSpeciesEvidence(spot, term))) species.add(term);
   }
   for (const term of ["에깅", "원투", "루어", "서프루어", "구멍치기"]) {
     if (spots.some(spot => noteHasFishingTerm(spot.userNote, term))) methods.add(term);
@@ -50,8 +73,7 @@ function searchSpots(spots, query) {
 function filterSpots(spots, { query = "", species = "", method = "", type = "", favoritesOnly = false } = {}, favoriteIds = []) {
   const favorites = new Set(favoriteIds);
   return searchSpots(spots, query).filter(spot =>
-    (!species || spot.species.includes(species) || spot.reportedSpecies?.includes(species)
-      || noteHasFishingTerm(spot.userNote, species))
+    (!species || getSpotSpeciesEvidence(spot, species))
     && (!method || spot.methods.includes(method) || noteHasFishingTerm(spot.userNote, method))
     && (!type || getSpotFilterType(spot) === type)
     && (!favoritesOnly || favorites.has(spot.id))
@@ -78,6 +100,11 @@ function initializeSpotControls(markerController, favorites = null, location = n
     type: form.querySelector("#spot-type"),
   };
   const options = createSpotFilterOptions(fishingSpots);
+  const queryNotice = document.createElement('p');
+  queryNotice.className = 'spot-query-notice';
+  queryNotice.setAttribute('role', 'status');
+  queryNotice.hidden = true;
+  form.append(queryNotice);
   for (const [key, select] of Object.entries(selects)) {
     for (const value of options[key === "method" ? "methods" : key === "type" ? "types" : key]) {
       const option = document.createElement("option");
@@ -137,6 +164,7 @@ function initializeSpotControls(markerController, favorites = null, location = n
     const noFavorites = state.favoritesOnly && favorites?.getFavoriteCount() === 0;
     favoriteEmpty.hidden = !noFavorites;
     emptyMap.hidden = noFavorites || visible.length !== 0 || normalizeSpotSearch(state.query).length !== 0;
+    emptyMap.textContent = state.species ? '현재 등록된 관련 포인트가 없습니다.' : '검색 결과가 없습니다.';
     emptyResult.textContent = noFavorites ? "아직 즐겨찾기한 포인트가 없습니다." : "검색 결과가 없습니다.";
     favoriteCount.textContent = `즐겨찾기 ${favorites?.getFavoriteCount() || 0}`;
     storageStatus.hidden = !favorites || favorites.canPersist();
@@ -148,6 +176,8 @@ function initializeSpotControls(markerController, favorites = null, location = n
     for (const select of Object.values(selects)) select.value = "";
     favoriteOnly.checked = false;
     closeResults();
+    syncSpeciesUrl();
+    queryNotice.hidden = true;
     applyFilters();
     markerController.resetView();
   }
@@ -179,7 +209,34 @@ function initializeSpotControls(markerController, favorites = null, location = n
     }
     if (event.key === "Escape") { search.focus(); closeResults(); event.preventDefault(); }
   });
-  for (const select of Object.values(selects)) select.addEventListener("change", applyFilters);
+  function syncSpeciesUrl() {
+    const url = new URL(window.location.href);
+    if (selects.species.value) url.searchParams.set('species', selects.species.value);
+    else url.searchParams.delete('species');
+    history.replaceState(history.state, '', url);
+  }
+
+  function applySpeciesUrl() {
+    const parsed = readSpeciesQuery(window.location.search, options.species);
+    search.value = '';
+    for (const select of Object.values(selects)) select.value = '';
+    favoriteOnly.checked = false;
+    selects.species.value = parsed.value;
+    closeResults();
+    queryNotice.textContent = parsed.invalid ? '지원하지 않는 어종 필터입니다. 전체 포인트를 표시합니다.' : '';
+    queryNotice.hidden = !parsed.invalid;
+    if (parsed.invalid) syncSpeciesUrl();
+    applyFilters();
+    if (parsed.value) markerController.fitSpots(matches.filter(isDisplayableFishingSpot));
+    else markerController.resetView();
+  }
+
+  for (const [key, select] of Object.entries(selects)) select.addEventListener('change', () => {
+    queryNotice.hidden = true;
+    if (key === 'species') syncSpeciesUrl();
+    applyFilters();
+    if (key === 'species') markerController.fitSpots(matches.filter(isDisplayableFishingSpot));
+  });
   favoriteOnly.addEventListener("change", applyFilters);
   favorites?.subscribe(() => {
     const focused = document.activeElement;
@@ -197,5 +254,6 @@ function initializeSpotControls(markerController, favorites = null, location = n
   reset.addEventListener("click", resetFilters);
   location?.subscribe(renderSearchResults);
   document.addEventListener("click", event => { if (!form.contains(event.target)) closeResults(); });
-  applyFilters();
+  window.addEventListener('popstate', applySpeciesUrl);
+  applySpeciesUrl();
 }

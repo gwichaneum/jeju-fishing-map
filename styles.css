@@ -102,6 +102,11 @@ p {
   box-shadow: 0 2px 10px rgba(5, 25, 40, 0.08);
 }
 
+.site-navigation a:hover { background: rgba(247, 252, 255, 0.28); }
+.site-navigation a[aria-current="page"]:hover { background: #fff; }
+.site-navigation a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.spot-query-notice { margin: 8px 0 0; color: #155b73; font-size: 0.8rem; }
+
 .main-content,
 .site-footer {
   width: min(100%, 1440px);

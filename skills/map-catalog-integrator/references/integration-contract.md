@@ -1,56 +1,79 @@
-# 지도·도감 연동 계약
+# 도감 → 지도 연동 계약
 
-## Phase 1 관찰 — 2026-10-28
+## 확정 범위 — Phase 4 변경 (2026-10-28)
 
-- 지도 URL: `/`, `/index.html`. 단일 HTML, 기능별 defer script, 라우터 없음.
-- `spot-filters.js`: `createSpotFilterOptions`로 한국어 필터를 생성하고 `filterSpots`로 AND 조건을 적용한다.
-- `initializeSpotControls` 내부 `applyFilters`는 아직 외부 API가 아니다. URLSearchParams·species query 처리가 없다.
-- `script.js`: `initializeJejuMap`의 map load 뒤 controls 초기화. `createFishingSpotPopupContent`가 정보 DOM을 만들며 `focusSpot`이 실제 표시 포인트로 이동한다.
-- 도감 HTML·데이터·상세 경로는 아직 없다. `server.js`는 파일 allowlist 방식이므로 파일 생성만으로 서비스되지 않는다.
+기존 양방향 기획에서 도감 탐색 → 지도 포인트 확인을 핵심 흐름으로 확정했다. 지도 Popup에는 정보가 많으므로 가독성을 위해 Popup→도감 연결을 제외한다.
+상단 Navigation의 일반 화면 이동은 양쪽에서 제공한다. Popup 도감 버튼·링크·어종 Chip·Badge·수집 상태·수집 마릿수는 후속 미완료 작업이 아니다.
 
-## Phase 2 반영
+## 실제 파일과 실행 경계
 
-- 실제 도감 URL은 `/catalog.html`, 원본은 `species-catalog.json`, 목록/상세는 `catalog.js`, 스타일은 `catalog.css`다.
-- 공통 Navigation의 일반 페이지 이동만 구현했다. 도감 상세는 native dialog이며 URL species query를 아직 처리하지 않는다.
-- 상세의 관련 포인트 이름·근거 표시는 기존 filterSpots를 읽어 계산한다. 어종별 지도 이동 버튼은 비활성이다.
-- 현재 서버는 도감 파일과 JSON에 등록된 로컬 이미지만 추가로 제공한다. Phase 4에서는 실제 parser·Popup 링크·뒤로 가기를 연결해야 한다.
+- `npm.cmd start` → `http://127.0.0.1:8080`.
+- 지도: `/`, `/index.html`, `index.html`·`script.js`. 도감: `/catalog.html`, `catalog.html`·`catalog.js`·`catalog.css`.
+- 공통 UI는 `styles.css`, 공유 데이터/필터/URL helper는 `fishing-spots.js`·`spot-filters.js`다.
+- 도감은 MapLibre/지도 전체 JS를 실행하지 않는다. 지도는 도감 JSON을 조회하거나 기록 UI/IndexedDB를 초기화하지 않는다.
+- Express의 기존 정확한 파일 allowlist를 유지한다. query는 정적 파일 선택과 무관하며 새 자원/서버 재시작은 필요하지 않다.
 
-## 식별자
+## 식별자와 Mapping
 
-| 값 | 의미 | 규칙 |
-| --- | --- | --- |
-| speciesId | 도감·기록의 공통 안정적 ID | 소문자/숫자/하이픈, 실제 데이터에 존재해야 함 |
-| mapSpeciesKey | 기존 지도 필터 어댑터 | 정확한 실제 한국어 옵션 또는 null, 표시명으로 추정 금지 |
-| mapSpotId | 기존 포인트 ID | 숫자, fishing-spots.js 기준. 좌표 확인 여부는 별도 판단 |
+| 값 | 역할·검증 |
+| --- | --- |
+| speciesId | 도감/기록의 안정적 ID. 원본 JSON의 소문자/숫자/하이픈 값, 빈 값·중복 금지 |
+| mapSpeciesKey | 원본 JSON에서 읽는 지도 필터 값. createSpotFilterOptions(fishingSpots).species의 정확한 옵션 또는 null |
+| mapSpotId | 기존 숫자 포인트 ID. 좌표 확인 여부와 별개 |
 
-`학공치` 후보→`학꽁치`는 동일 대상 확인 후 연결한다. `오징어`→살오징어, `우럭`→쏨뱅이 자동 매핑은 금지한다.
-공개 species·reportedSpecies·개인 메모로 매칭된 포인트의 근거 구분을 팝업에서 유지한다.
+`species-catalog.json`의 31개 고유 ID·지원 키 22개/null 9개를 단일 원본으로 사용한다. 지도 옵션은 30개다. 별도 중복 Mapping 파일을 만들지 않는다.
+예: `patterned-squid`→`무늬오징어`, `local-hanchi`→`한치`, `largescale-blackfish`→`벵에돔`.
+검토된 표기 차이는 `japanese-halfbeak`(학공치)→`학꽁치`, `korean-rockfish`(조피볼락)→`우럭`이다. 쏨뱅이→우럭, 자바리→다금바리, 살오징어→포괄적 오징어 추정은 하지 않는다.
+`SPOT_SPECIES_MEMO_ALIASES`의 무늬→무늬오징어·벵에→벵에돔은 필터/관련 수만 보충한다.
+기존 noteHasFishingTerm의 시작/공백/쉼표/가운뎃점/슬래시 경계와 끝/구분자/낚시/포인트/갯바위 규칙을 사용한다. 임의 단어나 부분 문자열을 어종으로 해석하지 않는다.
+getSpotSpeciesEvidence는 공개 species→reportedSpecies→메모 우선순위로 근거를 구분한다. 공개 배열·메모·좌표 원본을 바꾸지 않는다.
 
-## 후속 어종별 이동 후보 (현재 query 처리 미지원)
+## URL·직접 접근
 
-| 이동 | 후보 계약 | 구현 전에 확정할 사항 |
-| --- | --- | --- |
-| 도감→지도 | `index.html?species=<URL 인코딩된 mapSpeciesKey>` | 실제 parser·검증·옵션 준비 후 적용·뒤로 가기 |
-| 지도→도감 | `catalog.html?species=<URL 인코딩된 speciesId>` | Phase 2에서 정한 실제 파일/route·상세 열기·서버 allowlist |
+| 주소 | 의미 |
+| --- | --- |
+| `/index.html?species=%EB%AC%B4%EB%8A%AC%EC%98%A4%EC%A7%95%EC%96%B4` | 무늬오징어 필터 |
+| `/?species=%ED%95%9C%EC%B9%98` | 한치 필터 |
+| `/catalog.html` | 기본 도감 |
 
-실제 파일·route를 선택한 뒤 이 표를 구현과 일치시킨다. 현재 지원하지 않는 주소를 앱 링크로 노출하지 않는다.
-URL은 URL/URLSearchParams 등으로 인코딩하고 query 값을 HTML 문자열에 삽입하지 않는다.
-필터 초기화 시 query와 UI가 충돌하지 않게 하고, URL 상태를 동기화하면 popstate도 함께 처리한다.
+지도 Parameter는 `species=<mapSpeciesKey>`다. URL/URLSearchParams와 speciesPageUrl로 인코딩하며 query를 HTML 문자열로 삽입하지 않는다.
+readSpeciesQuery는 실제 지원 값 하나만 허용한다. 빈 값·중복 값·미지원 값은 species를 제거하고 전체 포인트/제주 전체 보기와 “지원하지 않는 어종 필터입니다. 전체 포인트를 표시합니다.”를 제공한다.
+기본 지도·기본 도감·지도 query의 직접 접속과 새로고침이 동작해야 한다.
+기존 `/catalog.html?species=patterned-squid` 상세 URL은 호환 기능으로 유지한다. Popup에서 생성/연결하지 않으며 이번 단방향 연결의 필수 역방향 경로가 아니다. 잘못된 도감 ID는 목록/안내로 복귀한다.
 
-## UI·이동 동작
+## 관련 수·필터·지도 범위
 
-- 공통 `[낚시 지도] [나의 도감]` Navigation, 현재 항목 표시와 aria-current 등 의미 제공.
-- 기존 바다 배경·밝은 Glass Card·둥근 UI·system font·파란색/청록 포인트·그림자 재사용.
-- 도감에서 관련 포인트 이동 시 이전 검색·방법·유형·즐겨찾기 조건이 의도치 않게 결과를 막지 않도록 기준을 정한다.
-  기본 제안은 관련 어종만 적용하고 다른 탐색 조건은 비우되 저장된 즐겨찾기는 보존하는 것이다.
-- mapSpeciesKey=null이면 어종 필터를 적용하지 않는다. mapMatchStatus=unavailable는 검토한 대응 키 없음, 그 외는 관련 정보 확인 대기로 구분하고 일반 지도 이동을 제공한다.
-- 알 수 없는 query는 기본 지도 또는 도감 찾을 수 없음 안내로 복귀한다. 정확한 키라도 좌표 미확인이면 마커를 만들지 않는다.
-- Popup 링크는 도감에 매핑된 종마다 제공한다. 여러 종인 포인트는 임의의 한 종으로 몰지 않는다.
-- 뒤로 가기 시 이전 목록/필터·선택 종으로 돌아가는지 확인한다. 이동 시 불필요한 새 탭을 만들지 않는다.
-- 모바일은 터치 영역·focus·스크롤·가로 넘침과 필요 시 지도 resize를 검증한다.
+`filterSpots(fishingSpots, {species: mapSpeciesKey})`를 재사용한다. 전체 기록과 위치 확인 마커를 구분하며 숫자를 UI에 하드코딩하지 않는다.
+현재 전체 69기록/44마커, 무늬오징어 23기록/14마커, 한치 20기록/18마커다.
+지원 키/관련 기록이 있으면 “지도에서 관련 포인트 보기”를 제공한다. null/미지원/관련 기록 없음이면 “현재 등록된 관련 포인트가 없습니다.”와 query 없는 일반 제주 지도 링크다.
+위치 미확인 기록만 있으면 위치 확인 0곳과 같은 안내를 표시하고 가짜 마커를 만들지 않는다.
+지도는 옵션 준비 뒤 query를 적용하고 기존 filterSpots·renderMarkers를 사용한다. 다른 탐색 조건은 기본값이며 저장된 즐겨찾기 ID는 보존한다. 이후 조건은 기존 AND 필터다.
 
-## 회귀 경계
+- 0마커: 제주 전체 보기와 “현재 등록된 관련 포인트가 없습니다.”
+- 1마커: 실제 좌표, zoom 11.5.
+- 복수: 실제 좌표 bounds, 최대 zoom 11.5, 지도 폭 640px 미만 padding 32px/그 외 48px.
+- 좌표 미확인·비정상 위치는 마커/범위 제외. 제주 전체 보기·내 위치 버튼 유지.
 
-지도 표시·마커·Popup·검색/필터 AND·초기화·즐겨찾기 지속·위치·가까운 목록·화장실·날씨/Marine·공식 물때·API 오류 격리 전부 유지한다.
-새 리소스는 필요한 경로만 allowlist에 추가하고 `/api/tides`·키 처리·좌표 원본은 보존한다.
-정적 파일 200 응답뿐 아니라 실제 query 직접 접속·양방향 이동·뒤로 가기를 브라우저로 검사한다.
+수동 어종 변경은 replaceState로 URL을 동기화하고 전체 선택은 species를 제거한다.
+초기화는 검색·어종·방법·유형·즐겨찾기 조건과 species query를 비우고 전체 제주 포인트를 표시한다. 즐겨찾기 저장 목록은 지우지 않는다.
+
+## Popup 보호·오류 경계
+
+createFishingSpotPopupContent는 기존 구조를 유지한다. 이름·지역·유형·공개/제보 어종·방법·개인 메모·출처·즐겨찾기·화장실·날씨·Marine·공식 물때를 보존한다.
+어종은 기존 일반 문자열이다. 기존 출처/화장실 등의 외부 링크는 유지하되 도감 버튼·링크·Chip·메모 어종 추가 영역은 없다.
+지도에는 도감 JSON 조회/색인/이동 이벤트가 없다. 도감 데이터 실패는 지도에 영향을 주지 않는다.
+MapLibre 실패에도 상단 Navigation/도감 접근이 가능하며, 기록 모듈/IndexedDB 실패는 도감 기본 정보/지도 링크를 막지 않는다.
+
+## History·Navigation·모바일
+
+도감 상세 → 일반 지도 링크 → Back은 이전 상세 또는 도감으로 돌아온다. SPA Router를 추가하지 않는다.
+기존 상세 pushState·닫기 replaceState·popstate와 상세 URL을 유지한다. 기록 UI/DB를 중복 초기화하지 않는다.
+pagehide에서 Blob URL/DB 연결을 정리하고 BFCache 복귀 시 기록을 재조회한다. dirty Form은 beforeunload/같은 문서 Back 확인으로 입력을 보호한다.
+Navigation은 실제 링크·aria-current·동일 font/높이/radius/Glass/hover/focus·44px 터치 영역을 사용한다. 기존 Hero/Grid/지도 배치를 유지한다.
+320/375/390/430/768/1024/1440/1920px와 812×375 가로에서 넘침·제목/검색/Control 겹침·focus·Popup 스크롤을 검증한다.
+
+## 검사·인수
+
+[tester T01~T14](../../fishing-app-tester/references/test-cases.md)의 T10은 도감→지도 연결, T11은 Popup 정보/도감 기능 부재 검사다.
+사용자 A~J와 지도/도감/IndexedDB 회귀를 변경 후 다시 실행한다. 이전 양방향 검사를 현재 실행 결과로 복사하지 않는다.
+명령·테스트 어종·오류·결과·실기기/GPS/API 미확인 범위는 [SKILL_USAGE](../../../docs/SKILL_USAGE.md)의 마지막 단방향 범위 변경 기록을 따른다.

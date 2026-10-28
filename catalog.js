@@ -31,7 +31,7 @@ function getCatalogRelatedSpots(species) {
   return filterSpots(fishingSpots, { species: species.mapSpeciesKey }).map(spot => ({
     id: spot.id, name: spot.name,
     hasLocation: spot.needsVerification === false && Number.isFinite(spot.latitude) && Number.isFinite(spot.longitude),
-    evidence: spot.species.includes(species.mapSpeciesKey) ? 'public' : spot.reportedSpecies?.includes(species.mapSpeciesKey) ? 'report' : 'memo',
+    evidence: getSpotSpeciesEvidence(spot, species.mapSpeciesKey),
   }));
 }
 
@@ -142,13 +142,16 @@ function createSpeciesDetail(species, collected = false) {
       list.append(catalogElement('li', '', `${spot.name} · ${evidence}${spot.hasLocation ? '' : ' · 위치 확인 필요'}`));
     }
     related.append(list);
-  } else related.append(catalogElement('p', 'species-map-empty', species.mapMatchStatus === 'pending'
-    ? '정보 확인 중' : '현재 등록된 관련 포인트 없음'));
-  const mapButton = catalogElement('a', 'catalog-button species-map-link', '낚시 지도 열기');
-  mapButton.href = './index.html';
+  }
+  const hasKey = species.mapSpeciesKey && typeof fishingSpots !== 'undefined' && typeof createSpotFilterOptions === 'function'
+    && createSpotFilterOptions(fishingSpots).species.includes(species.mapSpeciesKey);
+  const canLink = hasKey && spots.length > 0;
+  if (!canLink || !spots.some(spot => spot.hasLocation)) related.append(catalogElement('p', 'species-map-empty', '현재 등록된 관련 포인트가 없습니다.'));
+  const mapButton = catalogElement('a', 'catalog-button species-map-link', canLink ? '지도에서 관련 포인트 보기' : '일반 제주 지도 열기');
+  mapButton.href = speciesPageUrl('./index.html', canLink ? species.mapSpeciesKey : null);
   mapButton.setAttribute('aria-describedby', 'species-map-note');
-  const mapNote = catalogElement('p', 'species-related-caption', species.mapSpeciesKey
-    ? `지도에서 어종 필터 ‘${species.mapSpeciesKey}’를 선택해 관련 포인트를 볼 수 있습니다.`
+  const mapNote = catalogElement('p', 'species-related-caption', canLink
+    ? `‘${species.mapSpeciesKey}’ 필터로 이동합니다. 개인 메모·제보는 공개 자료와 구분되며, 위치 미확인 기록은 마커에서 제외됩니다.`
     : '전체 낚시 지도를 열어 등록된 다른 포인트를 볼 수 있습니다.');
   mapNote.id = 'species-map-note';
   related.append(mapButton, mapNote);
@@ -203,6 +206,8 @@ function createSpeciesDetail(species, collected = false) {
 function initializeCatalog() {
   const panel = document.querySelector('.collection-panel');
   if (!panel) return;
+  const year = document.querySelector('[data-current-year]');
+  if (year) year.textContent = new Date().getFullYear();
   const form = document.querySelector('#catalog-filters');
   const grid = document.querySelector('#species-grid');
   const empty = document.querySelector('#catalog-empty');
@@ -227,6 +232,7 @@ function initializeCatalog() {
   let loadGeneration = 0;
   let reloading = false;
   const moduleLoads = new Map();
+  let lastDetailUrl = window.location.href;
 
   const mapSpotIds = () => typeof fishingSpots !== 'undefined' && Array.isArray(fishingSpots) ? fishingSpots.map(spot => spot.id) : [];
 
@@ -281,11 +287,59 @@ function initializeCatalog() {
     if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeDetail();
   } });
   dialog.addEventListener('close', () => {
+    if (dialog.open) return;
     document.body.classList.remove('species-detail-open');
     recordUI?.cleanup();
     const card = [...grid.querySelectorAll('.species-card')].find(node => node.dataset.speciesId === activeSpeciesId);
     (card || query).focus({ preventScroll: true });
     activeSpeciesId = null;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('species');
+    history.replaceState(history.state, '', url);
+    lastDetailUrl = url.href;
+  });
+
+  function openDetail(id, push = false) {
+    if (push) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('species', id);
+      history.pushState(history.state, '', url);
+    }
+    lastDetailUrl = window.location.href;
+    activeSpeciesId = id;
+    renderDetail();
+    if (!dialog.open) dialog.showModal();
+    document.body.classList.add('species-detail-open');
+    dialog.scrollTop = 0;
+    dialog.querySelector('#species-detail-close').focus({ preventScroll: true });
+  }
+
+  function applyDetailUrl() {
+    if (!species.length) return;
+    const parsed = readSpeciesQuery(window.location.search, species.map(item => item.speciesId));
+    if (parsed.value) {
+      if (activeSpeciesId !== parsed.value || !dialog.open) openDetail(parsed.value);
+    } else {
+      if (dialog.open) dialog.close();
+      if (parsed.invalid) {
+        announce('해당 어종을 찾을 수 없습니다.', true);
+        const url = new URL(window.location.href);
+        url.searchParams.delete('species');
+        history.replaceState(history.state, '', url);
+      }
+      lastDetailUrl = window.location.href;
+    }
+  }
+
+  window.addEventListener('popstate', () => {
+    if (recordUI?.isEditing()) {
+      if (recordUI.isBusy() || (recordUI.isDirty() && !window.confirm('작성 중인 기록이 저장되지 않았습니다. 이동할까요?'))) {
+        history.pushState(history.state, '', lastDetailUrl);
+        return;
+      }
+      recordUI.cancelEditing();
+    }
+    applyDetailUrl();
   });
 
   function announce(message, error = false) {
@@ -362,12 +416,7 @@ function initializeCatalog() {
       card.append(createCatalogImage(item, 'species-image-frame', collected), catalogElement('span', 'species-card-name', item.nameKo), catalogElement('span', 'species-card-status', label));
       card.addEventListener('click', () => {
         announce('');
-        activeSpeciesId = item.speciesId;
-        renderDetail();
-        dialog.showModal();
-        document.body.classList.add('species-detail-open');
-        dialog.scrollTop = 0;
-        dialog.querySelector('#species-detail-close').focus({ preventScroll: true });
+        openDetail(item.speciesId, true);
       });
       li.append(card);
       fragment.append(li);
@@ -479,6 +528,7 @@ function initializeCatalog() {
       renderProgress();
       render();
       if (dialog.open) renderDetail();
+      applyDetailUrl();
       loaded = true;
     } catch (error) {
       status.textContent = '도감 기본 데이터를 불러오지 못했습니다.';

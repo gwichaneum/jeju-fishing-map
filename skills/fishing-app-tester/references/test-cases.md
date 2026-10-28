@@ -16,7 +16,7 @@
 | T08 | T07 상태 | 첫 기록 삭제 후 남은 기록 삭제, 없는 ID 삭제도 확인 | 3마리/1회 후 0마리/0회·회색, 수집 종 수 감소, 없는 삭제는 안전한 미변경 | 실제 delete·집계·카드 상태 코드 |
 | T09 | 기록 Form 사용 가능 | 0·음수·소수·없는 종·잘못된 날짜, 텍스트 위장/깨진 사진/10MiB 초과 입력; 저장 실패도 주입 | 잘못된 입력 차단, 실패 후 기존 기록·입력 보존, 거짓 저장 성공·해금 없음 | 실제 입력 검증·이미지 디코딩·저장 오류 코드 |
 | T10 | 지도 연동 완료 | 무늬오징어 상세→지도 포인트 보기, 직접 URL·뒤로 가기, null/알 수 없는 키도 확인 | 실제 어종 필터·관련 표시 가능 마커, 미확인 좌표 제외, null 안내, 뒤로 가기 정상 | 실제 도감 링크/parser, spot-filters.js, script.js, server.js |
-| T11 | T10, 매핑된 종 있는 Popup | Popup에서 종별 도감 링크 선택, 직접 접속·새로고침·뒤로 가기 | 같은 speciesId 상세 열림, 복수 종 링크 정확, 알 수 없는 ID 안전 안내 | script.js의 Popup, 실제 도감 parser·매핑, server.js |
+| T11 | 지도 Popup 사용 가능 | 개인/공개/제보 포인트 Popup 열기, 어종·방법·메모·화장실·날씨·해상·물때·즐겨찾기와 모바일 스크롤 확인 | 기존 정보 구조 유지, 도감 링크·버튼·어종 Chip·수집 상태 없음. 화면 전환은 상단 Navigation만 사용 | script.js의 Popup, styles.css, index.html |
 | T12 | 기존 지도·서버 실행 | 검색·다중 조건·초기화·즐겨찾기/새로고침·위치 허용/거부·화장실·날씨/Marine·오늘/내일 물때 확인, 각/동시 API 실패 주입 | FR-01~FR-09 유지, 44개 기준 마커, 메모/제보 구분, 실패 영역만 안내, 프록시 키 비노출 | script.js, spot-filters.js, favorites.js, location.js, restrooms.js, weather.js, tides.js, tide-utils.js, server.js, server/tide-service.cjs |
 | T13 | 목록·상세·Form·Popup 구현 | 320/375/390/430/768/1024/1440/1920px와 가로 전환, 터치·Tab 이동, 긴 메모·이름 확인 | Grid·상세·Form·Popup 가로 넘침 없음, 매우 좁은 화면 2열·좁은 모바일 3열·390px 이상 4열·Tablet 5~6열·넓은 PC 6~8열, focus·alt·44px 터치 목표, Popup 스크롤/버튼 정상 | index.html, 실제 도감 HTML, catalog.css, styles.css, script.js |
 | T14 | 위 전체 시나리오 | console/pageerror·network 기록, 빠른 화면/포인트 전환·뒤로 가기·저장 오류 확인 | 치명적 JS 오류·미처리 rejection 없음, 필수 자원 404 없음, API 오류는 제어된 안내 | 오류 stack의 실제 파일, server allowlist·defer 순서 |
