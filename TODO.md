@@ -75,7 +75,7 @@
 2026-10-28 추가. 위 지도 Completed/Future Improvements는 기존 기록을 보존했다.
 출조 기록·사진 후보는 아래 C04~C05로 구체화하며 사용자 제보·계정·동기화는 이번 확장에 포함하지 않는다.
 PRD 11장의 F1~F8을 추적한다. 2026-10-28 전체 정보 감사와 브라우저 검증으로 C02·C03의 Phase 2 범위를 완료했다. 31종 이미지와 상세 정보가 준비되었고 일반·엄격 검증은 오류 0·경고 0이다. 검증 범위와 지역별 자료의 한계는 [어종 정보 출처](./docs/SPECIES_INFO_SOURCES.md)에 기록한다.
-Phase 3 초기화 수정 후 C04·C05를 완료했다. Phase 4의 현재 확정 범위는 공통 Navigation·도감→지도 필터 연결·Popup 기존 정보 보존이다. 이전 양방향 요청의 Popup 도감 기능은 가독성을 위해 제거했다. 현재 결과는 문서 끝의 범위 변경 기록과 SKILL_USAGE를 따른다. Phase 5 미진행.
+현재 C04~C06과 Phase 5 로컬 최종 검증/README·제출 문서를 정리했다. 연결 범위는 공통 Navigation·도감→지도 필터이며 Popup 도감 기능은 제외한다. 실제 배포 URL/HTTPS·배포 사이트 인수는 미완료다. 현재 결과는 FINAL_TEST_REPORT와 문서 끝의 Phase 5 기록을 따른다.
 권장 Commit 메시지는 사용자용 제안이며 이 작업에서 commit/push하지 않는다.
 
 ## C01. 문서와 Skill 준비 — Phase 1
@@ -240,11 +240,15 @@ PRD 연결: F1~F8, FR-01~FR-09, 11.8~11.10.
 
 - [x] 네 Skill의 각 단계 실사용 증거를 docs/SKILL_USAGE.md에 기록 (Phase 2/3 이력과 이번 Phase 4 실행 구분)
 - [x] fishing-app-tester의 T01~T14, console·모바일·IndexedDB·집계·지도 회귀 검증 (Phase 4, 아래/사용 기록의 실제 범위)
-- [ ] README를 기능·실제 화면·사용 흐름·문서/네 Skill 링크·실행·방법론 장단점·개선·결론·주의사항 중심으로 축약 (Phase 5)
+- [x] README를 기능·실제 화면·사용 흐름·문서/네 Skill 링크·실행·방법론 장단점·개선·결론·주의사항 중심으로 축약 (Phase 5)
 - [ ] 실제 서비스 URL을 확인해 README 최상단 바로가기 연결; 임의 주소/저장소 주소 대체 금지
-- [ ] Node 프록시·HTTPS·환경변수·정적 허용 경로와 배포 사이트 실제 접근 검증
-- [ ] 원격 GitHub Public 여부 확인 (package.json private 값과 구분)
-- [ ] 전체 완성 기준·문서 링크·이미지 사용 조건·미확인 항목 최종 정리
+- [x] Node 시작/PORT/Production HOST·환경변수·깨끗한 설치·정적 allowlist/비공개 경로 차단 로컬 검증
+- [ ] 배포 사이트 HTTPS·지도/도감/query/API/IndexedDB/모바일 실제 접근 검증
+- [x] 원격 GitHub Public 여부 확인 (package.json private 값과 구분)
+- [x] 전체 완성 기준·문서 링크·기존 이미지 사용 조건 기록·미확인 항목 최종 정리
+- [x] 최종 T01~T58 보고서와 실제 제출 화면 3장 생성
+- [x] 플랫폼 key 환경변수/공개 bind·전이 의존성 취약점·작은 터치 영역 최소 수정 및 회귀
+- [ ] 실제 휴대폰/GPS·Safari/Firefox·최소 지원 Node 22 별도 실행
 
 완료 확인: PRD 11.9 전체 기준과 T01~T14의 실제 결과를 대조한다. URL이 없거나 브라우저·현장 검증을 하지 못했으면
 그 부분을 미완료로 보고하며 과거 테스트나 스크립트 SKIP을 새 검증 성과로 쓰지 않는다.
@@ -263,3 +267,9 @@ API 실응답 성공·실제 GPS·실기기·배포 검증은 미확인으로 �
 이번 변경 후 실제 8080에서 A~J·T01~T14(현재 T11은 Popup 보존 검사), 자동 97개·정적 29개·Skill YAML, 9개 viewport·지도 12개 API fixture 조합+위치 거부·사진/기록 CRUD/브라우저 재실행·저장 오류/복구를 다시 검증했다.
 69개 Popup 생성 내용과 원본 함수를 비교해 기존 정보 구조/일반 문자열이 동일하고 도감 링크가 없음을 확인했다. 지도에서 도감 JSON/기록 초기화 요청 0회, 기록 UI factory 1회·단일 제출 1건을 확인했다. 관련 수는 무늬 23/14·한치 20/18이다.
 C06의 현재 범위를 완료했다. 실제 휴대폰/GPS·공식 API 실응답·배포는 미확인으로 구분하며 상세 증거는 SKILL_USAGE 마지막 기록을 따른다. Phase 5와 commit/push는 진행하지 않는다.
+
+## 현재 Phase 5 최종 정리 — 2026-10-28
+
+T01~T58은 기재한 로컬 방법/환경에서 PASS다. 99개 자동 검사·Phase 5 정적 29개·실제 날씨/해상/공식 물때 오늘/내일·사진/DB/9 viewport 회귀를 실행했다. 최종 검증 중 발견한 환경변수/Production bind·전이 의존성·44px 미만 터치 영역만 수정했다.
+README를 축약하고 실제 화면/네 Skill·문서 링크를 연결했다. [최종 테스트](./docs/FINAL_TEST_REPORT.md)와 [배포·보안 점검](./docs/DEPLOYMENT_CHECKLIST.md)에 검사 범위·실기기/배포 미확인을 분리했다. 키/개인 원본 기록은 문서에 넣지 않았다.
+Public 저장소는 확인했지만 실제 배포 URL은 없으므로 LIVE_SITE_URL_REQUIRED를 남겼다. **실제 배포 후 URL 교체 필요.** 공개 배포/HTTPS 인수는 완료 표시하지 않는다. 최종 commit/push는 사용자 검토 후 진행한다.

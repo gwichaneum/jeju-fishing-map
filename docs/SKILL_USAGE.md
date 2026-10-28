@@ -2,7 +2,7 @@
 
 [PRD 확장](../PRD.md#11-낚시-도감-확장-요구사항) · [TODO](../TODO.md#낚시-도감-확장)
 
-현재 상태는 문서 끝의 **Phase 4 도감→지도 범위 변경** 기록을 따른다. 이전 양방향 구현·검증은 당시의 이력이며 Popup 도감 기능은 가독성을 위해 제거했다. 공통 Navigation·도감→지도 query·기존 Popup/지도/도감/IndexedDB 회귀가 현재 인수 범위다. Phase 5 미진행. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md)
+현재 상태는 문서 끝의 **Phase 5 최종 검증·문서·배포 준비** 기록을 따른다. 이전 기록은 당시 이력이다. 도감→지도/Popup 보호 범위를 유지하고 최종 로컬 검증·README·제출 증거를 정리했다. 실제 배포 URL/HTTPS 인수는 NOT TESTED다. [이미지 출처](./SPECIES_ASSETS.md) · [정보 감사·출처](./SPECIES_INFO_SOURCES.md) · [최종 테스트](./FINAL_TEST_REPORT.md)
 
 ## Phase 1 — 생성 기록 (2026-10-28, KST)
 
@@ -661,3 +661,58 @@ T07의 2→4 수정도 별도 실행하여 2+3=5/2회→7/2회와 query 새로�
 이번 요청 전후 보존한 44개에는 도감 JSON/31종 이미지/낚시 데이터·좌표/README/기록 core/UI/도감 UI/필터/서버/의존성 파일이 포함된다. 사용자 원본 브라우저 DB를 열어 지우거나 수정하지 않았고 schema 변경/.env·키 열람/수정·commit/push는 하지 않았다.
 실제 휴대폰·Safari/Firefox·실제 GPS/현장 상태·공식 API 실응답 성공·배포는 미확인이다. 날씨/해상/물때 성공·오류 판정은 통제된 fixture이며 API 실패 시 예상된 network/MIME 메시지를 치명적 JS 오류와 구분했다.
 확정 범위의 Phase 4/C06을 완료했다. Phase 5의 README 최종 축약·실제 배포 URL/공개 상태 확인·최종 문서/발표 정리는 이번에 수행하지 않고 멈춘다.
+
+## Phase 5 최종 검증·문서·배포 준비 (2026-10-28, KST)
+
+### 요청과 Skill 적용
+
+사용자 요청은 새 기능 없이 전체 최종 회귀·배포 준비·짧은 README·실제 URL/Marker·문서·Public GitHub/키 보안·제출 증거를 정리하는 것이다. 첨부 파일은 로컬 실행 예시의 npm install 줄에서 끝나지만 그 앞의 명시된 Phase 5 범위를 기준으로 진행했다. commit/push·호스팅 가입·임의 URL 생성은 하지 않았다.
+
+[fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 시작 전에 직접 읽고 명시적으로 적용했다. Skill 절차에 맞춰 브라우저 검증 전에 [test-cases](../skills/fishing-app-tester/references/test-cases.md)를 읽었다. 다른 세 Skill은 frontmatter와 참조 링크만 자동 검사했으며 본문을 다시 수동으로 읽거나 수정하지 않았다. Skill 명세의 T01~T14와 사용자 최종 T01~T58은 번호 체계가 다르므로 이번 결과는 [FINAL_TEST_REPORT](./FINAL_TEST_REPORT.md)의 58행을 따른다.
+
+### 조사·최소 수정
+
+- 실제 앱은 HTML/CSS/JS·MapLibre/OpenFreeMap·Node/Express이며 npm start는 node server.js, PORT는 기존 플랫폼 값을 지원했다. catalog/기록/날씨/Marine/물때 프록시·정적 데이터/이미지·README/PRD/TODO·출처 문서·.env.example/.gitignore·배포 설정 유무를 확인했다. 실제 .env 내용은 읽거나 출력하지 않았다.
+- 서버가 dotenv parsed 값만 사용해 플랫폼 key를 무시하던 문제를 process.env 우선/fallback 유지로 수정했다. Production 기본 bind만 0.0.0.0으로 설정하고 로컬 127.0.0.1과 PORT/start를 유지했다. tests/server-startup.test.cjs의 2개 검사로 환경변수 우선·로컬 fallback·PORT/HOST·로그 비노출을 확인했다.
+- npm audit에서 body-parser 2.3.0(high), qs 6.16.0(moderate)이 발견됐다. npm audit fix --package-lock-only --ignore-scripts 후 설치하여 각각 2.4.0/6.17.0으로 갱신했다. 직접 dependency 이름/버전은 바꾸지 않았고 audit 0건을 확인했다. 공식 공지는 [DEPLOYMENT_CHECKLIST](./DEPLOYMENT_CHECKLIST.md)에 연결했다.
+- 최종 버튼 검사에서 지도 마커 24px/Popup 닫기 36px를 확인했다. 각각 44px로 넓히고 dot 크기·badge/닫기 glyph 중심은 유지했다. Popup DOM/도감 링크 부재/지도/API 조합/overflow를 다시 검사했다. 신규 사용자 기능이나 대규모 Refactoring은 없다.
+- 새 정상 실행을 검증하기 위해 기존 프로젝트 8080 프로세스만 확인 후 재시작했다. 같은 origin·사용자 저장소를 유지했으며 DB를 비우지 않았다. README/문서와 제출용 실제 스크린샷 3장 외에 어종·포인트·이미지 원본 데이터는 변경하지 않았다.
+
+### 이번 실행과 증거
+
+| 검사/명령 | 실제 결과 |
+| --- | --- |
+| npm.cmd test | 99 PASS, 실패·건너뜀 0. 기존 97개+Production 시작 2개 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS. 실제 도감/기록 항목은 아래 Phase 5 검사로 확인 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=5 --catalog species-catalog.json --record-module catch-records.js | 29 PASS, 실제 catalog strict 오류/경고 0, 실제 기록 9집계/25거부 입력, 네 Skill frontmatter/참조·syntax·자원 경로 |
+| py -X utf8 .verify/check-phase4-yaml.py | 네 Skill delimiter/YAML/name/description PASS. 다른 Skill 본문은 변경하지 않음 |
+| node .verify/phase5-map.cjs | 4 viewport×성공/Marine 실패/동시 실패 12조합+위치 거부. 검색·44/14마커·필터·즐겨찾기/재조회·모의 위치/가까운 5곳·화장실·오늘/내일 물때·Popup fit PASS. 터치 보완 후 재실행 |
+| node .verify/phase5-crud.cjs | 사진/날짜/2마리→추가3=5/2→3→4 수정6/2→삭제2/1→마지막0/0·회색, 다른 종/검색/분류·진행률·실패 입력/사진·같은 profile의 Chrome 프로세스 재시작과 Blob 바이트/필드 복원·9 viewport/긴 Form/focus PASS |
+| node .verify/phase5-integration.cjs | 무늬23/14·한치20/18·null9종·무효/중복/빈 query·직접/재조회/Back/초기화·Popup 69개 DOM·도감 링크/모듈 요청 없음·9 Navigation 크기 PASS. 터치 보완 후 재실행 |
+| node .verify/phase5-storage-errors.cjs | quota/요청 성공 뒤 abort·입력/사진 보존·손상8건 삭제 없이 제외·stale edit/없는 삭제·버전/blocked·회전 JPEG/사진 교체·KST 날짜 PASS |
+| node .verify/phase5-boundaries.cjs | core/UI 모듈·DB 실패/지연에도 31종·상세 유지, JSON 실패 구분/복구, 반복 retry UI factory1회·단일 제출1건 PASS |
+| node .verify/phase5-keyboard.cjs | 카드 Enter/Space/ESC/focus·2→4 수정7/2회·root query/AND·Popup 5회/지도 canvas1개 PASS |
+| node .verify/phase5-final-controls.cjs | 에깅 단독5마커/개인 유형 단독3마커·즐겨찾기 추가/제거 각각 재조회 유지·수정 후 지도 버튼44px 미만0개 PASS |
+| node .verify/phase5-evidence.cjs | 실제 live Popup·31개 고유 이미지 decode/31종 상세·정보/이미지 두 출처·합성 첫 기록·정상/오류 화면 null/undefined/NaN 없음·pageerror/rejection/fatal/정상404 모두0, 제출 화면3장. 터치 보완 후 재실행 |
+| node .verify/phase5-live-api.cjs | 실제 Forecast 자동 모델/Marine 유한 값, 실제 로컬 공식 프록시 오늘/내일 HTTP200·4/3이벤트. 원본 인증키/상위 URL은 출력하지 않음 |
+| 깨끗한 사본 npm ci·node .verify/phase5-production-smoke.cjs | .env 없는 OS 임시 폴더에 앱69파일 복사/새 설치. production·독립 PORT·0.0.0.0·앱200/금지경로404·빈key503/합성 플랫폼key인식/로그 비노출 PASS |
+| npm.cmd audit --omit=dev --json | 보안 갱신 후 알려진 취약점0건 |
+| repository check·최종 링크/보존 검사·git diff --check | 아래 범위의 보안/불변 원본·문서 경로 검증, 공백 오류 없음 |
+
+Git 제외 `.verify/artifacts/phase5/`의 map/map-results.json, crud/browser-results.json, integration-results.json, storage-errors/error-results.json, boundaries.json, keyboard.json, final-controls.json, evidence.json, live-api.json, production-smoke.json, repository-security.json, final-checks.json에 증거를 저장했다. 이번 명령은 이전 결과를 복사한 것이 아니라 현재 작업본에 다시 실행했다. 제출 화면 assets/screenshots/final-map.png·final-collection.png·final-catch.png를 직접 열어 확인했고 조과 사진은 합성임을 화면과 README에 표시했다.
+
+### 배포·Public·키 판정
+
+인증 없는 GitHub 공개 API는 저장소 HTTP200/public=true, homepage=null/has_pages=false/deployments0건이었다. 실제 사이트 URL은 발견하지 못했으므로 README 맨 위에 링크 대신 LIVE_SITE_URL_REQUIRED와 실제 URL 추가 필요 문구를 남겼다. 저장된 origin/main 기준 로컬 HEAD는4 commit 앞서며 사용자 최종 push 전에는 원격에 최신 기능/문서가 반영됐다고 주장하지 않는다.
+
+현재/추가 예정 텍스트와 reachable23 commit의165개 텍스트 blob을 키/토큰/private-key 패턴 검사했다. 비예시 .env 추적 이력/노출 후보는 없었다. 바이너리 전체 OCR·모든 비밀의 부재를 증명하는 감사는 아니며 실제 키를 읽어 비교하지 않았다. Public 여부는 package.json private와 구분했다. 서버 비공개 경로 차단·브라우저 station/date만 전달·안전한 프록시 응답을 검증했다.
+
+정적 GitHub Pages만으로는 Node /api/tides가 실행되지 않는다. Node≥22·npm 설치/start·플랫폼 key/PORT/HOST·HTTPS가 필요한 조건을 DEPLOYMENT_CHECKLIST에 기록했다. 실제 호스팅 계정/배포/HTTPS·배포 origin IndexedDB 검사는 하지 않았다. 로컬과 새 origin의 사진/기록은 자동 이전되지 않는다.
+
+### 검사 중 수정한 기대값과 남은 범위
+
+처음 Production 사본을 숨김 .verify 내부에 두어 Express의 dotfile 경로 보호로 정적 요청이500이 된 검증 환경 문제가 있었다. 사본을 OS 임시 폴더로 옮겨 새 설치·실행을 통과했고 정적 공개 범위를 완화하지 않았다. 출처 목록은 정보/이미지 두 개인데 하나로 가정한 검사도 기대값만 고친 뒤31종을 통과했다. T51 최초44px 미만은 실제 앱 접근성 결함으로 최소 수정·재검증했다. 보안 audit의 최초2건과 수정 후0건을 구분했다. 최종 실제 설치 버전 대조에서 작업 폴더의 구 node_modules를 발견해 npm ci로 재설치했다. installed-versions.json에서 작업 폴더/깨끗한 사본 모두 body-parser2.4.0·qs6.17.0을 확인하고 같은8080 서버 재시작 뒤99검사·실제 API/화면 검증을 다시 통과했다.
+
+로컬 T01~T58은 명시한 범위에서 PASS지만 최종 보고서 D06/D07은 NOT TESTED, 실제 기기/최소 Node 별도 실행은 MANUAL CHECK REQUIRED다. 실제 GPS·휴대폰 사진 선택/키보드·Safari/Firefox를 에뮬레이션으로 통과했다고 기록하지 않는다. API 결과는 조회 시점이며 현장 안전/가용성 보장이 아니다. 원본 이미지의 권리/종을 새로 전문가 감사하지 않고 기존 출처와 SHA/디코딩을 보존했다.
+
+README/PRD/TODO/최종 테스트/배포 점검/출처 문구를 현재 범위로 정리했다. 새 기능/원본 좌표·어종·이미지/DB schema·사용자 원본 profile은 변경하지 않았다. 실제 .env·키는 열람/수정·공개하지 않았다. 실제 배포 후 URL 교체와 배포 인수가 남았고 commit/push는 사용자 검토 후 진행한다. 이번 작업에서 commit/push하지 않았다.
