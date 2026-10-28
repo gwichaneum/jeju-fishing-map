@@ -24,7 +24,7 @@
 | Node | 22 이상 |
 | NODE_ENV | production |
 | PORT | 플랫폼이 지정한 포트 사용, 미지정 시 8080 |
-| HOST | production 기본 0.0.0.0, 로컬 기본 127.0.0.1. 명시 값이 있으면 우선 |
+| HOST | 환경변수와 무관하게 0.0.0.0 고정. NODE_ENV 미지정 또는 기존 HOST=127.0.0.1/localhost에서도 Render 포트 탐지 가능 |
 | DATA_GO_KR_SERVICE_KEY | 플랫폼의 서버 환경변수로 설정. 실제 값은 문서/코드에 기록하지 않음 |
 | HTTPS | 플랫폼 또는 reverse proxy에서 TLS 종료. 모바일 위치 권한도 검증 |
 | 정적 자원 | 기존 server.js allowlist의 HTML/CSS/JS·공개 데이터·등록 이미지 경로 |
@@ -35,6 +35,8 @@
 ## 이번에 수정하고 확인한 배포 차단 요인
 
 1. 서버가 `.env`의 parsed 값만 읽던 문제를 플랫폼 환경변수 우선으로 수정했다. Production 기본 bind도 0.0.0.0으로 설정했다. 기존 PORT 지원/로컬 실행 방식은 유지했다.
+
+   Render 포트 탐지 수정: 이후 host를 항상 0.0.0.0으로 고정했다. PORT 환경변수 우선/기본 8080과 start=node server.js를 유지하므로 npm start와 pnpm start 모두 같은 서버를 실행한다. [Render 포트 바인딩 조건](https://render.com/docs/web-services#port-binding)을 따른다.
 2. npm audit에서 body-parser 2.3.0(high), qs 6.16.0(moderate)이 발견됐다. 직접 의존성 Express/dotenv 버전은 유지하고 lockfile의 body-parser를 2.4.0, qs를 6.17.0으로 갱신했다. 이후 설치·npm audit --omit=dev에서 취약점 0건을 확인했다. 근거: [body-parser 공지](https://github.com/advisories/GHSA-27r3-jxmh-p828), [qs 공지](https://github.com/advisories/GHSA-6pq8-jhm2-2vcw).
 3. `.env` 없는 OS 임시 폴더에 실제 공개 앱 파일 69개를 복사하고 npm ci로 새 설치했다. Production 환경의 독립 포트/공개 bind·HTML/JS/이미지 200·비공개 파일 404·키 없음 503·합성 플랫폼 키 인식/로그 비노출을 검증했다. 실제 자격증명은 사본에 넣지 않았다.
 

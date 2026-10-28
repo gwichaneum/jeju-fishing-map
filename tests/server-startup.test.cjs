@@ -39,14 +39,18 @@ test('production startup uses platform key/port and a public bind address withou
   assert.equal(Object.keys(observed.isolatedDotenv).length, 0);
   assert.deepEqual(observed.warnings, []);
   assert.doesNotMatch(observed.logs.join('\n'), /platform-fixture-only|local-fixture-only/);
-  assert.equal(startup({ NODE_ENV: 'production', HOST: '127.0.0.1' }).host, '127.0.0.1');
+  assert.equal(startup({ NODE_ENV: 'production', HOST: '127.0.0.1' }).host, '0.0.0.0');
+  const render = startup({ PORT: '10000', HOST: 'localhost' });
+  assert.equal(render.port, 10000);
+  assert.equal(render.host, '0.0.0.0');
+  assert.ok(render.logs.includes('Jeju Fishing Map: http://0.0.0.0:10000'));
 });
 
-test('local startup preserves dotenv fallback, loopback port 8080 and safe missing-key behavior', () => {
+test('local startup preserves dotenv fallback, port 8080 and safe missing-key behavior', () => {
   const local = startup({});
   assert.equal(local.key, 'local-fixture-only');
   assert.equal(local.port, 8080);
-  assert.equal(local.host, '127.0.0.1');
+  assert.equal(local.host, '0.0.0.0');
   const missing = startup({ DATA_GO_KR_SERVICE_KEY: '' });
   assert.equal(missing.key, '');
   assert.equal(missing.warnings.length, 1);
