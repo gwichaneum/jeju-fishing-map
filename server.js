@@ -51,10 +51,10 @@ function createApp({ tideService = createTideService() } = {}) {
 
 function startServer() {
   const env = dotenv.config({ path: path.join(__dirname, ".env"), quiet: true, processEnv: {} }).parsed || {};
-  const tideService = createTideService({ serviceKey: env.DATA_GO_KR_SERVICE_KEY || "" });
+  const tideService = createTideService({ serviceKey: process.env.DATA_GO_KR_SERVICE_KEY ?? env.DATA_GO_KR_SERVICE_KEY ?? "" });
   if (!tideService.configured) console.warn("DATA_GO_KR_SERVICE_KEY가 설정되지 않았습니다.");
   const port = Number(process.env.PORT) || 8080;
-  const host = process.env.HOST || "127.0.0.1";
+  const host = process.env.HOST || (process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1");
   const server = createApp({ tideService }).listen(port, host, () => {
     console.log(`Jeju Fishing Map: http://${host}:${port}`);
   });

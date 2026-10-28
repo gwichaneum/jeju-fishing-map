@@ -694,8 +694,8 @@ h1 {
 .fishing-marker {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -741,8 +741,8 @@ h1 {
 .fishing-marker-favorite-badge {
   display: none;
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: 8px;
+  right: 8px;
   width: 12px;
   height: 12px;
   border: 2px solid #ffffff;
@@ -940,10 +940,10 @@ h1 {
 }
 
 .jeju-map .fishing-popup .maplibregl-popup-close-button {
-  top: 6px;
-  right: 6px;
-  width: 36px;
-  height: 36px;
+  top: 2px;
+  right: 2px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   color: var(--muted);
   font-size: 1.25rem;
