@@ -1,0 +1,2119 @@
+[
+  {
+    "speciesId": "rockfish",
+    "nameKo": "볼락",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/rockfish.webp",
+    "imageAlt": "볼락 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "볼락",
+    "description": "작은 몸통에 큰 눈과 뚜렷한 등지느러미가 있는 바닷물고기.",
+    "methods": [
+      "루어낚시"
+    ],
+    "rigs": [
+      "소형 웜과 지그헤드 채비"
+    ],
+    "seasonNote": "출처는 겨울~봄 볼락 루어낚시와 3월 말~6월 초의 연안 접근을 소개합니다. 해역·수온에 따라 차이가 있습니다.",
+    "habitatNote": "계절에 따라 연안과 깊은 수심을 오가며, 봄에는 얕은 연안을 탐색하는 사례가 소개됩니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=40934351",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 볼락; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Sebastes_inermis.jpg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "H. Patterson (1856), Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=40934351",
+        "title": "위키백과: 볼락",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=11585",
+        "title": "볼락루어 마스터 플랜: 시즌별 낚시 특징",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Sebastes inermis",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/73/Sebastes_inermis.jpg",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/7/73/Sebastes_inermis.jpg",
+    "imageFileTitle": "Sebastes_inermis.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "6ef4f342f38023fb89ff4c65bd6c6c40e10f8d0d6802ed94124cf52bee72cd51",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "black-seabream",
+    "nameKo": "감성돔",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/black-seabream.webp",
+    "imageAlt": "감성돔 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "감성돔",
+    "description": "검은빛과 은빛이 도는 몸, 옆으로 납작하고 높은 체형을 가진 돔류.",
+    "methods": [
+      "릴찌낚시"
+    ],
+    "rigs": [
+      "가을 저부력 구멍찌 반유동 채비"
+    ],
+    "seasonNote": "가을 감성돔 공략을 다룬 기사 사례입니다. 제주 전 지역의 고정 시즌을 뜻하지 않습니다.",
+    "habitatNote": "연안 갯바위·방파제 낚시 자료를 참고합니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=42447401",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 감성돔; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 명시된 기사와 지역·기법의 사례이며 전체 지역에 일반화하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.397_-_Acanthopagrus_schlegelii_(Bleeker)_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=42447401",
+        "title": "위키백과: 감성돔",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=4071",
+        "title": "가을 감성돔 성공전략",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Acanthopagrus schlegelii",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/Naturalis_Biodiversity_Center_-_RMNH.ART.397_-_Acanthopagrus_schlegelii_%28Bleeker%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/Naturalis_Biodiversity_Center_-_RMNH.ART.397_-_Acanthopagrus_schlegelii_%28Bleeker%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.397 - Acanthopagrus schlegelii (Bleeker) - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "848a05dcdb0bb5848c35d60c11618e0c4c6d55fbccfda3a3e7892d9d7bbc350f",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "red-seabream",
+    "nameKo": "참돔",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/red-seabream.webp",
+    "imageAlt": "참돔 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "참돔",
+    "description": "붉은빛이 감도는 몸과 높은 등지느러미가 특징인 돔류.",
+    "methods": [
+      "찌낚시"
+    ],
+    "rigs": [
+      "수심과 조류에 맞춘 릴찌 채비"
+    ],
+    "seasonNote": "기사에서는 봄~초여름과 가을을 주요 시기로 소개하며 지역별 차이를 설명합니다.",
+    "habitatNote": "연안과 섬 주변에서 찌낚시 대상으로 소개됩니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 참돔; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 명시된 기사와 지역·기법의 사례이며 전체 지역에 일반화하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Pagrus_major_Red_seabream_ja01.jpg",
+    "imageLicense": "CC BY-SA 3.0",
+    "imageAttribution": "Miya",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 참돔 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=90820",
+        "title": "입문자교실: 참돔 찌낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Pagrus major",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Pagrus_major_Red_seabream_ja01.jpg/960px-Pagrus_major_Red_seabream_ja01.jpg",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Pagrus_major_Red_seabream_ja01.jpg/960px-Pagrus_major_Red_seabream_ja01.jpg",
+    "imageFileTitle": "File:Pagrus major Red seabream ja01.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "717c51dfaa2608d5a84b54c20cf02e7b58f388350f0c09f351b09cf6cb51c9a7",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "largescale-blackfish",
+    "nameKo": "벵에돔",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/largescale-blackfish.webp",
+    "imageAlt": "벵에돔 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "벵에돔",
+    "description": "흑갈색 몸과 둥근 윤곽이 돋보이는 연안 물고기.",
+    "methods": [
+      "찌낚시"
+    ],
+    "rigs": [
+      "제로찌 계열의 구멍찌 채비"
+    ],
+    "seasonNote": "제주에서는 초여름과 겨울을 주요 시기로 소개합니다. 당일 수온과 포인트 조건을 함께 확인하세요.",
+    "habitatNote": "제주와 남해·동해의 맑은 연안에 서식하는 난류성 어종.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=41101094",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 벵에돔; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 명시된 기사와 지역·기법의 사례이며 전체 지역에 일반화하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Gure.jpg",
+    "imageLicense": "CC BY-SA 3.0",
+    "imageAttribution": "guitar_snufkin",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=41101094",
+        "title": "위키백과: 벵에돔",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=90670",
+        "title": "입문자교실: 벵에돔낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Girella punctata",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Gure.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Gure.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Gure.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "4bc4acbd317ea2fb994b8b632dfb07f70f3d5082a74b9d9892251fdc64b53cf6",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "horse-mackerel",
+    "nameKo": "전갱이",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/horse-mackerel.webp",
+    "imageAlt": "전갱이 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "전갱이",
+    "description": "은빛 몸과 큰 눈을 가진 전갱이과 물고기.",
+    "methods": [
+      "민장대 찌낚시",
+      "아징"
+    ],
+    "rigs": [
+      "소형 찌·크릴 채비",
+      "소형 웜·지그헤드"
+    ],
+    "seasonNote": "연중 낚이는 어종으로, 출처는 큰 전갱이의 주요 시기를 6~7월과 11~1월로 소개합니다. 방파제의 작은 전갱이는 초여름~가을 사례를 참고하세요.",
+    "habitatNote": "난류의 영향을 받는 맑은 연안의 방파제·갯바위와 양식장 주변에서 낚습니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 전갱이; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://togotv.dbcls.jp/togopic.2024.188.html",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "DBCLS / Togo picture gallery; @_HETAKA, ONO Hiromasa",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 전갱이 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18159",
+        "title": "제주 무늬오징어 야엔: 미끼용 전갱이 포획 사례",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=90192",
+        "title": "입문자 교실: 전갱이 낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Trachurus japonicus",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/202408_Japanese_jack_mackerel.svg",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/202408_Japanese_jack_mackerel.svg",
+    "imageFileTitle": "202408_Japanese_jack_mackerel.svg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 전체 개체를 -45도 회전했습니다. 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "b7434f7af636902a8da0fcb90328338cef96af8cc75b7c6528b34eb9e696c1c1",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "chub-mackerel",
+    "nameKo": "고등어",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/chub-mackerel.webp",
+    "imageAlt": "고등어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "고등어",
+    "description": "유선형 몸과 등에 물결처럼 이어지는 무늬가 있는 물고기.",
+    "methods": [
+      "선상 외줄낚시",
+      "릴찌낚시"
+    ],
+    "rigs": [
+      "어피 카드채비",
+      "찌와 카드채비·크릴 미끼"
+    ],
+    "seasonNote": "동해 남부 선상낚시 기사에서는 10월~이듬해 2~3월을 다룹니다. 제주 방파제의 고정 시즌으로 적용하지 않습니다.",
+    "habitatNote": "무리 지어 이동하며, 동해 남부 선상 사례에서는 밑밥에 모이는 중상층을 공략합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 고등어; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Scomber_japonicus.png",
+    "imageLicense": "Public domain",
+    "imageAttribution": "저작자 미상 (Wikimedia Commons 표기)",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 고등어 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=2626",
+        "title": "겨울바다의 파시: 고등어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Scomber japonicus",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Scomber_japonicus.png",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Scomber_japonicus.png",
+    "imageFileTitle": "File:Scomber japonicus.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "b6ff2ea3794fe6ccd5896236b4146ed52e89a6c887eafc409933083c27be9508",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "japanese-seabass",
+    "nameKo": "농어",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/japanese-seabass.webp",
+    "imageAlt": "농어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "농어",
+    "description": "큰 입과 길쭉한 은회색 몸을 가진 연안 물고기.",
+    "methods": [
+      "루어낚시"
+    ],
+    "rigs": [
+      "미노우·쇼크리더 채비",
+      "싱킹 펜슬"
+    ],
+    "seasonNote": "출처는 일반 농어의 5~6월과 10월 이후 연안 회유를 소개합니다. 제주에서 겨울에 노리는 넙치농어는 별도 대상으로 구분합니다.",
+    "habitatNote": "연안의 수중여·간출여와 기수역 주변을 탐색하는 낚시가 소개됩니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 농어; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.186_-_Lateolabrax_japonicus_(Cuvier)_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 농어 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=14378",
+        "title": "세상 쉬운 바다루어 6: 농어 루어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Lateolabrax japonicus",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Naturalis_Biodiversity_Center_-_RMNH.ART.186_-_Lateolabrax_japonicus_%28Cuvier%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Naturalis_Biodiversity_Center_-_RMNH.ART.186_-_Lateolabrax_japonicus_%28Cuvier%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.186 - Lateolabrax japonicus (Cuvier) - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "bcc1e0bc89d9013f6877524821b3fc06de264d6c623185a6e8fad94f2ff56ff5",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "olive-flounder",
+    "nameKo": "광어",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/olive-flounder.webp",
+    "imageAlt": "광어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "광어",
+    "description": "넙치라고도 하며 몸이 넓고 납작하고 두 눈이 한쪽에 모여 있습니다.",
+    "methods": [
+      "연안 루어낚시",
+      "선상 루어낚시"
+    ],
+    "rigs": [
+      "연안 지그헤드·웜",
+      "선상 다운샷 채비"
+    ],
+    "seasonNote": "서해 기준 기사에서는 5월 중순~10월 중순, 일부 먼 섬은 11월까지를 소개합니다. 제주 전역의 시즌을 뜻하지 않습니다.",
+    "habitatNote": "모래·자갈과 암반이 섞인 바닥에서 노리는 어종입니다. 지도 포인트의 광어 표기는 기존 개인 메모 근거입니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 넙치; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 넙치 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=16337",
+        "title": "입문자교실: 광어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Paralichthys olivaceus",
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageOriginalUrl": "https://www.nifs.go.kr/cmmn/images/MF0008111_DG0115_watermark_2.png",
+    "imageDownloadUrl": "https://www.nifs.go.kr/cmmn/images/MF0008111_DG0115_watermark_2.png",
+    "imageFileTitle": "MF0008111_DG0115_watermark_2.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "3c179dffa4a540b6d4ce08b74971871e5a4663a83be529c27778f2ee41adf8bb",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "striped-beakfish",
+    "nameKo": "돌돔",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/striped-beakfish.webp",
+    "imageAlt": "돌돔 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "돌돔",
+    "description": "몸 옆의 굵은 검은 줄무늬와 단단한 입이 눈에 띄는 물고기.",
+    "methods": [
+      "원투낚시",
+      "민장대·릴찌낚시"
+    ],
+    "rigs": [
+      "구멍봉돌·목줄·돌돔바늘 원투 채비"
+    ],
+    "seasonNote": "출처는 제주·추자의 주요 시기를 6~7월로 소개합니다. 다른 해역에서는 9~10월 등 지역별 차이가 있습니다.",
+    "habitatNote": "암초와 수중여, 직벽 주변에서 공략하며 시기에 따라 노리는 수심이 달라집니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=41696102",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 돌돔; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.237_-_Oplegnathus_fasciatus_(Temminck_and_Schlegel)_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=41696102",
+        "title": "위키백과: 돌돔",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18681",
+        "title": "입문자교실: 돌돔낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Oplegnathus fasciatus",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Naturalis_Biodiversity_Center_-_RMNH.ART.237_-_Oplegnathus_fasciatus_%28Temminck_and_Schlegel%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Naturalis_Biodiversity_Center_-_RMNH.ART.237_-_Oplegnathus_fasciatus_%28Temminck_and_Schlegel%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.237 - Oplegnathus fasciatus (Temminck and Schlegel) - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "91273cbc6fced7513162d536a2027311a7944419934d1150c45384f48463d3f6",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "marbled-rockfish",
+    "nameKo": "쏨뱅이",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/marbled-rockfish.webp",
+    "imageAlt": "쏨뱅이 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "큰 머리와 등지느러미가 돋보이는 쏨뱅이류.",
+    "methods": [
+      "선상 외줄낚시",
+      "갯바위 던질낚시"
+    ],
+    "rigs": [
+      "볼락 외줄 채비·새우 또는 오징어살 미끼"
+    ],
+    "seasonNote": "출처는 남해·제주 연안의 정착성 어종으로 소개하고 해가 진 뒤의 먹이활동을 설명합니다. 특정 월을 제주 피크 시즌으로 정하지 않습니다.",
+    "habitatNote": "암초가 발달한 연안의 바위틈에 머무는 정착성 어종입니다. 붉감펭 등 비슷한 종과 구분합니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=39161896",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 쏨뱅이; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:FMIB_52974_Sebastes_marmoratus.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "James Carson Brevoort (1856); University of Washington, Freshwater and Marine Image Bank / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=39161896",
+        "title": "위키백과: 쏨뱅이",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://fishingseasons.co.kr/contents_view_detail.asp?b_no=1669",
+        "title": "명정구 박사의 조어박물지: 쏨뱅이",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Sebastiscus marmoratus",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/29/FMIB_52974_Sebastes_marmoratus.jpeg",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/2/29/FMIB_52974_Sebastes_marmoratus.jpeg",
+    "imageFileTitle": "FMIB_52974_Sebastes_marmoratus.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "35be01492e877918a7fcac06685b8d29c761d5ffd93423e4d9cf0f7cce156e81",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "local-hanchi",
+    "nameKo": "한치",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/local-hanchi.webp",
+    "imageAlt": "제주 한치의 대표 대상 창꼴뚜기(Uroteuthis edulis)의 원기재 전신 선화",
+    "mapSpeciesKey": "한치",
+    "description": "몸통이 길쭉하고 짧은 다리가 특징인 두족류입니다. 제주에서 한치로 부르는 창꼴뚜기를 참고하며, 지역명만으로 모든 개체의 종을 확정하지 않습니다.",
+    "methods": [
+      "선상 이카메탈",
+      "오모리그"
+    ],
+    "rigs": [
+      "이카메탈: 스테와 봉돌 역할을 하는 이카메탈을 단 채비",
+      "오모리그: 봉돌과 긴 목줄 끝의 스테 또는 에기를 사용하는 채비"
+    ],
+    "seasonNote": "제주·남해 선상낚시를 다룬 출처는 5월 시작, 6~7월을 주요 시기로 소개합니다. 연안 낚시와 해마다 다른 수온 조건은 구분하세요.",
+    "habitatNote": "제주와 남해의 선상 대상이며 입질 수심층을 찾아 스테나 에기를 운용합니다.",
+    "sourceUrl": "https://www.fsis.go.kr/front/contents/cmsView.do?cate_id=0301&cnts_id=18408&select_list_no=110",
+    "license": "연결된 자료의 사실을 짧게 재서술; 원문·도판 이용 조건은 원출처 확인",
+    "attribution": "입문자 교실: 한치낚시; 국립수산물품질관리원 FSIS: 오징어보다 한 수 위, 한치",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "제주한치·창꼴뚜기의 관계는 국립수산과학원 자료를 참고합니다. 지역명만으로 모든 개체에 학명을 부여하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Report_on_the_Cephalopoda_collected_by_H._M._S._Challenger_during_the_years_1873-76_(IA_reportoncephalop00hoyl).pdf",
+    "imageLicense": "Public domain",
+    "imageAttribution": "William Evans Hoyle (1886); McFarlane & Erskine (lithography); Biodiversity Heritage Library / Internet Archive",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=89780",
+        "title": "입문자 교실: 한치낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://www.fsis.go.kr/front/contents/cmsView.do?cate_id=0301&cnts_id=18408&select_list_no=110",
+        "title": "국립수산물품질관리원 FSIS: 오징어보다 한 수 위, 한치",
+        "fields": [
+          "nameKo",
+          "description"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "제주·동해 한치 명칭을 구분. 식용 제철을 낚시 시즌의 근거로 사용하지 않음"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "mapMatchStatus": "matched",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://iiif.archive.org/iiif/reportoncephalop00hoyl$359/full/1200,/0/default.jpg",
+    "imageDownloadUrl": "https://iiif.archive.org/iiif/reportoncephalop00hoyl$359/full/1200,/0/default.jpg",
+    "imageFileTitle": "Hoyle 1886, Plate XXIII, figure 1 (Loligo edulis)",
+    "imageSha256": "412c69e0eae03253750cef253a9008f84fdf1a28f6ec276c3d941a194aa3b229",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 전체 개체를 180도 회전했습니다. Plate XXIII, Fig. 1의 원기재 선화만 사용했습니다. 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0,
+    "imageTaxon": "Uroteuthis edulis (original name: Loligo edulis)",
+    "imageIdentityNote": "제주 한치의 대표 대상인 창꼴뚜기의 원기재 도판을 사용. 지역명 한치의 모든 개체를 단일 종으로 확정하지 않음."
+  },
+  {
+    "speciesId": "patterned-squid",
+    "nameKo": "무늬오징어",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/patterned-squid.webp",
+    "imageAlt": "무늬오징어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "무늬오징어",
+    "description": "폭이 넓은 몸통 양옆으로 큰 반원형 지느러미가 이어지는 오징어류입니다. 길쭉한 몸통의 한치와 다른 형태를 보입니다.",
+    "methods": [
+      "에깅 — 에기를 던져 가라앉힌 뒤 들었다 놓으며 탐색"
+    ],
+    "rigs": [
+      "합사 원줄·쇼크리더·스냅에 에기를 연결한 채비 — 침강 속도는 수심·조류에 맞춰 선택"
+    ],
+    "seasonNote": "에깅 입문 안내는 여름~가을을 소개하며 9~11월을 입문 적기로 다룹니다. 제주에서는 다른 시기 사례도 있으므로 수온·기상을 함께 확인하세요.",
+    "habitatNote": "해초와 수중여가 있는 갯바위·방파제·포구를 탐색합니다. 계절에 따라 얕은 산란장과 조류가 흐르는 깊은 곳을 구분합니다.",
+    "sourceUrl": "https://www.honda.co.jp/fishing/picture-book/aoriika/",
+    "license": "직접 작성한 사실 요약; 출처 원문·사진의 복제 허가를 뜻하지 않음",
+    "attribution": "Honda釣り倶楽部, アオリイカ; 낚시 안내: 낚시춘추 최훈",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 명시된 기사와 지역·기법의 사례이며 전체 지역에 일반화하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:FMIB_39103_Sepioteuthis_arctipinnis%2C_ventral_view_of_male_from_market_at_Honolulu.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Samuel Stillman Berry (1914); Freshwater and Marine Image Bank / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.honda.co.jp/fishing/picture-book/aoriika/",
+        "title": "Honda釣り倶楽部: アオリイカ — 형태 특징",
+        "fields": [
+          "nameKo",
+          "description",
+          "scientificName"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=13558",
+        "title": "낚시춘추 최훈: 여름을 더 뜨겁게 만드는 무늬오징어 에깅 (2020.08)",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "에깅 채비·운용·계절 안내. 한치 이카메탈과 구분"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Sepioteuthis lessoniana",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/FMIB_39103_Sepioteuthis_arctipinnis%2C_ventral_view_of_male_from_market_at_Honolulu.jpeg/500px-FMIB_39103_Sepioteuthis_arctipinnis%2C_ventral_view_of_male_from_market_at_Honolulu.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150902034555",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/FMIB_39103_Sepioteuthis_arctipinnis%2C_ventral_view_of_male_from_market_at_Honolulu.jpeg/500px-FMIB_39103_Sepioteuthis_arctipinnis%2C_ventral_view_of_male_from_market_at_Honolulu.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150902034555",
+    "imageFileTitle": "FMIB 39103 Sepioteuthis arctipinnis, ventral view of male from market at Honolulu.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 전체 개체를 180도 회전했습니다. 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "cf245a8725617060e1bce15363e5fe03b3c33d1a7c71ee681580b5ab8281e5ee",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0,
+    "imageIdentityNote": "원문은 Sepioteuthis arctipinnis. Commons의 S. lessoniana 동의어 식별을 대조한 도판이며 종 복합체의 개체별 판별을 대신하지 않음."
+  },
+  {
+    "speciesId": "hairtail",
+    "nameKo": "갈치",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/hairtail.webp",
+    "imageAlt": "갈치 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "갈치",
+    "description": "은빛으로 빛나는 길고 납작한 몸이 리본처럼 이어집니다.",
+    "methods": [
+      "연안 릴찌낚시 — 방파제·갯바위의 야간 미끼낚시"
+    ],
+    "rigs": [
+      "전지찌·갈치바늘·와이어 목줄에 생선살을 꿰는 채비 — 무리의 유영층에 맞춰 수심 조절"
+    ],
+    "seasonNote": "남해 연안 사례에서 여름~12월까지를 다루며 늦가을에는 굵은 씨알을 소개합니다. 제주 먼바다 출조의 고정 시즌을 뜻하지 않습니다.",
+    "habitatNote": "연안 갯바위·방파제의 야간 낚시에서 무리를 이루는 수심층을 찾아 공략합니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=42447399",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 갈치; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "여기서는 남해 연안의 릴찌낚시를 안내합니다. 먼바다 선상 외줄·텐야 채비 및 시즌과 구분하며, 당일 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=42447399",
+        "title": "위키백과: 갈치",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=12863",
+        "title": "최훈의 바다낚시 입문: 갈치 릴찌낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Trichiurus japonicus",
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageOriginalUrl": "https://www.nifs.go.kr/cmmn/images/MF00043931_watermark_2.png",
+    "imageDownloadUrl": "https://www.nifs.go.kr/cmmn/images/MF00043931_watermark_2.png",
+    "imageFileTitle": "MF00043931_watermark_2.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "ece317d3c88b656da81f27e25c67887fffa6080e8f367a92ff543210c3519a9f",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "japanese-amberjack",
+    "nameKo": "방어",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/japanese-amberjack.webp",
+    "imageAlt": "방어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "방어",
+    "description": "길쭉한 방추형 몸을 가진 전갱이과 물고기입니다. 위턱 뒤쪽의 모서리가 각진 점을 부시리와 구별할 때 참고합니다.",
+    "methods": [
+      "쇼어 플러깅"
+    ],
+    "rigs": [
+      "펜슬베이트·폽퍼·쇼크리더 채비"
+    ],
+    "seasonNote": "제주 서귀포의 방어·부시리 플러깅 기사에서 4월 이후, 장마기와 9~11월을 소개합니다. 모든 포인트의 방어 시즌으로 일반화하지 않습니다.",
+    "habitatNote": "제주 서귀포 갯바위·부속섬의 조류가 흐르는 연안을 탐색하는 사례입니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (정보의 짧은 재서술)",
+    "attribution": "제주 문섬: 쇼어 플러깅; 국립수산과학원: 방어 — 형태특징",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://togotv.dbcls.jp/togopic.2024.153.html",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "DBCLS / Togo picture gallery; @_HETAKA, ONO Hiromasa",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=13252",
+        "title": "제주 문섬: 쇼어 플러깅",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 방어 — 형태특징",
+        "fields": [
+          "nameKo",
+          "description"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "방어 항목의 형태특징"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Seriola quinqueradiata",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202406_Japanese_amberjack.png",
+    "imageDownloadUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202406_Japanese_amberjack.png",
+    "imageFileTitle": "202406_Japanese_amberjack.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 전체 개체를 -40도 회전했습니다. 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "58047bb37b854a73af5118cca334ebebe2a2ed328c479fc8c0724a7ebab39a77",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "yellowtail-amberjack",
+    "nameKo": "부시리",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/yellowtail-amberjack.webp",
+    "imageAlt": "부시리 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "부시리",
+    "description": "몸 옆으로 노란 띠가 이어지는 전갱이과 물고기입니다. 방어와 닮았지만 위턱 뒤쪽의 가장자리가 둥근 점을 구별할 때 참고합니다.",
+    "methods": [
+      "쇼어 플러깅"
+    ],
+    "rigs": [
+      "펜슬베이트·폽퍼·쇼크리더 채비"
+    ],
+    "seasonNote": "제주 문섬과 남원 기사에서 봄의 대형 부시리 조과와 4월 이후의 플러깅을 소개합니다. 입질은 당일 조류와 먹잇감 조건에 따라 달라집니다.",
+    "habitatNote": "조류가 흐르는 제주 연안의 갯바위·부속섬에서 넓은 수면을 탐색하는 대상입니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=41393092",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 부시리; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. Naturalis 원본의 Seriola aureovittata와 WoRMS 분류 대응을 검토했으며 분류 차이를 고려해 학명은 표시하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.196_-_Seriola_aureovittata_Temminck_and_Schlegel_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=41393092",
+        "title": "위키백과: 부시리",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=13252",
+        "title": "제주 문섬: 쇼어 플러깅",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Naturalis_Biodiversity_Center_-_RMNH.ART.196_-_Seriola_aureovittata_Temminck_and_Schlegel_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Naturalis_Biodiversity_Center_-_RMNH.ART.196_-_Seriola_aureovittata_Temminck_and_Schlegel_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.196 - Seriola aureovittata Temminck and Schlegel - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "686883899044cc8cba5722804bebf0dd54099120cfb33d3799b34bcb0d8698c4",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0,
+    "imageTaxon": "Seriola aureovittata",
+    "imageIdentityNote": "Naturalis RMNH.ART.196의 일본산 부시리 도판. 역사적 S. lalandi 동의어 표기를 원문과 함께 보존."
+  },
+  {
+    "speciesId": "pearl-spot-chromis",
+    "nameKo": "자리돔",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/pearl-spot-chromis.webp",
+    "imageAlt": "자리돔 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "자리돔",
+    "description": "몸이 짧고 옆으로 납작하며 입이 작은 자리돔과 물고기.",
+    "methods": [
+      "카드채비 낚시"
+    ],
+    "rigs": [
+      "자리돔용 소형 바늘 카드채비"
+    ],
+    "seasonNote": "출처는 제주의 봄~초여름 관찰·어획을 소개합니다. 5~7월의 식용 제철을 연간 낚시 가능 기간과 같은 뜻으로 사용하지 않습니다.",
+    "habitatNote": "제주 등 따뜻한 연안의 암초 주변에서 무리 지어 생활하는 작은 물고기입니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=41174600",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 자리돔; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:SuzumeDai.jpg",
+    "imageLicense": "CC BY 2.5",
+    "imageAttribution": "Izuzuki",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=41174600",
+        "title": "위키백과: 자리돔",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://fishingseasons.co.kr/contents_view_detail.asp?b_no=11727",
+        "title": "김지민의 신자산어보: 자리돔",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Chromis notata",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/2.5/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/SuzumeDai.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/SuzumeDai.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "SuzumeDai.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "7c475ca1e4808cb2bce79958fd43516b48d1f77244e50f6c030527532081f64f",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "flathead-mullet",
+    "nameKo": "숭어",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/flathead-mullet.webp",
+    "imageAlt": "숭어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "숭어",
+    "description": "둥글고 무딘 머리와 작은 입, 길쭉한 몸을 가진 물고기.",
+    "methods": [
+      "릴찌낚시"
+    ],
+    "rigs": [
+      "소형 막대찌·짧은 목줄·작은 바늘·크릴 미끼"
+    ],
+    "seasonNote": "출처는 남해의 늦가을~겨울 찌낚시와 서해·동해의 다른 시즌을 구분합니다. 제주 전역의 고정 월별 시즌으로 사용하지 않습니다.",
+    "habitatNote": "방파제와 강 하구의 기수역에서 무리 지어 생활하며, 가숭어와 구분합니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=40906911",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 숭어; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.511_-_Mugil_cephalus_Linnaeus_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Ishizaki Yūshi (1768–1846); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=40906911",
+        "title": "위키백과: 숭어",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18942",
+        "title": "입문자교실: 숭어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Mugil cephalus",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Naturalis_Biodiversity_Center_-_RMNH.ART.511_-_Mugil_cephalus_Linnaeus_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Naturalis_Biodiversity_Center_-_RMNH.ART.511_-_Mugil_cephalus_Linnaeus_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.511 - Mugil cephalus Linnaeus - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "60c33bf4ae1edf0d5f77afe20d2c17623e2d4d4eb83a8afdaeff19bc6b548ec4",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "chicken-grunt",
+    "nameKo": "벤자리",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/chicken-grunt.webp",
+    "imageAlt": "벤자리 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "벤자리",
+    "description": "어린 개체의 몸에는 머리에서 꼬리 방향으로 뻗는 짙은 줄무늬가 보입니다. 조류가 통하는 암초 주변에 무리 짓는 어종입니다.",
+    "methods": [
+      "갯바위·방파제 찌낚시"
+    ],
+    "rigs": [
+      "찌·목줄·바늘에 크릴을 꿰는 채비 — 밑밥과 미끼가 함께 흘러가도록 운용"
+    ],
+    "seasonNote": "일본 Honda의 동종 안내는 봄~겨울, 특히 초여름(5~7월)을 소개합니다. 일본 자료의 범위이며 제주 전체의 고정 시즌을 뜻하지 않습니다.",
+    "habitatNote": "조류 소통이 좋은 암초 주변에 무리 지으며, 낮에는 바닥 가까이 있다가 밤에는 더 위층에서 먹이활동을 합니다.",
+    "sourceUrl": "https://www.honda.co.jp/fishing/picture-book/isaki/",
+    "license": "연결된 자료의 사실을 짧게 재서술; 원문·도판 이용 조건은 원출처 확인",
+    "attribution": "Honda釣り倶楽部: イサキ — 벤자리 특징·생태; Honda釣り倶楽部: イサキ — 찌낚시 채비",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.352_-_Parapristipoma_trilineatum_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.honda.co.jp/fishing/picture-book/isaki/",
+        "title": "Honda釣り倶楽部: イサキ — 벤자리 특징·생태",
+        "fields": [
+          "nameKo",
+          "description",
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "학명 Parapristipoma trilineatum이 일치하는 일본의 동종 안내"
+      },
+      {
+        "url": "https://www.honda.co.jp/fishing/picture-book/isaki/trap01/",
+        "title": "Honda釣り倶楽部: イサキ — 찌낚시 채비",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "ウキフカセ釣り 항목. 일본의 기법·시기"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Parapristipoma trilineatum",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Naturalis_Biodiversity_Center_-_RMNH.ART.352_-_Parapristipoma_trilineatum_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Naturalis_Biodiversity_Center_-_RMNH.ART.352_-_Parapristipoma_trilineatum_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.352 - Parapristipoma trilineatum - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "61ffe141807daf2b39cb726c959bbdf6fabd73a303e4d5e79d903cec1c542ad3",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "japanese-halfbeak",
+    "nameKo": "학공치",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/japanese-halfbeak.webp",
+    "imageAlt": "학공치 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "학꽁치",
+    "description": "가늘고 긴 몸과 앞으로 길게 뻗은 아래턱이 특징입니다.",
+    "methods": [
+      "릴찌낚시",
+      "민장대 찌낚시"
+    ],
+    "rigs": [
+      "던질찌·목줄찌·학공치 소형 바늘 채비"
+    ],
+    "seasonNote": "포항을 다룬 출처는 보통 12월~이듬해 4월, 해당 해에는 10월 조과를 소개합니다. 제주 고정 시즌으로 적용하지 않습니다.",
+    "habitatNote": "연안 표층을 무리 지어 다니며, 기사에서는 방파제·갯바위에서 크릴로 공략합니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=40910380",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 학공치; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 표시명 학공치와 지도 학꽁치는 국립해양생물자원관 국명 및 기존 필터를 대조했습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Hyporhamphus_sajori.jpg",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "Kwun H, Park J, Kim H, Kim J, Park H (2017) Checklist of the tidal pool fishes of Jeju Island, Korea. ZooKeys 709: 135-154. https://doi.org/10.3897/zookeys.709.14711",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.mbris.kr/pub/about/gallery.do?pageIndex=504",
+        "title": "국립해양생물자원관: 학공치",
+        "fields": [
+          "nameKo",
+          "scientificName"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=40910380",
+        "title": "위키백과: 학공치",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=5346",
+        "title": "시즌 개막: 학꽁치의 귀환",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Hyporhamphus sajori",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Hyporhamphus_sajori.jpg/960px-Hyporhamphus_sajori.jpg",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Hyporhamphus_sajori.jpg/960px-Hyporhamphus_sajori.jpg",
+    "imageFileTitle": "File:Hyporhamphus sajori.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "3b5cd201e6df8fb34242260d541a1d3cc55f99171bb3a7713b56c6753896ef38",
+    "mapMatchStatus": "matched",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "golden-cuttlefish",
+    "nameKo": "갑오징어",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/golden-cuttlefish.webp",
+    "imageAlt": "갑오징어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "몸통이 넓고 납작하며 몸 안에 단단한 갑을 가진 두족류입니다. 국립수산과학원의 참갑오징어(Sepia esculenta) 항목을 참고합니다.",
+    "methods": [
+      "연안 에깅",
+      "선상 에깅"
+    ],
+    "rigs": [
+      "수평에기 한 개와 싱커의 다운샷 채비"
+    ],
+    "seasonNote": "출처는 봄의 큰 개체와 9~11월 가을낚시를 소개합니다. 지역별 차이가 있어 제주 전역의 고정 시즌을 뜻하지 않습니다.",
+    "habitatNote": "연안 자갈·작은 암초가 섞인 바닥을 천천히 탐색합니다. 기사에는 제주 얕은 모래밭 조과도 소개됩니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (정보의 짧은 재서술)",
+    "attribution": "세상 쉬운 바다루어 8: 갑오징어 에깅; 국립수산과학원: 참갑오징어 — 형태특징",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=14625",
+        "title": "세상 쉬운 바다루어 8: 갑오징어 에깅",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 참갑오징어 — 형태특징",
+        "fields": [
+          "nameKo",
+          "description"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "Sepia esculenta 항목. 다른 갑오징어류 전체를 대표하지 않음"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Sepia esculenta",
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageOriginalUrl": "https://www.nifs.go.kr/cmmn/images/MF0009730_2.jpg",
+    "imageDownloadUrl": "https://www.nifs.go.kr/cmmn/images/MF0009730_2.jpg",
+    "imageFileTitle": "MF0009730_2.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "a1a8a364f9f8471e2723ce88c9f5ff0fadf2a1ac44abfeb44d58a182f607fb5f",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "japanese-flying-squid",
+    "nameKo": "살오징어",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/japanese-flying-squid.webp",
+    "imageAlt": "살오징어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "몸통 끝의 지느러미와 길게 뻗는 촉수가 있는 오징어류.",
+    "methods": [
+      "야간 선상낚시"
+    ],
+    "rigs": [
+      "생미끼를 묶은 텐야와 오징어 스틱 채비"
+    ],
+    "seasonNote": "거제·통영 먼바다 현장기에서는 1~4월 출조를 소개합니다. 제주 오징어 필터나 제주 연간 시즌으로 확정하지 않습니다.",
+    "habitatNote": "먼바다 선상에서 어군이 머무는 수심층을 탐색하는 살오징어 사례입니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "공공누리 제1유형 (특징·서식 정보를 짧게 재서술); 낚시 안내는 별도 전문 자료의 사실 요약",
+    "attribution": "국립수산과학원, 살오징어; 낚시 안내: 낚시춘추",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://togotv.dbcls.jp/togopic.2024.187.html",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "DBCLS / Togo picture gallery; @_HETAKA, ONO Hiromasa",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 살오징어 — 기본 정보",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=15252",
+        "title": "거제 홍도 먼바다: 살오징어 현장기",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Todarodes pacificus",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202408_Japanese_flying_squid.png",
+    "imageDownloadUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202408_Japanese_flying_squid.png",
+    "imageFileTitle": "202408_Japanese_flying_squid.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "29f3c37897a46f8b0a69854f15451bb206938b06d3cb62ea1f505da2d8939418",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "common-octopus",
+    "nameKo": "참문어",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/common-octopus.webp",
+    "imageAlt": "참문어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "여덟 팔을 가진 두족류로, 돌문어라고도 부르며 암반과 돌틈 주변에서 생활합니다. 동해의 대문어와 구분합니다.",
+    "methods": [
+      "연안 루어낚시",
+      "선상낚시"
+    ],
+    "rigs": [
+      "문어용 에기와 봉돌 채비"
+    ],
+    "seasonNote": "돌문어류 기사에서는 봄~초겨울, 특히 가을 조과를 소개합니다. 지역별 차이가 있으며 동해 대문어의 시즌과 구분합니다.",
+    "habitatNote": "암반·바위틈 주변에 머무는 참문어를 대상으로 바닥 가까이 에기를 운용합니다.",
+    "sourceUrl": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=90743",
+    "license": "연결된 자료의 사실을 짧게 재서술; 원문·도판 이용 조건은 원출처 확인",
+    "attribution": "입문자교실: 문어낚시",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 문어는 지역명으로 여러 종을 가리킬 수 있어 참문어류의 낚시 사례만 다룹니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://togotv.dbcls.jp/togopic.2022.018.html",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "DBCLS / Togo picture gallery; @_HETAKA, ONO Hiromasa",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=90743",
+        "title": "입문자교실: 문어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote",
+          "nameKo",
+          "description"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202201_East_asian_common_octopus.png",
+    "imageDownloadUrl": "https://dbarchive.biosciencedbc.jp/data/togo-pic/image/202201_East_asian_common_octopus.png",
+    "imageFileTitle": "202201_East_asian_common_octopus.png",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "9bf9c3f384b5cc2082204c256d53fc5ba0d86f1e6d9254fb9a0f8f5d4dce14a7",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "webfoot-octopus",
+    "nameKo": "주꾸미",
+    "nameEn": null,
+    "category": "cephalopod",
+    "imageSrc": "assets/species/webfoot-octopus.webp",
+    "imageAlt": "주꾸미 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "둥근 몸통 주위로 여덟 팔이 펼쳐지는 작은 문어류.",
+    "methods": [
+      "선상 루어낚시"
+    ],
+    "rigs": [
+      "주꾸미용 에기·스냅도래·봉돌 채비"
+    ],
+    "seasonNote": "서해 선상낚시를 다룬 출처는 9~10월 가을낚시와 11월 수온 하강에 따른 변화를 소개합니다. 제주 고정 시즌을 뜻하지 않습니다.",
+    "habitatNote": "주로 바닥을 공략하는 낚시이며 출처는 서해 중심의 선상 사례를 다룹니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=42443805",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 주꾸미; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Octopus_ocellatus_Miyajima1.jpg",
+    "imageLicense": "CC BY-SA 4.0",
+    "imageAttribution": "Totti / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=42443805",
+        "title": "위키백과: 주꾸미",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=18879",
+        "title": "입문자교실: 주꾸미낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Octopus_ocellatus_Miyajima1.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Octopus_ocellatus_Miyajima1.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Octopus ocellatus Miyajima1.jpg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "b52c9415f015c6943be10bc95ecb171d64dbf3780d1105db7939435884a87901",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0,
+    "imageIdentityNote": "Amphioctopus fangsiao, 구명 Octopus ocellatus. 자연스럽게 팔을 말고 있는 사육 개체의 외곽을 추출."
+  },
+  {
+    "speciesId": "thread-sail-filefish",
+    "nameKo": "쥐치",
+    "nameEn": null,
+    "category": "fish",
+    "imageSrc": "assets/species/thread-sail-filefish.webp",
+    "imageAlt": "쥐치 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "description": "세로로 넓고 납작한 몸, 뾰족한 주둥이와 작은 입을 가진 물고기.",
+    "methods": [
+      "연안 루어낚시",
+      "선상낚시"
+    ],
+    "rigs": [
+      "소형 쥐치바늘의 프리리그·다운샷",
+      "쥐치 카드채비와 웜"
+    ],
+    "seasonNote": "출처는 여름의 활발한 활동과 11월~1월의 바닥 공략을 소개합니다. 동해·남해 사례를 제주 전체 시즌으로 일반화하지 않습니다.",
+    "habitatNote": "맑은 연안의 자갈·모래와 암초가 섞인 곳에 서식하며, 수온에 따라 공략층이 달라집니다.",
+    "sourceUrl": "https://ko.wikipedia.org/w/index.php?oldid=41174516",
+    "license": "CC BY-SA 4.0 (백과 설명을 짧게 재서술)",
+    "attribution": "한국어 위키백과 기여자, 쥐치; 낚시 안내는 별도 출처의 사실 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "낚시 안내는 연결된 출처의 지역·기법·시점에 한정한 참고 사례입니다. 제주 전역의 현재 조황이나 출입 가능 여부를 확정하지 않습니다. 기존 지도 필터를 대조했으며 정확히 대응하는 키가 없어 지도 연결은 없습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.181_-_Stephanolepis_cirrhifer_(Temminck_and_Schlegel)_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://ko.wikipedia.org/w/index.php?oldid=41174516",
+        "title": "위키백과: 쥐치",
+        "fields": [
+          "nameKo",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=15114",
+        "title": "세상 쉬운 바다루어 13: 쥐치 루어낚시",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "scientificName": "Stephanolepis cirrhifer",
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Naturalis_Biodiversity_Center_-_RMNH.ART.181_-_Stephanolepis_cirrhifer_%28Temminck_and_Schlegel%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg/960px-thumbnail.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150720161142",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Naturalis_Biodiversity_Center_-_RMNH.ART.181_-_Stephanolepis_cirrhifer_%28Temminck_and_Schlegel%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg/960px-thumbnail.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150720161142",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.181 - Stephanolepis cirrhifer (Temminck and Schlegel) - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageSha256": "23c7712f55f699bd9fa228739f7ee913f268b02ad7ed6fc383b7816757b57c53",
+    "mapMatchStatus": "unavailable",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "japanese-spanish-mackerel",
+    "nameKo": "삼치",
+    "nameEn": null,
+    "scientificName": "Scomberomorus niphonius",
+    "category": "fish",
+    "imageSrc": "assets/species/japanese-spanish-mackerel.webp",
+    "imageAlt": "삼치 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "삼치",
+    "mapMatchStatus": "matched",
+    "description": "길고 납작한 몸과 날카로운 이빨을 가진 고등어과 물고기.",
+    "methods": [
+      "연안 루어낚시",
+      "선상 루어낚시"
+    ],
+    "rigs": [
+      "메탈지그 또는 스푼에 쇼크리더를 연결한 루어 채비 — 무게는 수심·조류에 맞춰 선택"
+    ],
+    "seasonNote": "입문 안내는 가을 연안낚시를 소개합니다. 동해 남부의 선상 대삼치는 8~11월, 특히 10월 사례이며 제주 고정 시즌과 구분합니다.",
+    "habitatNote": "서·남해와 동중국해 등지의 표층~중층에 분포합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Scomberomorus_niphonius_Naturalis_Biodiversity_Center_-_RMNH.ART.192_-_Scomberomorus_nichonius_(Cuvier)_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Kawahara Keiga (1786–c.1860); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 삼치 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=19004",
+        "title": "낚시춘추 편집부: 입문자 교실 — 삼치낚시 (2024.12)",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "국내 연안 / 동해 남부 선상 사례"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/17/Scomberomorus_niphonius_Naturalis_Biodiversity_Center_-_RMNH.ART.192_-_Scomberomorus_nichonius_%28Cuvier%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/1/17/Scomberomorus_niphonius_Naturalis_Biodiversity_Center_-_RMNH.ART.192_-_Scomberomorus_nichonius_%28Cuvier%29_-_Kawahara_Keiga_-_1823_-_1829_-_Siebold_Collection_-_pencil_drawing_-_water_colour.jpeg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Scomberomorus niphonius Naturalis Biodiversity Center - RMNH.ART.192 - Scomberomorus nichonius (Cuvier) - Kawahara Keiga - 1823 - 1829 - Siebold Collection - pencil drawing - water colour.jpeg",
+    "imageSha256": "a48416ae02b67e9f82614c3e759c2c2482fb89e2abc467a16c4f397a6c936be6",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "konoshiro-gizzard-shad",
+    "nameKo": "전어",
+    "nameEn": null,
+    "scientificName": "Konosirus punctatus",
+    "category": "fish",
+    "imageSrc": "assets/species/konoshiro-gizzard-shad.webp",
+    "imageAlt": "전어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "mapMatchStatus": "unavailable",
+    "description": "옆으로 납작한 몸과 작은 입, 길게 뻗는 등지느러미 끝줄기가 특징입니다.",
+    "methods": [
+      "민장대 찌낚시"
+    ],
+    "rigs": [
+      "작은 찌·소형 바늘·목줄에 작은 크릴을 꿰는 민장대 채비"
+    ],
+    "seasonNote": "경기 화성 방파제 기사에는 초가을 전어 조과와 10월 초 입질이 끊긴 사례가 나옵니다. 해당 지역·당시 사례이며, 제주 추천 월이나 식용 제철과 동일하게 보지 않습니다.",
+    "habitatNote": "우리나라 전 연근해, 특히 남해와 동중국해 등지에 분포합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다. 현재 지도 필터에 정확한 대응 키가 없어 관련 포인트는 연결하지 않습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 전어 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://www.badatime.com/gearing/13",
+        "title": "바다타임: 전어 낚시 채비",
+        "fields": [
+          "methods",
+          "rigs"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "민장대 찌낚시의 구성·미끼"
+      },
+      {
+        "url": "https://fishingseasons.co.kr/contents_view_detail.asp?b_no=3271",
+        "title": "낚시춘추 이영규: 화성 궁평항 — 초가을 전어 조과 언급",
+        "fields": [
+          "seasonNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "도입부의 전어 조과만 사용. 제목의 10~11월 피크는 망둥어이므로 전어에 적용하지 않음"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageDownloadUrl": "https://www.nifs.go.kr/cmmn/images/MF0012157_DG0102_watermark_2.png",
+    "imageOriginalUrl": "https://www.nifs.go.kr/cmmn/images/MF0012157_DG0102_watermark_2.png",
+    "imageFileTitle": "MF0012157_DG0102_watermark_2.png",
+    "imageSha256": "5eb8575c9cd6b6f709648a13e76dbed6a61ffaf24e240ca74a81bc06618e7558",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0,
+    "assetNote": null
+  },
+  {
+    "speciesId": "korean-rockfish",
+    "nameKo": "조피볼락",
+    "nameEn": null,
+    "scientificName": "Sebastes schlegelii",
+    "category": "fish",
+    "imageSrc": "assets/species/korean-rockfish.webp",
+    "imageAlt": "조피볼락 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "우럭",
+    "mapMatchStatus": "matched",
+    "description": "우럭이라는 방언으로도 불리는 연안의 정착성 물고기. 쏨뱅이와 다른 대상입니다.",
+    "methods": [
+      "연안 루어낚시"
+    ],
+    "rigs": [
+      "소형 웜을 꿴 지그헤드 채비 — 바닥과 돌 주변을 탐색하고 밑걸림에 주의"
+    ],
+    "seasonNote": "동해안 우럭 루어낚시 안내는 5월 이후, 6월의 마릿수와 9~10월의 굵은 씨알을 소개합니다. 제주 전체의 고정 시즌으로 적용하지 않습니다.",
+    "habitatNote": "우리나라 전 연안의 암초지대에 서식하는 것으로 국립수산과학원이 설명합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/board/actionBoard0008View.do?BBS_CL_CD=G&BBS_ID=20250828100256207LBN&MENU_ID=M0000054",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Sebastes_schlegelii_Hilgendorf%2C_1880.jpg",
+    "imageLicense": "CC BY-SA 2.1 jp",
+    "imageAttribution": "Tomarin",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/board/actionBoard0008View.do?BBS_CL_CD=G&BBS_ID=20250828100256207LBN&MENU_ID=M0000054",
+        "title": "국립수산과학원: 조피볼락 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=2336",
+        "title": "낚시춘추: 동해 우럭·개볼락 루어낚시 — 우럭 시즌·장비 항목",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "조피볼락(우럭) 전용 소제목과 우럭 언급만 사용. 개볼락의 특성을 옮기지 않음"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by-sa/2.1/jp/",
+    "imageOriginalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Sebastes_schlegelii_Hilgendorf%2C_1880.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Sebastes_schlegelii_Hilgendorf%2C_1880.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "imageFileTitle": "Sebastes schlegelii Hilgendorf, 1880.jpg",
+    "imageSha256": "557e50726f8b3a5f322c0976fdbe7f9f3a90b4bb4c6922d06bc0eaf3f01c6547",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "longtooth-grouper",
+    "nameKo": "자바리",
+    "nameEn": null,
+    "scientificName": "Epinephelus bruneus",
+    "category": "fish",
+    "imageSrc": "assets/species/longtooth-grouper.webp",
+    "imageAlt": "자바리(Epinephelus bruneus) 어린 개체의 전신 사진",
+    "mapSpeciesKey": null,
+    "mapMatchStatus": "unavailable",
+    "description": "큰 입을 가진 바리류로, 어린 개체의 몸에는 비스듬한 짙은 띠가 보이며 오래 자란 개체는 전체적으로 갈색을 띱니다.",
+    "methods": [
+      "갯바위 생미끼 바닥낚시",
+      "선상 생미끼 외줄낚시"
+    ],
+    "rigs": [
+      "봉돌과 외바늘을 사용하는 선상 생미끼 채비 — 살아 있는 물고기나 오징어를 사용"
+    ],
+    "seasonNote": "일본 Honda의 동종(Epinephelus bruneus) 안내는 연중, 특히 10~2월을 소개합니다. 일본 자료의 범위이며 제주 현지 시즌은 출조 전 별도 확인하세요.",
+    "habitatNote": "암초·바위굴과 바위턱 주변에 머물며 낮에는 숨고 해질녘과 새벽에 먹이활동을 합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/portal/pcon0000298/systA/actionConts.do",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다. 현재 지도 필터에 정확한 대응 키가 없어 관련 포인트는 연결하지 않습니다. 지도에 있는 다금바리 명칭만으로 자바리와 같은 종이라고 확정하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Epinephelus_bruneus_(10.12782-specdiv.29.389)_Figure_1.png",
+    "imageLicense": "CC BY 4.0",
+    "imageAttribution": "Hoshino, Senou & Nguyen (2024)",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/portal/pcon0000298/systA/actionConts.do",
+        "title": "국립수산과학원: 자바리 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://www.honda.co.jp/fishing/picture-book/kue/",
+        "title": "Honda釣り倶楽部: クエ — 특징·서식·낚시",
+        "fields": [
+          "description",
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "학명 Epinephelus bruneus가 일치하는 일본의 동종 안내"
+      },
+      {
+        "url": "https://www.honda.co.jp/fishing/picture-book/kue/trap01/",
+        "title": "Honda釣り倶楽部: クエ — 생미끼 바닥낚시·외줄 채비",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "일본의 기법·시기. 지도 다금바리 키의 동일 종을 입증하는 자료가 아님"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Epinephelus_bruneus_%2810.12782-specdiv.29.389%29_Figure_1.png/500px-Epinephelus_bruneus_%2810.12782-specdiv.29.389%29_Figure_1.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20250128180920",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Epinephelus_bruneus_%2810.12782-specdiv.29.389%29_Figure_1.png/500px-Epinephelus_bruneus_%2810.12782-specdiv.29.389%29_Figure_1.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20250128180920",
+    "imageFileTitle": "Epinephelus bruneus (10.12782-specdiv.29.389) Figure 1.png",
+    "imageSha256": "03c59b88c9afbf0fe47c29eb01c6f0f513384403da07f6e789636e11d851b4b0",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). Figure 1a의 어린 개체만 사용했습니다. 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "mottled-spinefoot",
+    "nameKo": "독가시치",
+    "nameEn": null,
+    "scientificName": "Siganus fuscescens",
+    "category": "fish",
+    "imageSrc": "assets/species/mottled-spinefoot.webp",
+    "imageAlt": "독가시치 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "독가시치",
+    "mapMatchStatus": "matched",
+    "description": "옆으로 납작한 타원형 몸과 작은 입을 가지며 지느러미 가시에 독이 있습니다. 맨손으로 가시를 만지지 않도록 주의하세요.",
+    "methods": [
+      "갯바위 찌낚시"
+    ],
+    "rigs": [
+      "찌·목줄·바늘에 새우 미끼를 다는 채비 — 작은 찌 움직임에도 주의"
+    ],
+    "seasonNote": "제주·남해를 다룬 자료는 여름~가을, 특히 한여름을 주요 시기로 소개합니다.",
+    "habitatNote": "따뜻한 남해·제주의 얕은 연안에서 해조류가 많은 곳을 무리 지어 다닙니다.",
+    "sourceUrl": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11822",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://commons.wikimedia.org/wiki/File:Naturalis_Biodiversity_Center_-_RMNH.ART.523_-_Siganus_fuscescens_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg",
+    "imageLicense": "Public domain",
+    "imageAttribution": "Ishizaki Yūshi (1768–1846); Naturalis Biodiversity Center / Wikimedia Commons",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11822",
+        "title": "국립수산과학원: 독가시치 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://fishingseasons.co.kr/contents_view_detail.asp?b_no=1477",
+        "title": "낚시춘추 명정구 박사의 조어박물지: 독가시치",
+        "fields": [
+          "description",
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "특징·생태·낚시 절의 찌 반응과 새우 미끼 안내"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "imageOriginalUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Naturalis_Biodiversity_Center_-_RMNH.ART.523_-_Siganus_fuscescens_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg/960px-Naturalis_Biodiversity_Center_-_RMNH.ART.523_-_Siganus_fuscescens_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150721012626",
+    "imageDownloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Naturalis_Biodiversity_Center_-_RMNH.ART.523_-_Siganus_fuscescens_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg/960px-Naturalis_Biodiversity_Center_-_RMNH.ART.523_-_Siganus_fuscescens_-_Y%C5%ABshi_Ishizaki_-_Cock_Blomhoff_Collection_-_pencil_drawing_-_water_colour.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20150721012626",
+    "imageFileTitle": "Naturalis Biodiversity Center - RMNH.ART.523 - Siganus fuscescens - Yūshi Ishizaki - Cock Blomhoff Collection - pencil drawing - water colour.jpg",
+    "imageSha256": "28ae9ad52fa2cc5fc30353c815e7fad40aed9546b1b0705b5aa51bb57434c773",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "whitespotted-conger",
+    "nameKo": "붕장어",
+    "nameEn": null,
+    "scientificName": "Conger myriaster",
+    "category": "fish",
+    "imageSrc": "assets/species/whitespotted-conger.webp",
+    "imageAlt": "붕장어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": "붕장어",
+    "mapMatchStatus": "matched",
+    "description": "길게 이어지는 몸을 가진 붕장어과 물고기.",
+    "methods": [
+      "야간 원투낚시"
+    ],
+    "rigs": [
+      "구멍봉돌·도래·짧은 목줄·바늘에 고등어살이나 꽁치살을 꿰는 바닥 채비"
+    ],
+    "seasonNote": "남해 입문 안내는 초여름~늦가을의 밤낚시를 소개합니다. 해역·수온에 따라 접근 시기가 달라집니다.",
+    "habitatNote": "연안의 모래·펄 바닥과 바위틈 주변에 머물며, 밤에는 바닥 가까이 생선살 미끼로 탐색합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/photobank/actionPhotobankPictureView.do?PHOTO_SEQ=4765",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 붕장어 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=13452",
+        "title": "낚시춘추 최훈: 여름밤 붕장어를 낚아보자 (2020.07)",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "남해 야간 원투낚시 사례. 산란 설명은 채택하지 않음"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageOriginalUrl": "https://www.nifs.go.kr/photobank/photobankFileDownload.do?FILE_VIEW_SE=01&FILE_SEQ=12453&PHOTO_SEQ=4765",
+    "imageDownloadUrl": "https://www.nifs.go.kr/photobank/photobankFileDownload.do?FILE_VIEW_SE=01&FILE_SEQ=12453&PHOTO_SEQ=4765",
+    "imageFileTitle": "0410_붕장어.png (FILE_SEQ 12453), watermark-free original",
+    "imageSha256": "ca0a443100ddf31bb80e1cbebc0effd29a922ccd3cb5b2d6bed8a87b1ddb103b",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  },
+  {
+    "speciesId": "mi-iuy-croaker",
+    "nameKo": "민어",
+    "nameEn": null,
+    "scientificName": "Miichthys miiuy",
+    "category": "fish",
+    "imageSrc": "assets/species/mi-iuy-croaker.webp",
+    "imageAlt": "민어 한 개체의 전신 참고 이미지",
+    "mapSpeciesKey": null,
+    "mapMatchStatus": "unavailable",
+    "description": "길고 옆으로 납작한 몸, 큰 입과 빗 모양의 꼬리지느러미가 특징입니다.",
+    "methods": [
+      "선상 생새우 외수질낚시"
+    ],
+    "rigs": [
+      "봉돌·목줄·바늘에 살아 있는 새우를 꿰는 외수질 채비 — 바닥을 확인한 뒤 살짝 띄워 운용"
+    ],
+    "seasonNote": "전북 격포의 선상 사례는 6~10월, 특히 7~8월을 소개합니다. 제주 고정 시즌으로 일반화하지 않습니다.",
+    "habitatNote": "서·남해와 황해 등의 펄 바닥에 주로 서식합니다.",
+    "sourceUrl": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+    "license": "직접 작성한 사실 요약; 원문·사진의 이용 조건과 구분",
+    "attribution": "국립수산과학원 공개 자료의 국명·분류·특징 요약",
+    "verified": true,
+    "needsVerification": false,
+    "verificationNote": "특징·낚시 안내는 연결된 출처의 대상 종·지역·기법 범위에서 확인했습니다. 제주 전역의 현재 조황이나 출입 가능 여부를 보장하지 않습니다. 현재 지도 필터에 정확한 대응 키가 없어 관련 포인트는 연결하지 않습니다.",
+    "imageSourceUrl": "https://www.nifs.go.kr/photobank/actionPhotobankPictureView.do?PHOTO_SEQ=5084",
+    "imageLicense": "공공누리 제1유형",
+    "imageAttribution": "국립수산과학원",
+    "imageVerified": true,
+    "informationSources": [
+      {
+        "url": "https://www.nifs.go.kr/contents/actionContentsCons0088.do",
+        "title": "국립수산과학원: 민어 기본 정보",
+        "fields": [
+          "nameKo",
+          "scientificName",
+          "description",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28"
+      },
+      {
+        "url": "https://m.fishingseasons.co.kr/news_Detail.asp?b_no=16523",
+        "title": "낚시춘추 이영규: 전북 격포 민어낚시 (2023.08)",
+        "fields": [
+          "methods",
+          "rigs",
+          "seasonNote",
+          "habitatNote"
+        ],
+        "reviewedOn": "2026-10-28",
+        "scope": "전북의 생새우 외수질. 전남 선상 원투낚시와 구분"
+      }
+    ],
+    "reviewedOn": "2026-10-28",
+    "needsAsset": false,
+    "imageQualityVerified": true,
+    "imageBackground": "transparent",
+    "assetNote": null,
+    "imageLicenseUrl": "https://www.kogl.or.kr/info/licenseType1.do",
+    "imageOriginalUrl": "https://www.nifs.go.kr/photobank/photobankFileDownload.do?FILE_VIEW_SE=01&FILE_SEQ=12772&PHOTO_SEQ=5084",
+    "imageDownloadUrl": "https://www.nifs.go.kr/photobank/photobankFileDownload.do?FILE_VIEW_SE=01&FILE_SEQ=12772&PHOTO_SEQ=5084",
+    "imageFileTitle": "민어 원본 사진 (PHOTO_SEQ 5084 / FILE_SEQ 12772)",
+    "imageSha256": "a8092c677de943c70dfcff226f4ce71f4a89e65a651ffac837bd7d4217570a23",
+    "imageChanges": "원본의 단일 개체를 추출하고 배경을 투명 처리했습니다. 원본 비율·해부학적 형태를 유지하고 512×512 sRGB WebP 중앙에 배치했습니다(약 10% 안전 여백). 표시 상태는 같은 파일에 CSS filter만 적용합니다.",
+    "imageScale": 1,
+    "imageRotation": 0
+  }
+]

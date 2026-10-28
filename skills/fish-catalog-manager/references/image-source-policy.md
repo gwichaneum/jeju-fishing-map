@@ -6,10 +6,11 @@
 ## 저장과 증거
 
 - 실제 파일은 기존 `assets/` 아래에 둔다. PNG/WebP/SVG 중 투명 배경을 우선한다.
+- JPEG는 원본부터 깨끗한 단색 배경일 때만 허용한다. 전신 한 개체만 보여야 하며 바다·수조·사람·손·접시·다른 물체·글자·워터마크·심한 잘림이 있으면 교체하거나 needsAsset=true로 둔다. 종의 형태를 생성·변형하거나 참고 화면의 생물을 잘라 재사용하지 않는다.
 - 외부 URL을 imageSrc로 쓰지 않는다. 다운로드 권한·라이선스가 확인된 파일만 로컬에 저장한다.
 - 정보는 sourceUrl/license/attribution, 이미지는 imageSourceUrl/imageLicense/imageAttribution/imageVerified로 분리한다.
 - 라이선스의 저작자 표기·변형 표시·동일조건·상업 이용 등 실제 의무를 확인하고 필요한 표기를 UI·문서에 반영한다.
-- 권한 또는 종 정확성을 확인하지 못하면 imageSrc=null, imageVerified=false, needsVerification=true와 이유를 남긴다.
+- 권한·종 정확성·이미지 품질을 확인하지 못하면 imageSrc=null, imageVerified=false, needsAsset=true, needsVerification=true와 assetNote를 남긴다. 파일 자체의 미준비와 설명 정보의 검증 상태를 별도 필드로 기록한다.
 - SVG는 외부 리소스·script·추적 링크를 제거하고 검토한다. 파일 존재 검사만으로 이미지 안전성·권한·정확성이 증명되지 않는다.
 - 서버 `staticFiles`에는 새 이미지의 필요한 경로만 등록한다. `.env`·프로젝트 루트 전체를 공개하지 않는다.
 

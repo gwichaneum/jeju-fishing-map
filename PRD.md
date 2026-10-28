@@ -4,12 +4,12 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 버전 | 1.1 (지도 + 개인 도감 확장 설계) |
+| 문서 버전 | 1.5 (Phase 2 전체 상세 정보 인수) |
 | 작성·검토 기준일 | 지도 검증 기록 2026-10-02 / 확장 설계 2026-10-28 |
 | 프로젝트 버전 | 0.1.0 (`package.json` 기준) |
 | 문서 기준 | 1~10장은 기존 지도 명세·검증 기록, 11장은 단계별 도감 확장 요구사항 |
 | 개발 방식 | Codex를 활용한 AI Vibe Coding, 기능 단위 구현·검증·Git 관리 |
-| 현재 상태 | 기존 지도 구현 완료, 도감은 Phase 1 문서·Skill 준비만 완료; 도감 기능 미구현 |
+| 현재 상태 | 기존 지도 유지, 읽기 전용 도감 31종·이미지 31종·상세 정보 31종. C02·C03 완료, 엄격 검증 오류 0·경고 0. 조과·IndexedDB·해금·어종별 자동 지도 연동은 미구현 |
 
 [프로젝트 보고서](./README.md) · [작업 현황](./TODO.md) · [상세 구현·데이터 검증 기록](./docs/TECHNICAL_NOTES.md)
 
@@ -337,7 +337,7 @@ Marine 실패 시 다른 영역은 유지된다. 모델 해상 정보를 공식 
 | Phase | 결과물 | 연결 작업 | 현재 상태 |
 | --- | --- | --- | --- |
 | 1 | 기존 구조 분석, 통합 PRD·TODO, Skill 4개와 references/scripts, 사용 기록 초기 문서 | C01 | 완료 |
-| 2 | 최소 20종 데이터·이미지 출처 정책·고유 이미지, 도감 목록·상세·회색 상태 | C02·C03 | 미구현 |
+| 2 | 필수 30종 데이터·이미지 출처 정책·고유 이미지, 도감 목록·상세·회색 상태 | C02·C03 | 완료. 31종 이미지·특징·방법·채비·시기·서식·출처 준비. 일반·엄격 검증 오류 0·경고 0, Phase 2 정적 검사·브라우저·지도 회귀 통과 |
 | 3 | 조과 Form·IndexedDB·추가/수정/삭제, 누적 집계·잠금/해금 | C04·C05 | 미구현 |
 | 4 | 지도↔도감 이동·실제 필터 연결·공통 UI 완성·전체 회귀 테스트 | C06·C07 일부 | 미구현 |
 | 5 | README 축약·실제 사이트 링크·Public 저장소 확인·최종 문서 | C07 나머지 | 미구현 |
@@ -388,7 +388,9 @@ FR-01~FR-09 전체와 모바일 UI를 회귀 기준으로 유지한다. 새 파�
 
 ### 11.5 초기 대상과 지도 키 조사
 
-최소 20종을 목표로 아래 24종을 우선 검토한다. 이 표는 후보·매핑 설계이며 도감 데이터가 생성되었다는 뜻이 아니다.
+아래 표는 Phase 1의 24종 후보·매핑 설계 기록이다. 재작업에서는 필수 30종과 기존 쥐치를 합한 31종을 데이터에 포함했다.
+추가한 7종은 삼치·전어·조피볼락·자바리·독가시치·붕장어·민어다. 후속 전체 정보 감사에서 낚시 안내까지 출처와 대조했다. 지역·기법별 적용 범위와 31종의 근거는 [어종 정보 출처](./docs/SPECIES_INFO_SOURCES.md)를 따른다.
+조피볼락은 공개 자료의 우럭 방언 설명을 대조해 기존 지도 키 `우럭`에 연결했다. 자바리는 `다금바리`에 임의 연결하지 않는다.
 지도에 어종 문자열이 있다는 사실은 도감의 생물학적 설명·채비·시기·이미지가 검증되었다는 뜻이 아니다.
 모든 후보의 도감 정보·이미지는 출처 확인 전 `verified: false`, `needsVerification: true`로 다룬다.
 
@@ -415,17 +417,19 @@ FR-01~FR-09 전체와 모바일 UI를 회귀 기준으로 유지한다. 새 파�
 
 | 자료 | 필드 |
 | --- | --- |
-| speciesCatalog | speciesId, nameKo, nameEn, category, imageSrc, imageAlt, mapSpeciesKey, description, methods, rigs, seasonNote, habitatNote, sourceUrl, license, attribution, verified, needsVerification |
-| 선택 어종 필드 | scientificName(출처 확인 후만), verificationNote, informationSources, imageSourceUrl, imageLicense, imageAttribution, imageVerified |
+| speciesCatalog | speciesId, nameKo, nameEn, category, imageSrc, imageAlt, mapSpeciesKey, description, methods, rigs, seasonNote, habitatNote, sourceUrl, license, attribution, verified, needsAsset, needsVerification |
+| 이미지·검증 필드 | scientificName(출처 확인 후만), verificationNote, mapMatchStatus(matched/unavailable/pending), informationSources, imageSourceUrl, imageLicense, imageAttribution, imageVerified, imageQualityVerified, imageBackground, assetNote, imageScale, imageRotation |
 | catchRecords | recordId, speciesId, caughtAt, count, photoBlob, locationName, mapSpotId, memo, createdAt, updatedAt |
 
 - `speciesId`는 영문 소문자·숫자·하이픈의 안정적인 ID이며 이름 변경으로 바꾸지 않는다. 지도 키는 실제 한국어 필터 값 또는 null이다.
 - 미확인 설명·방법·채비·시기는 null/빈 배열과 확인 필요 이유로 남긴다. 그럴듯한 문장·학명·이미지를 만들지 않는다.
 - 이미지는 사용 권한 확인 후 로컬 `assets/`에 저장하고 출처 URL·라이선스·Attribution을 기록한다. 제3자 hotlink 금지.
 - 투명 PNG/WebP/SVG를 우선 검토한다. 회색·컬러는 같은 src·크기·회전·위치이며 CSS로만 상태를 바꾼다.
+- 단일 생물 전신·투명/깨끗한 단색 배경만 허용한다. 바다·수조·손·접시·다른 물체·글자·워터마크·심한 잘림은 제외한다. 권한 확인과 이미지 품질 검증은 별개다.
+- 적합한 이미지가 없으면 imageSrc=null·needsAsset=true·assetNote를 기록하고 이름과 ‘이미지 준비 중’을 표시한다. 가짜 대체 그림을 만들지 않는다.
 - 예시 filter는 `grayscale(1) saturate(0) brightness(0.42) contrast(1.15)`, opacity는 0.65~0.8에서 형태가 보이도록 조정한다.
 - 갈치·광어·한치·무늬오징어·갑오징어·문어·주꾸미·학공치 등 형태 구분은 수동 시각 검증한다. 권한·정확성 미확인은 이미지 준비 필요로 보고한다.
-- 참고 화면이 있으면 Grid·원형 frame·이름·상태·모바일 밀도만 참고한다. 브랜드·입질확률·시간표·색상/아이콘·원본 어종 이미지를 복사하지 않는다. 현재 첨부 텍스트 외 참고 화면 파일은 발견하지 못했다.
+- 사용자가 제공한 모바일 참고 화면 3장을 확인했다. Grid·원형 frame·이름·상태·모바일 밀도만 참고하며 브랜드·입질확률·시간표·색상/아이콘·원본 어종 이미지를 복사하지 않는다.
 - IndexedDB 제안: `jejuFishingCollection` v1, `catchRecords` store(keyPath `recordId`), speciesId·caughtAt·mapSpotId 인덱스. 브라우저 저장소 초기화·비공개 모드·용량 제한으로 소실될 수 있음을 안내한다.
 
 ### 11.7 UI와 지도 연동 설계
@@ -433,8 +437,8 @@ FR-01~FR-09 전체와 모바일 UI를 회귀 기준으로 유지한다. 새 파�
 공통 Segmented Navigation은 `[낚시 지도] [나의 도감]`으로 현재 화면을 표시한다. Phase 2에 도감 구조와 공통 스타일을 준비하고
 Phase 4에서 실제 양방향 이동을 완성한다. 도감만 별도의 Dark Theme로 구성하지 않는다.
 Header는 ‘나의 낚시 도감’, 수집 종/전체 종, Progress Bar, 상태·분류 필터(필요하면 검색)를 포함한다.
-Grid는 넓은 PC 5~6열, Tablet 4열, 일반 Mobile 3열, 매우 좁은 Mobile 2열을 목표로 실제 폭에서 검증한다.
-카드는 둥근 이미지 frame·고유 이미지·이름·상태·누적 수치, 키보드/터치 상세 열기를 제공한다. 터치 영역은 44px 이상을 목표로 한다.
+Grid는 390px 이상 Mobile 4열, 좁은 Mobile 3열, 매우 좁은 화면 2열, Tablet 5~6열, 넓은 PC 6~8열을 목표로 실제 폭에서 검증한다.
+개별 항목은 큰 흰 카드 대신 차분한 링·고유 이미지·이름·상태를 배치한다. 누적 수치는 기록 구현 후 연결하며 키보드/터치 상세 열기와 44px 이상의 터치 영역을 제공한다.
 
 `index.html?species=무늬오징어`와 `catalog.html?species=patterned-squid`는 후속 구현 후보일 뿐 현재 지원 주소가 아니다.
 Phase 2에서 실제 도감 파일·로딩 구조를 정하고, Phase 4에서 양쪽 파서·서버 허용 경로·뒤로 가기를 함께 구현한 뒤 링크를 활성화한다.
@@ -456,7 +460,7 @@ PC·모바일 브라우저에서 같은 앱을 실행하고, Phase 5에 실제 �
 아래는 전체 Phase 종료 기준이며 Phase 1에서 기능 완료로 표시하지 않는다.
 
 - [ ] FR-01~FR-09 지도·마커·Popup·검색·필터·즐겨찾기·현재 위치·화장실·날씨·물때·API 프록시 유지
-- [ ] 최소 20종 카드와 어류/두족류·수집 상태 필터, 수집 종 수·Progress 표시 (F1)
+- [ ] 필수 30종 카드와 어류/두족류·수집 상태 필터, 수집 종 수·Progress 표시 (F1)
 - [ ] 종별 고유 형태와 동일 원본의 회색/컬러 상태, 미수집 상세 열기 및 정보 출처 (F2·F3)
 - [ ] 사진+2마리 첫 기록 → 컬러 해금, 같은 종 3마리 추가 → 총 5마리/기록 2회 (F4·F5)
 - [ ] 수정 후 통계 재계산, 마지막 기록 삭제 후 회색 복귀, 잘못된 입력 차단 (F4·F5)
@@ -477,3 +481,30 @@ PC·모바일 브라우저에서 같은 앱을 실행하고, Phase 5에 실제 �
 
 날짜·사용 요청·적용 절차·검사 파일·실행 스크립트·발견 오류·수정·검증 결과를 [SKILL_USAGE](./docs/SKILL_USAGE.md)에 기록한다.
 Phase 1은 Skill 생성과 제작 검증만 기록한다. 스크립트 자체 검사·SKIP을 도감 기능이나 IndexedDB·브라우저 테스트 통과로 주장하지 않는다.
+
+### 11.11 Phase 2 이미지 감사·Grid 재작업 (2026-10-28)
+
+아래는 이미지 감사 당시의 이력이다. 후속 최종 상태는 11.12와 문서 상단 현재 상태를 따른다.
+
+- 실제 원본은 `species-catalog.json`, 화면은 `catalog.html`, 로직·스타일은 `catalog.js`·`catalog.css`다. 공통 메뉴를 `index.html`·`styles.css`에 추가했다.
+- 31종(어류 25·두족류 6), 초기 수집 0/31·0%, 상태/분류/검색 AND 필터, 빈 결과, 미수집 상세와 정보·이미지 출처를 제공한다. 수집 수·비율은 데이터에서 계산하며 HTML에 고정하지 않는다.
+- 기존 24개 이미지 중 21개가 새 품질 기준에 미달했다. 후속 보완까지 9개 교체·12개 준비 중 전환·3개 유지, 새 전어 이미지를 추가했다. 미사용 옛 파일 20개를 삭제했고 볼락은 같은 경로의 파일 내용을 교체했다.
+- 현재 준비 이미지는 13종이며 로컬 파일만 사용한다. 18종은 needsAsset=true로 ‘이미지 준비 중’을 표시한다. [이미지 감사·출처·삭제/교체 목록](./docs/SPECIES_ASSETS.md)과 [저작자·라이선스 목록](./assets/species/ATTRIBUTION.md)에 실제 상태를 기록했다.
+- 후속 보완으로 갑오징어는 국립수산과학원 참갑오징어 원본·공공누리 제1유형, 쏨뱅이는 FMIB 52974·James Carson Brevoort(1856)·public domain을 확인해 추가했다. 전신·단독 개체·단색 배경·글자/워터마크 없음 기준을 적용했다.
+- 한치의 손 포함 사진과 무늬오징어의 수중 사진을 제외했다. 적합한 대체 이미지가 없어 두 종은 준비 중이다. 갈치는 국립수산과학원 공개 투명 PNG·공공누리 제1유형과 Trichiurus japonicus 표기를 대조해 교체했다.
+- 기존 24종의 낚시 안내에는 출처별 지역·기법 범위를 유지했다. 새 7종은 국명·기본 특징만 대조했으며 methods/rigs=[]·seasonNote=null로 낚시 안내를 보류했다. verified와 이미지 검증·needsAsset는 구분한다.
+- 실제 지도 키가 없는 종은 mapSpeciesKey=null·mapMatchStatus=unavailable와 사유로 관리한다. 기존 포인트·좌표·필터를 바꾸거나 다른 종으로 대체하지 않는다.
+- 실제 데이터 일반 검증은 오류 0·보류 경고 37개로 구조 PASS다. `--strict`는 같은 경고 때문에 FAIL이며 C02 전체 준비는 미완료다. 과거의 24개 준비·엄격 통과 기록은 이전 기준의 이력이며 현재 상태가 아니다.
+- `server.js`는 도감 4개 파일과 JSON에 명시된 로컬 이미지 경로만 허용 목록에 추가한다. 기존 API·포인트·화장실·기상·물때·위치·즐겨찾기 로직을 유지한다.
+- 관련 포인트 이름·공개 자료/제보/메모 구분은 상세에서 읽을 수 있으나 어종별 지도 이동 버튼은 비활성이다. 양방향 query 연동은 Phase 4에서 구현한다.
+- 조과 Form·사진 업로드·IndexedDB·집계·실제 해금은 구현하지 않았다. 컬러 참고 스크린샷은 CSS 원본 비교용이며 해금 동작의 증거가 아니다.
+- 자동 테스트 83개와 브라우저 320/375/390/430/768/1024/1440/1920px·812×375 가로 화면의 목록/상세·실패 복구·기존 지도 탐색을 확인했다. 준비 13종의 동일 src·회색 필터·CSS 컬러 전환 시 위치/크기를 확인했고, 미준비 18종의 형태 비교는 미완료다. 전체 결과·SKIP은 [SKILL_USAGE](./docs/SKILL_USAGE.md)에 기록한다.
+
+### 11.12 Phase 2 전체 상세 정보 인수 (2026-10-28)
+
+- 31종 이미지 준비 후, 빈 낚시 방법·채비·시기 7종을 보완하고 전체 특징·서식·지도 키·출처를 감사했다. 31종 정보 확인, needsVerification 0, 일반·엄격 검증 오류 0·경고 0이다. 지역 사례의 범위는 [SPECIES_INFO_SOURCES](./docs/SPECIES_INFO_SOURCES.md)에 기록한다.
+- 상세는 이미지·이름/분류·특징·대표 방법·채비·시기·서식·관련 포인트·출처·현장 차이 안내 순서다. 미수집에서도 열람하며 미확인 정보에는 “정보 확인 중”, 대응 지도 키가 없는 9종에는 “현재 등록된 관련 포인트 없음”을 표시한다.
+- 정보 출처의 fields·검토일·지역/기법 범위를 기록하고 이미지 출처와 분리한다. 대표 채비는 문자열 배열 1~2개로 유지한다. 한치는 이카메탈/오모리그, 무늬오징어는 에깅, 갈치는 연안 야간 릴찌낚시로 구분한다.
+- 일반 지도 열기와 대응 필터 선택 안내를 제공한다. 어종 자동 필터 쿼리·Popup 역방향 연결은 Phase 4의 C06에 남는다.
+- 이미지 31종의 경로와 실제 파일 SHA-256을 보존했다. 기존 자동 테스트 83개, Phase 1/2 정적 검사, 9개 viewport·모바일/PC 전체 31종 상세, 미확인 정보 fixture, 지도 12조합·위치 거부 회귀를 통과했다. 실제 휴대폰·공식 API 실응답 재조회·현장 검증은 수행하지 않았다.
+- C02·C03의 Phase 2 범위 완료. Phase 3 저장·조과·집계·실제 해금은 구현하지 않았고 commit/push하지 않았다.

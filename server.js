@@ -2,13 +2,17 @@ const express = require("express");
 const path = require("node:path");
 const dotenv = require("dotenv");
 const { createTideService, TideError } = require("./server/tide-service.cjs");
+const speciesCatalog = require("./species-catalog.json");
 
 const staticFiles = new Map([
   ["/", "index.html"], ["/index.html", "index.html"],
-  ...["styles.css", "script.js", "spot-filters.js", "favorites.js", "location.js", "weather.js",
+  ...["styles.css", "script.js", "catalog.html", "catalog.css", "catalog.js", "species-catalog.json", "spot-filters.js", "favorites.js", "location.js", "weather.js",
     "tide-utils.js", "tides.js", "fishing-spots.js", "restrooms.js"].map(file => [`/${file}`, file]),
   ...["jeju-coast.jpg", "search.svg", "rotate-ccw.svg", "heart.svg", "heart-filled.svg",
     "locate-fixed.svg", "map.svg"].map(file => [`/assets/${file}`, `assets/${file}`]),
+  ...speciesCatalog.filter(species => species.imageVerified === true
+    && /^assets\/species\/[a-z0-9-]+\.(?:png|webp|svg|jpe?g)$/.test(species.imageSrc || ""))
+    .map(species => [`/${species.imageSrc}`, species.imageSrc]),
 ]);
 
 function createApp({ tideService = createTideService() } = {}) {

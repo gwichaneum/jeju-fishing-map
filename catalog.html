@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>나의 낚시 도감 · Jeju Fishing Map</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/map.svg" />
+    <meta name="description" content="제주의 낚시 대상 어종을 살펴보고 특징과 낚시 방법, 정보 출처를 확인하세요." />
+    <link rel="preload" as="image" href="./assets/jeju-coast.jpg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./catalog.css" />
+    <script defer src="./fishing-spots.js"></script>
+    <script defer src="./spot-filters.js"></script>
+    <script defer src="./catalog.js"></script>
+  </head>
+  <body class="catalog-page">
+    <div class="page-shell">
+      <main class="main-content catalog-main">
+        <nav class="site-navigation" aria-label="주요 화면">
+          <a href="./index.html">낚시 지도</a>
+          <a href="./catalog.html" aria-current="page">나의 도감</a>
+        </nav>
+        <header class="hero-copy catalog-hero">
+          <p class="kicker">JEJU COAST ARCHIVE · COLLECTION</p>
+          <h1>나의 낚시 도감</h1>
+          <p class="intro">다음 출조에서 만나고 싶은 어종을 찾아보세요.</p>
+        </header>
+
+        <section class="collection-panel" aria-labelledby="collection-heading" aria-busy="true">
+          <div class="collection-overview">
+            <div>
+              <h2 id="collection-heading">한 종씩, 나만의 컬렉션</h2>
+              <p class="collection-caption">미수집 어종도 눌러서 자세히 볼 수 있어요.</p>
+            </div>
+            <div class="collection-progress">
+              <p><strong id="collection-collected">—</strong><span id="collection-total"> / —종 수집</span><span id="collection-percent">—</span></p>
+              <progress id="collection-progress" value="0" max="1" aria-label="어종 수집 진행률">불러오는 중</progress>
+            </div>
+          </div>
+
+          <form id="catalog-filters" class="catalog-filters" role="search" aria-label="도감 검색 및 필터">
+            <fieldset class="collection-status-filter">
+              <legend class="visually-hidden">수집 상태</legend>
+              <label><input type="radio" name="status" value="all" checked /><span>전체</span></label>
+              <label><input type="radio" name="status" value="uncollected" /><span>미수집</span></label>
+              <label><input type="radio" name="status" value="collected" /><span>수집완료</span></label>
+            </fieldset>
+            <div class="catalog-search">
+              <label class="visually-hidden" for="catalog-query">어종 이름 검색</label>
+              <img src="./assets/search.svg" width="18" height="18" alt="" />
+              <input id="catalog-query" name="query" type="search" placeholder="어종 이름으로 찾기" autocomplete="off" />
+            </div>
+            <fieldset class="collection-category-filter">
+              <legend class="visually-hidden">생물 분류</legend>
+              <label><input type="radio" name="category" value="all" checked /><span>전체 분류</span></label>
+              <label><input type="radio" name="category" value="fish" /><span>어류</span></label>
+              <label><input type="radio" name="category" value="cephalopod" /><span>두족류</span></label>
+            </fieldset>
+            <p id="catalog-result-count" class="catalog-result-count" role="status" aria-live="polite" aria-atomic="true">도감을 불러오는 중입니다.</p>
+          </form>
+
+          <p id="catalog-load-status" class="catalog-load-status" role="status">제주의 어종을 불러오는 중이에요.</p>
+          <button id="catalog-retry" class="catalog-button" type="button" hidden>다시 불러오기</button>
+          <ul id="species-grid" class="species-grid" aria-label="낚시 대상 어종" hidden></ul>
+          <div id="catalog-empty" class="catalog-empty" hidden>
+            <h3>조건에 맞는 어종이 없어요</h3>
+            <p id="catalog-empty-message">검색어나 분류를 바꿔보세요.</p>
+            <button id="catalog-reset" class="catalog-button" type="button">전체 어종 보기</button>
+          </div>
+          <p class="collection-footnote">사진과 조과를 남기는 기록 기능을 준비하고 있어요.<br class="small-screen-break" /> 자료의 범위와 정보·이미지 출처는 각 어종 상세에서 안내합니다.</p>
+        </section>
+      </main>
+      <footer class="site-footer">Jeju Fishing Map · 바다의 발견을 모으다</footer>
+    </div>
+
+    <dialog id="species-detail" class="species-detail" aria-labelledby="species-detail-name" aria-describedby="species-detail-description">
+      <div class="species-detail-toolbar">
+        <span class="species-detail-eyebrow">JEJU COLLECTION</span>
+        <button type="button" id="species-detail-close" class="detail-close" aria-label="어종 상세 닫기">닫기 <span aria-hidden="true">×</span></button>
+      </div>
+      <div id="species-detail-content"></div>
+    </dialog>
+    <noscript><p class="catalog-noscript">도감을 검색하고 상세 정보를 보려면 브라우저에서 JavaScript를 허용해 주세요.</p></noscript>
+  </body>
+</html>

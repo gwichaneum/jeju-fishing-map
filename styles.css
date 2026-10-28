@@ -70,6 +70,38 @@ p {
   min-height: 100svh;
 }
 
+.site-navigation {
+  display: flex;
+  width: fit-content;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 4px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 18px;
+  background: rgba(241, 248, 252, 0.18);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.site-navigation a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 20px;
+  border-radius: 13px;
+  color: #fff;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.site-navigation a[aria-current="page"] {
+  color: #155b73;
+  background: #f7fcff;
+  font-weight: 650;
+  box-shadow: 0 2px 10px rgba(5, 25, 40, 0.08);
+}
+
 .main-content,
 .site-footer {
   width: min(100%, 1440px);

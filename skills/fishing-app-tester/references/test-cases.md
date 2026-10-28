@@ -6,9 +6,9 @@
 
 | ID | 사전 조건 | 실행 순서 | 기대 결과 | 실패 시 확인 파일 |
 | --- | --- | --- | --- | --- |
-| T01 | 도감 구현, 기록 없는 별도 profile | 도감 직접 접속, 전체/분류/상태 필터 선택 | 최소 20종 모두 미수집, 0/전체·0%, 수집완료 필터는 빈 결과 | 실제 catalog 데이터·목록 JS, styles.css |
+| T01 | 도감 구현, 기록 없는 별도 profile | 도감 직접 접속, 전체/분류/상태 필터 선택 | 최소 30종 모두 미수집, 데이터에서 계산한 0/전체·0%, 수집완료 필터는 빈 결과 | 실제 catalog 데이터·목록 JS, styles.css |
 | T02 | T01 상태 | 미수집 카드 click·Enter·Space로 열기, 닫기 | 이름·분류·특징·방법·채비·시기·출처/확인 필요 표시, 키보드 focus 복귀 | 실제 도감 상세 HTML/JS |
-| T03 | 종별 권한 확인 이미지 준비 | 갈치·광어·한치·무늬오징어 등 회색/컬러 비교 | 고유 형태·지느러미·촉수가 구분됨, 같은 src·크기·회전·위치, generic 재사용 없음 | 실제 catalog 데이터, assets의 실제 이미지, styles.css |
+| T03 | 종별 권한 확인 이미지 준비 | 갈치·광어·한치·무늬오징어 등 회색/컬러 비교, 원본의 배경·글자·워터마크·잘림 확인 | 고유 형태·지느러미·촉수가 구분됨, 같은 src·크기·회전·위치·filter, generic 재사용 없음. needsAsset는 준비 중으로 표시하며 해당 종의 형태 구분을 PASS로 세지 않음 | 실제 catalog 데이터, assets의 실제 이미지, catalog.css |
 | T04 | 기록 기능 구현, 미수집 종 | 유효 사진·날짜·2마리·장소·메모 저장 | transaction 완료 뒤 컬러, 총 2마리/1회, 수집 종 수 증가 | 실제 Form·저장소·집계 모듈 |
 | T05 | T04 기록 유지 | 같은 종에 사진·3마리 기록 추가 | 총 5마리/2회, 수집 종 수는 그대로, 다른 종 영향 없음 | 실제 집계·목록·상세 모듈 |
 | T06 | T05 저장 완료 | 새로고침, 브라우저 닫고 같은 origin 재접속 | 두 기록의 사진·날짜·수치·메모·장소 복원, 총 5마리/2회 | 실제 IndexedDB store·버전·Blob 복원 코드 |
@@ -18,7 +18,7 @@
 | T10 | 지도 연동 완료 | 무늬오징어 상세→지도 포인트 보기, 직접 URL·뒤로 가기, null/알 수 없는 키도 확인 | 실제 어종 필터·관련 표시 가능 마커, 미확인 좌표 제외, null 안내, 뒤로 가기 정상 | 실제 도감 링크/parser, spot-filters.js, script.js, server.js |
 | T11 | T10, 매핑된 종 있는 Popup | Popup에서 종별 도감 링크 선택, 직접 접속·새로고침·뒤로 가기 | 같은 speciesId 상세 열림, 복수 종 링크 정확, 알 수 없는 ID 안전 안내 | script.js의 Popup, 실제 도감 parser·매핑, server.js |
 | T12 | 기존 지도·서버 실행 | 검색·다중 조건·초기화·즐겨찾기/새로고침·위치 허용/거부·화장실·날씨/Marine·오늘/내일 물때 확인, 각/동시 API 실패 주입 | FR-01~FR-09 유지, 44개 기준 마커, 메모/제보 구분, 실패 영역만 안내, 프록시 키 비노출 | script.js, spot-filters.js, favorites.js, location.js, restrooms.js, weather.js, tides.js, tide-utils.js, server.js, server/tide-service.cjs |
-| T13 | 목록·상세·Form·Popup 구현 | 320/375/768/1440/1920px와 가로 전환, 터치·Tab 이동, 긴 메모·이름 확인 | Grid·상세·Form·Popup 가로 넘침 없음, 작은 화면 2~3열·Tablet 4열·넓은 PC 5~6열, focus·alt·44px 터치 목표, Popup 스크롤/버튼 정상 | index.html, 실제 도감 HTML, styles.css, script.js |
+| T13 | 목록·상세·Form·Popup 구현 | 320/375/390/430/768/1024/1440/1920px와 가로 전환, 터치·Tab 이동, 긴 메모·이름 확인 | Grid·상세·Form·Popup 가로 넘침 없음, 매우 좁은 화면 2열·좁은 모바일 3열·390px 이상 4열·Tablet 5~6열·넓은 PC 6~8열, focus·alt·44px 터치 목표, Popup 스크롤/버튼 정상 | index.html, 실제 도감 HTML, catalog.css, styles.css, script.js |
 | T14 | 위 전체 시나리오 | console/pageerror·network 기록, 빠른 화면/포인트 전환·뒤로 가기·저장 오류 확인 | 치명적 JS 오류·미처리 rejection 없음, 필수 자원 404 없음, API 오류는 제어된 안내 | 오류 stack의 실제 파일, server allowlist·defer 순서 |
 
 ## 결과를 남기는 법

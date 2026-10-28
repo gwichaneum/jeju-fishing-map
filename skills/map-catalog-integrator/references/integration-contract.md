@@ -1,12 +1,19 @@
 # 지도·도감 연동 계약
 
-## 현재 관찰 — 2026-10-28
+## Phase 1 관찰 — 2026-10-28
 
 - 지도 URL: `/`, `/index.html`. 단일 HTML, 기능별 defer script, 라우터 없음.
 - `spot-filters.js`: `createSpotFilterOptions`로 한국어 필터를 생성하고 `filterSpots`로 AND 조건을 적용한다.
 - `initializeSpotControls` 내부 `applyFilters`는 아직 외부 API가 아니다. URLSearchParams·species query 처리가 없다.
 - `script.js`: `initializeJejuMap`의 map load 뒤 controls 초기화. `createFishingSpotPopupContent`가 정보 DOM을 만들며 `focusSpot`이 실제 표시 포인트로 이동한다.
 - 도감 HTML·데이터·상세 경로는 아직 없다. `server.js`는 파일 allowlist 방식이므로 파일 생성만으로 서비스되지 않는다.
+
+## Phase 2 반영
+
+- 실제 도감 URL은 `/catalog.html`, 원본은 `species-catalog.json`, 목록/상세는 `catalog.js`, 스타일은 `catalog.css`다.
+- 공통 Navigation의 일반 페이지 이동만 구현했다. 도감 상세는 native dialog이며 URL species query를 아직 처리하지 않는다.
+- 상세의 관련 포인트 이름·근거 표시는 기존 filterSpots를 읽어 계산한다. 어종별 지도 이동 버튼은 비활성이다.
+- 현재 서버는 도감 파일과 JSON에 등록된 로컬 이미지만 추가로 제공한다. Phase 4에서는 실제 parser·Popup 링크·뒤로 가기를 연결해야 한다.
 
 ## 식별자
 
@@ -19,7 +26,7 @@
 `학공치` 후보→`학꽁치`는 동일 대상 확인 후 연결한다. `오징어`→살오징어, `우럭`→쏨뱅이 자동 매핑은 금지한다.
 공개 species·reportedSpecies·개인 메모로 매칭된 포인트의 근거 구분을 팝업에서 유지한다.
 
-## 후속 구현 후보 (현재 지원하지 않음)
+## 후속 어종별 이동 후보 (현재 query 처리 미지원)
 
 | 이동 | 후보 계약 | 구현 전에 확정할 사항 |
 | --- | --- | --- |
@@ -36,7 +43,7 @@ URL은 URL/URLSearchParams 등으로 인코딩하고 query 값을 HTML 문자열
 - 기존 바다 배경·밝은 Glass Card·둥근 UI·system font·파란색/청록 포인트·그림자 재사용.
 - 도감에서 관련 포인트 이동 시 이전 검색·방법·유형·즐겨찾기 조건이 의도치 않게 결과를 막지 않도록 기준을 정한다.
   기본 제안은 관련 어종만 적용하고 다른 탐색 조건은 비우되 저장된 즐겨찾기는 보존하는 것이다.
-- mapSpeciesKey=null이면 관련 정보 미확인으로 표시하고 일반 지도 이동을 제공한다. 임의 어종 필터를 적용하지 않는다.
+- mapSpeciesKey=null이면 어종 필터를 적용하지 않는다. mapMatchStatus=unavailable는 검토한 대응 키 없음, 그 외는 관련 정보 확인 대기로 구분하고 일반 지도 이동을 제공한다.
 - 알 수 없는 query는 기본 지도 또는 도감 찾을 수 없음 안내로 복귀한다. 정확한 키라도 좌표 미확인이면 마커를 만들지 않는다.
 - Popup 링크는 도감에 매핑된 종마다 제공한다. 여러 종인 포인트는 임의의 한 종으로 몰지 않는다.
 - 뒤로 가기 시 이전 목록/필터·선택 종으로 돌아가는지 확인한다. 이동 시 불필요한 새 탭을 만들지 않는다.
