@@ -716,3 +716,58 @@ Git 제외 `.verify/artifacts/phase5/`의 map/map-results.json, crud/browser-res
 로컬 T01~T58은 명시한 범위에서 PASS지만 최종 보고서 D06/D07은 NOT TESTED, 실제 기기/최소 Node 별도 실행은 MANUAL CHECK REQUIRED다. 실제 GPS·휴대폰 사진 선택/키보드·Safari/Firefox를 에뮬레이션으로 통과했다고 기록하지 않는다. API 결과는 조회 시점이며 현장 안전/가용성 보장이 아니다. 원본 이미지의 권리/종을 새로 전문가 감사하지 않고 기존 출처와 SHA/디코딩을 보존했다.
 
 README/PRD/TODO/최종 테스트/배포 점검/출처 문구를 현재 범위로 정리했다. 새 기능/원본 좌표·어종·이미지/DB schema·사용자 원본 profile은 변경하지 않았다. 실제 .env·키는 열람/수정·공개하지 않았다. 실제 배포 후 URL 교체와 배포 인수가 남았고 commit/push는 사용자 검토 후 진행한다. 이번 작업에서 commit/push하지 않았다.
+
+## 추가 기능 — 나의 조과 통계 (2026-10-28, KST)
+
+### 실제 사용한 Skill과 구현
+
+- [catch-record-manager](../skills/catch-record-manager/SKILL.md)를 읽고 적용했다. 변경 전 [IndexedDB 계약](../skills/catch-record-manager/references/indexeddb-schema.md)과 실제 catch-records.js를 대조했다. jejuFishingCollection 버전 1, catchRecords/keyPath recordId, speciesId/caughtAt/createdAt index와 12개 필드, transaction 완료 후 변경 반영, 실제 도감 31종/지도 ID 검증을 유지했다. 데이터 마이그레이션·삭제·별도 저장소는 없다.
+- [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 읽고, 실제 브라우저 검사 전 [T01~T14](../skills/fishing-app-tester/references/test-cases.md)를 읽었다. 기존 도감/지도 회귀와 아래 사용자 통계 18개 항목을 각각 실행했다. 이번 확장은 별도의 Phase 번호를 만들지 않고 기존 Phase 5 정적 검사와 신규 통계 테스트를 함께 사용했다.
+- catch-statistics.js는 순수 계산, catch-statistics-ui.js는 DOM/사진 표시를 담당한다. 도감이 이미 읽은 records를 계산에 전달한다. 기존 summarizeCollection의 반환 객체 하나를 도감 Progress와 통계가 공유하며 collected 계산을 중복 구현하지 않았다. 탭 전환 5회 전후 DB open 횟수 차이는 0이었다.
+- 계산은 유효하고 중복되지 않은 recordId의 count 합계·기록 개수, speciesId별 합계/순위, caughtAt/createdAt 최신 5건, 현재 지역 월 포함 6개월, locationName별 기록 빈도 TOP 5다. 어종 동률은 마지막 caughtAt 최신순, 같은 날짜까지 같으면 안정적인 speciesId 순이다. 장소 동률은 총 마릿수·이름순이다. 빈 장소/없음/undefined/null/N/A 등은 제외한다.
+- count는 기존 저장 검증대로 양의 정수 Number만 인정한다. 입력 Form의 문자열 "3"은 parseCount로 3이 된 후 저장되고, 이미 저장된 raw 문자열 "3"과 "abc"는 도감/통계 모두 제외한다. 집계 덧셈은 숫자로 수행한다. 월은 caughtAt.slice(0, 7), 현재 월은 지역 getFullYear/getMonth로 처리하며 UTC로 날짜를 재해석하지 않는다.
+- 기존 imageSrc를 순위에 재사용한다. 최근 사진은 photoBlob URL을 만들고 다시 그리기·탭 숨김·visibility 숨김·pagehide에 해제한다. 사진 오류에는 이미지 숨김/fallback, pageshow persisted에는 다시 표시한다. 장소는 텍스트만 제공하며 지도 연결/새 API/서버 전송/차트 의존성은 추가하지 않았다.
+- 검사는 실제 사용자 profile과 분리한 Chrome 156 격리 context/profile 및 합성 PNG/JPEG로 수행했다. 기본 8080 지도와 새 코드의 8095 서버를 사용했으며 개인 원본 DB·사진·메모·.env/키는 읽거나 출력하지 않았다. README·원본 어종/좌표/이미지·기존 기록 모듈과 Skill 본문은 변경하지 않았다.
+
+### 실행 결과
+
+| 실행 | 실제 결과 |
+| --- | --- |
+| npm.cmd test | 113 PASS, 실패/건너뜀 0. 기존 99개와 신규 통계 14개 |
+| node --test tests/catch-statistics.test.cjs | 14 PASS. A 빈 기록, B 참돔 2+3=5/2회/1종, C 2+3+4=9/3회/3종/무늬 1위, D 마지막 종 삭제 감소, E Form 문자열 변환/저장 문자열 제외, F abc 제외, 불량/중복/동률/최근5/6개월·연도·지역 경계/장소/모듈 지연 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | 기존 검증기 변경 없이 9개 집계·25개 거부 입력 PASS |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS. Phase 1 설정에서 빠진 도감/기록 검사는 아래 Phase 5 인자로 별도 수행 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=5 --catalog species-catalog.json --record-module catch-records.js | 29 PASS, 오류 0. 실제 catalog·record 모듈·문서/Skill 참조·JS syntax·자원 경로 |
+| node .verify/statistics-dashboard.cjs | 사용자 항목 1~15/17/18 PASS. 빈 상태·CRUD·수집률, 12개 유효+9개 불량 기록, 순위/Bar·최근5·6개월·장소5·사진/URL·9 viewport·키보드·통계 JS404/저장소 실패 격리 검사 |
+| node .verify/statistics-map.cjs | 사용자 항목16 PASS. 6 viewport × 성공/Marine 실패/전체 API 실패 18조합+GPS 거부 1. 44개 기본마커/어종14/검색·필터·즐겨찾기 복원·모의 주변5·화장실·오늘/내일 물때·Popup/Navigation/도감31카드, pageerror 0 |
+| node .verify/statistics-map-states.cjs / statistics-map-keyboard.cjs | 375px 성공/부분/전체 실패의 land/marine/tides ready/error 분리, GPS 거부, 다중 필터 5마커·검색 Enter/마커 Enter/Escape 5회·지도1개·Navigation2개 PASS |
+| node .verify/statistics-regression-crud.cjs | 기존 도감 CRUD·재잠금·중복 제출 방지·동일 profile Chrome 재실행 Blob 바이트/필드 복원·DB버전1/기존 index3개·입력 검증·9 viewport/가로/긴 Form/focus, 13개 결과 PASS |
+| node .verify/statistics-regression-storage-errors.cjs | quota/요청 성공 뒤 abort/입력 보존, 불량8건 삭제 없이 제외, stale edit/없는 삭제, blocked/versionchange/미래 버전 데이터 보존, 사진 교체/EXIF JPEG, 지역 날짜 경계. 11개 결과 PASS |
+| node .verify/statistics-regression-boundaries.cjs | 기존 core/UI 파일 누락·잘못된 export·DB 실패/지연/미지원·JSON503 구분/복구, 정적31종 유지, 반복 retry factory1/단일 제출1. 11개 결과 PASS |
+| node .verify/statistics-regression-integration.cjs | Skill T10/T11 포함12개 결과 PASS. 375/1440 도감→지도 무늬23/14·한치20/18·Back복원, query/재조회/초기화/무효입력·null9종, 기존69Popup 구조 동일·도감feature없음,0/1마커범위·9 viewport Navigation. 지도DB open0,도감DB open1,pageerror/로컬4040. API503 fixture |
+| node .verify/statistics-review-boundaries.cjs | 최종 수정 후 3 PASS. 통계 계산/UI 각 요청을 보류해도31종/검색/분류/상세/실제 조과 등록 유지, release 후 통계2마리/1회/1종. 10월→11월 재진입 시6개월 범위 갱신·추가DB open/getAll 각각0, pageerror/console error0 |
+| pnpm.exe start / node .verify/statistics-default-smoke.cjs | 기본8080이 현재 작업 폴더의 수정 파일을 제공함을 대조한 뒤 해당 Node만 재시작했다. pnpm start→node server.js,0.0.0.0:8080 정상. 격리 context의31종·통계4카드·0/31·상단2링크·pageerror/console error/404 모두0. 임시8095 검증 서버는 종료 |
+
+### 사용자 통계 18개 항목 대조
+
+| 항목 | 관찰 결과 |
+| --- | --- |
+| 1 통계 Tab / 2 기록0 | 내부 탭 click·Arrow/Home/End, roving focus/aria-selected, 0마리·0/31종·0회·아직 없음과 안내/도감 버튼 PASS |
+| 3 총 조과 / 4 수집 어종 / 5 기록 횟수 / 6 최다 어종 | 12개 유효 기록은 22마리·3/31종·12회·무늬오징어8마리 PASS. 9개 불량은 제외하고 DB 원본21건 보존 |
+| 7 순위 / 8 최근5 | 무늬8→한치7→참돔7, Bar 100%/87.5%/87.5%; 같은 날짜 createdAt 최신순 r12/r11/r10/r9/r2와 사진 decode PASS |
+| 9 월별 / 10 장소5 | 2026.05~10 합계2/1/2/4/3/9, 이전 달1마리는 전체 합계에만 포함. 빈 기록은6개월 모두0. 현사3회/6마리 우선, 나머지 TOP5·placeholder 미표시 PASS |
+| 11 추가 / 12 수정 / 13 삭제 | 실제 Form 2+3=5/2회→3을4로 수정6/2회→삭제2/1회→마지막 삭제0/0회, 전체 새로고침 없이 재개방 반영 PASS |
+| 14 Progress 일치 | 1/31(3%)→마지막 삭제0/31(0%), seed3/31(10%)로 통계와 일치 PASS |
+| 15 모바일 | 320/375/390/430/768/1024/1440/1920 및812×375 가로. PC4열·768이하/가로2열, 이름/숫자·44px 탭·전체 가로 넘침 없음 PASS. PC/375 스크린샷 직접 열어 확인 |
+| 16 기존 지도 / 17 기존 도감 | 위 지도19시나리오/명시 상태/키보드, 도감 CRUD·정적 분리·저장 오류·9 viewport 회귀 PASS |
+| 18 Console | 정상 통계/불량 기록/CRUD의 console error·pageerror·로컬404·POST 모두0. 진단 console에 사진명/메모 marker 미출력. 의도적 JS404·저장 오류 주입은 예상 진단으로 구분, pageerror0 |
+
+### 발견·수정·남은 확인
+
+첫 통합 검사는 통과했지만 추가 코드 검토·브라우저 재현에서 두 경계 오류를 발견했다. 통계 파일을 catalog.js 앞의 defer로 읽어 지연 시 정적 도감까지 기다리던 문제를 정적 렌더 뒤 독립적인 비동기 로딩으로 수정했다. 열린 페이지가 다음 달로 넘어간 뒤에도 이전6개월을 유지하던 문제는 통계 탭 재진입 시 지역 월을 확인하고 기존 메모리 기록으로 재계산하도록 수정했다. 각각 파일 요청 보류/시간 진행으로 재검증했고 신규 Dashboard·113개 자동 검사·29개 정적 검사와 기존 CRUD/저장 오류/초기화 회귀35개 결과를 다시 통과했다. 숨겨진 문서나 pagehide 뒤 비동기 작업이 끝나도 사진 URL을 다시 만들지 않도록 표시 조건도 보완했다.
+
+구현 중 최근 목록에서도 장소 placeholder를 숨길 수 있도록 normalizeLocationName을 추출해 장소 통계와 공유했고, 사진 URL 해제와 통계 모듈 누락 시 도감 유지도 직접 확인했다. 테스트 하네스의 저장소 실패 문구 검사를 구체적인 한국어 문구로 보강한 뒤 다시 실행했다. 의도적인 404/DB 오류를 정상 동작의 Console 오류 0 결과에 섞지 않았다.
+
+증거는 Git 제외 .verify/artifacts/statistics/ 아래 dashboard/results.json·dashboard-1440.png·dashboard-375.png·empty-desktop.png, map/map-results.json·keyboard.json·map-states/map-results.json, crud/browser-results.json, storage-errors/error-results.json, boundaries/boundaries.json, review-boundaries/results.json, integration/integration-results.json, default-server-smoke.json에 있다. 제품 데이터가 아닌 합성 테스트 화면이다. TODO의 11개 조과 통계 항목만 완료 표시하고 PRD F9를 최소 추가했다.
+
+실제 휴대폰의 터치·사진 선택, Safari/Firefox, 실제 GPS·새 실 API 응답, Render 배포 후 화면/그 origin의 IndexedDB는 이번에 검증하지 않았다. 새 통계에는 외부 API가 없으며 지도 API 검사는 성공/부분/전체 실패 fixture를 사용했다. 장소→지도·포인트별 기록·출조 일지·클라우드·로그인·서버 DB는 구현하지 않았다. commit/push하지 않았다.

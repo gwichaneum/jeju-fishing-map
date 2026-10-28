@@ -225,6 +225,12 @@ function initializeCatalog() {
   let activeSpeciesId = null;
   let records = [];
   let summary = null;
+  let statistics = null;
+  let statisticsUI = null;
+  let statisticsLoading = true;
+  let statisticsInitializing = null;
+  let pageActive = true;
+  let activeView = 'collection';
   let ready = false;
   let hasSnapshot = false;
   let store = null;
@@ -233,6 +239,51 @@ function initializeCatalog() {
   let reloading = false;
   const moduleLoads = new Map();
   let lastDetailUrl = window.location.href;
+
+  const viewTabs = [...panel.querySelectorAll('.collection-tabs [role="tab"]')];
+  const statisticsView = panel.querySelector('#statistics-view');
+
+  function renderStatistics() {
+    if (activeView !== 'statistics' || document.hidden || !pageActive) return;
+    if (!statisticsUI && typeof globalThis.createCatchStatisticsUI === 'function') {
+      statisticsUI = globalThis.createCatchStatisticsUI({ root: statisticsView, createSpeciesImage: createCatalogImage,
+        onShowCollection: () => { showView('collection'); query.focus(); } });
+    }
+    if (statisticsUI) statisticsUI.render({ species, statistics, hasSnapshot, ready, loading: statisticsLoading });
+    else statisticsView.textContent = statisticsLoading ? '조과 통계를 준비하고 있어요.'
+      : '통계 기능을 불러오지 못했습니다. 페이지를 새로고침해 다시 시도해 주세요.';
+  }
+
+  function showView(view) {
+    activeView = view;
+    for (const tab of viewTabs) {
+      const selected = tab.id === `${view}-tab`;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+    }
+    if (view === 'statistics') {
+      const now = new Date();
+      const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      // A tab can stay open across a month boundary. Refresh the calendar from memory, without a DB read.
+      if (statistics && statistics.monthlyStats.at(-1)?.month !== month) recalculate();
+      else renderStatistics();
+    }
+    else statisticsUI?.cleanup();
+  }
+
+  for (const [index, tab] of viewTabs.entries()) {
+    tab.addEventListener('click', () => showView(tab.id === 'statistics-tab' ? 'statistics' : 'collection'));
+    tab.addEventListener('keydown', event => {
+      const target = event.key === 'Home' ? 0 : event.key === 'End' ? viewTabs.length - 1
+        : event.key === 'ArrowRight' ? (index + 1) % viewTabs.length
+          : event.key === 'ArrowLeft' ? (index + viewTabs.length - 1) % viewTabs.length : null;
+      if (target === null) return;
+      event.preventDefault();
+      viewTabs[target].click();
+      viewTabs[target].focus();
+    });
+  }
 
   const mapSpotIds = () => typeof fishingSpots !== 'undefined' && Array.isArray(fishingSpots) ? fishingSpots.map(spot => spot.id) : [];
 
@@ -277,6 +328,26 @@ function initializeCatalog() {
     if (!hasCore()) throw recordError('MODULE_INVALID');
     if (typeof globalThis.createCatchRecordUI !== 'function') await loadRecordModule('./catch-record-ui.js');
     if (typeof globalThis.createCatchRecordUI !== 'function') throw recordError('MODULE_INVALID');
+  }
+
+  function initializeStatistics() {
+    if (statisticsInitializing) return;
+    statisticsLoading = true;
+    statisticsInitializing = (async () => {
+      try {
+        await Promise.all([
+          typeof globalThis.CatchStatistics?.calculateCatchStatistics === 'function' ? null : loadRecordModule('./catch-statistics.js'),
+          typeof globalThis.createCatchStatisticsUI === 'function' ? null : loadRecordModule('./catch-statistics-ui.js'),
+        ]);
+        if (typeof globalThis.CatchStatistics?.calculateCatchStatistics !== 'function'
+          || typeof globalThis.createCatchStatisticsUI !== 'function') throw recordError('MODULE_INVALID');
+      } catch (error) { reportFailure('statistics', error); }
+      finally {
+        statisticsLoading = false;
+        recalculate();
+        statisticsInitializing = null;
+      }
+    })();
   }
 
   function closeDetail() { if (!recordUI?.isBusy()) dialog.close(); }
@@ -432,12 +503,19 @@ function initializeCatalog() {
   }
 
   function recalculate() {
-    summary = hasSnapshot && globalThis.CatchRecords
+    statistics = null;
+    if (hasSnapshot && typeof globalThis.CatchStatistics?.calculateCatchStatistics === 'function') {
+      try { statistics = globalThis.CatchStatistics.calculateCatchStatistics(records, species, { mapSpotIds: mapSpotIds() }); }
+      catch (error) { reportFailure('statistics', error); }
+    }
+    // Both views use the same summary object. Statistics never open or initialize IndexedDB.
+    summary = statistics?.summary || (hasSnapshot && globalThis.CatchRecords
       ? globalThis.CatchRecords.summarizeCollection(records, species.map(item => item.speciesId), mapSpotIds())
-      : createEmptyCatalogSummary(species);
+      : createEmptyCatalogSummary(species));
     statusFilters.disabled = false;
     renderProgress();
     render();
+    renderStatistics();
     if (dialog.open) renderDetail();
   }
 
@@ -453,6 +531,7 @@ function initializeCatalog() {
     storageRetry.disabled = false;
     statusFilters.disabled = false;
     reportFailure('records', error);
+    renderStatistics();
     if (dialog.open) renderDetail();
   }
 
@@ -527,6 +606,7 @@ function initializeCatalog() {
       status.hidden = true;
       renderProgress();
       render();
+      renderStatistics();
       if (dialog.open) renderDetail();
       applyDetailUrl();
       loaded = true;
@@ -543,7 +623,11 @@ function initializeCatalog() {
       form.inert = false;
     }
     // Record failures are handled separately and can never enter the catalog-data catch.
-    if (loaded) await initializeRecords();
+    if (loaded) {
+      // Optional statistics must never block the static catalog or the record store.
+      initializeStatistics();
+      await initializeRecords();
+    }
     retry.disabled = storageRetry.disabled = false;
     reloading = false;
   }
@@ -557,9 +641,17 @@ function initializeCatalog() {
   document.querySelector('#catalog-reset').addEventListener('click', () => { form.reset(); render(); query.focus(); });
   retry.addEventListener('click', load);
   storageRetry.addEventListener('click', load);
-  window.addEventListener('pagehide', () => { recordUI?.cleanup(); store?.close(); });
-  window.addEventListener('pageshow', event => { if (event.persisted && store && !reloading) loadRecords(); });
+  window.addEventListener('pagehide', () => { pageActive = false; recordUI?.cleanup(); statisticsUI?.cleanup(); store?.close(); });
+  window.addEventListener('pageshow', event => {
+    pageActive = true;
+    if (event.persisted) {
+      renderStatistics();
+      if (store && !reloading) loadRecords();
+    }
+  });
   document.addEventListener('visibilitychange', () => {
+    if (document.hidden) statisticsUI?.cleanup();
+    else renderStatistics();
     if (!document.hidden && hasSnapshot && store && !reloading && !recordUI?.isBusy() && !recordUI?.isEditing()) loadRecords({ background: true });
   });
   load();
