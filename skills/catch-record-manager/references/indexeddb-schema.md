@@ -8,10 +8,12 @@
 | --- | --- |
 | Database | jejuFishingCollection |
 | 초기 버전 | DB_VERSION=1. 기존 DB 코드가 없음을 확인한 후 도입 |
-| 현재 버전 | DB_VERSION=2. 2026-10-29 장소 선택 확장. onupgradeneeded에서 기존 기록·사진·index를 보존하고 customLocations 추가 |
+| 장소 선택 버전 | DB_VERSION=2. 2026-10-29 장소 선택 확장. 기존 기록·사진·index를 보존하고 customLocations 추가 |
+| 현재 버전 | DB_VERSION=3. 2026-10-29 업적 확장. 기존 모든 store를 보존하고 achievementUnlocks 추가 |
 | Object store | catchRecords, keyPath: recordId, autoIncrement: false |
 | Index | speciesId, caughtAt, createdAt (각 unique: false) |
 | 사용자 장소 store | customLocations, keyPath: customLocationId, name index (unique: true) |
+| 업적 해금 이력 store | achievementUnlocks, keyPath: achievementId, 별도 index 없음. achievementId/unlockedAt 두 필드만 저장 |
 
 어종의 공개 정보는 별도 정적 speciesCatalog로 관리하고 개인 사진·메모를 섞지 않는다.
 사진은 해당 기록의 photoBlob에 함께 넣어 transaction 하나로 저장·수정·삭제한다. 별도 사진 store가 필요해지면 원자성과 참조 정리를 먼저 설계한다.
@@ -37,6 +39,12 @@ customLocations는 `{ customLocationId, name, address, latitude, longitude, memo
 기록 저장·수정은 두 store를 포함한 transaction에서 사용자 장소 존재 여부와 공식 이름을 확인하고 기록을 쓴다. 기록 삭제는 사용자 장소를 삭제하지 않는다.
 등록·수정 UI는 [catch-location-ui.js](../../../catch-location-ui.js)를 공유한다. 새 기록은 검색 결과 선택 또는 새 장소 등록이 필요하며 장소 미입력은 허용한다. 과거 이름은 사용자가 바꾸지 않으면 그대로 유지한다.
 통계는 mapSpotId → customLocationId → 기존 이름 순으로 집계한다. ID가 없는 과거 이름은 유일한 지도 공식 이름과 완전히 같은 경우에만 통계에서 해당 ID와 묶으며, DB에 ID를 자동으로 쓰지 않는다. 지도 표시 이름은 현재 공식 name, 사용자 장소는 현재 등록 name을 사용한다.
+
+업적 정의와 순수 계산은 [achievements.js](../../../achievements.js)에서 관리한다. 기존 catch-statistics.js의 summary/speciesStats/totalCount/recordCount와 같은 유효 기록 루프에서 계산한 mapPointCount/distinctDateCount를 사용한다. 장소 업적은 mapSpotId가 있는 서로 다른 ID만 세며, 과거 이름·사용자 장소를 지도 ID로 추측하지 않는다.
+해금 이력은 `syncAchievementUnlocks(ids)`가 readwrite transaction에서 조회·미보유 ID만 추가하고 complete 후 반환한다. 이미 있는 unlockedAt을 덮어쓰지 않으며 여러 탭에서 같은 ID를 동시에 처리해도 한 건만 생성된다. 날짜는 발견·저장 시점의 ISO UTC이며 과거 caughtAt으로 최초 달성일을 추정하지 않는다.
+진행도는 현재 기록에서 매번 계산하며, 저장한 해금 이력은 기록 수정/삭제와 함께 삭제하지 않는다. 일반 조과 CRUD는 업적 JS/메타데이터 저장 실패와 독립적이고, 업적 이력 실패는 별도 영역에서 재시도를 안내한다. 늦은 선택적 모듈 로드 중의 기록 변경 snapshot도 처리해 빠른 추가→삭제가 달성을 누락하지 않게 한다. 해금 알림은 이력 transaction 완료 후 한 번에 묶어서 표시한다.
+업적 정적 정의/UI는 공유 통계 JS·IndexedDB와 분리해 먼저 기본 잠금 카드 전체를 렌더링한다. 기록을 읽으면 진행도를, 해금 이력을 읽으면 영구 해금 상태를 반영한다. 이력 저장소만 실패하면 현재 기록의 진행도와 목록을 유지하고 작은 경고만 표시한다. 기록 자체를 아직 읽지 못한 경우에는 기본값임을 명시하며 마지막 snapshot이 있으면 보존한다.
+업적 재시도는 정의 JS를 새 요청으로 읽고 조과 기록·해금 이력을 다시 조회한 뒤 재계산한다. UI 인스턴스와 이벤트 리스너는 다시 만들지 않는다. DB 버전은 3을 유지하고 기존 onupgradeneeded의 achievementUnlocks 생성·데이터 보존 계약도 변경하지 않는다.
 
 10MiB와 허용 MIME을 변경하면 UI·검증기·문서를 함께 수정한다. 저장 전 MIME·용량·PNG/JPEG/WebP 파일 시그니처와 브라우저의 실제 이미지 디코딩을 확인한다. 저장소에서 다시 읽은 사진도 검증하여 손상된 파일을 집계에서 제외한다. SVG·HEIC/HEIF 직접 저장은 지원하지 않고 변환 안내를 제공한다.
 자동 압축·EXIF 분석·방향 재인코딩은 하지 않는다. 원본 바이트를 보관하고 브라우저의 이미지 표시 방향을 사용한다. 10MiB를 넘는 사진은 사용자가 줄여서 다시 선택하도록 안내한다.

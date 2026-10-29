@@ -817,3 +817,137 @@ README/PRD/TODO/최종 테스트/배포 점검/출처 문구를 현재 범위로
 T01/T02/T04~T14는 위 실행의 관련 범위에서 검증했다. T03의 기존 31종 이미지 판독/권리 감사 전체는 재실행하지 않았으며 원본 자산 불변과 기존 정적 검사를 확인했다. 실제 휴대폰의 가상 키보드·사진 권한, Safari/Firefox, 배포 origin의 실제 사용자 DB 업그레이드와 실제 GPS/새 외부 API 응답은 수동 확인이 필요하다. Popup 조과 목록·포인트 상세·출조 일지·클라우드·로그인·공유·사용자 장소의 공개 지도 업로드는 추가하지 않았다. git commit/push는 하지 않았다.
 
 수정 파일은 PRD.md, TODO.md, catalog.css, catalog.html, catalog.js, catch-record-ui.js, catch-records.js, catch-statistics.js, docs/SKILL_USAGE.md, server.js, skills/catch-record-manager/references/indexeddb-schema.md, tests/catalog.test.cjs다. 새 제품/테스트 파일은 catch-location-ui.js와 tests/catch-locations.test.cjs다. Git 제외 검증 스크립트는 .verify/location-selection.cjs, location-boundaries.cjs, location-map-regression.cjs, location-integration-regression.cjs이며 뒤의 두 스크립트는 격리 서버로 기존 회귀 하네스를 실행한다. 원본 지도·도감 데이터/이미지와 의존성은 변경하지 않았다.
+
+## 추가 기능 — 업적 / 배지 시스템 (2026-10-29, KST)
+
+### 요청 확정과 실제 Skill 사용
+
+- 사용자가 최종 개수 질문에 **“28개: 나열한 업적을 모두 구현”**을 선택했다. 초기의 약 18~24개 범위를 이 답변으로 확정했으며, 요청한 28개를 모두 제공한다. 기존 PRD F10은 장소 선택이므로 해당 요구사항을 보존하고 업적을 F11로 추가했다.
+- [catch-record-manager](../skills/catch-record-manager/SKILL.md)를 명시적으로 적용했다. 이번 변경 전 실제 DB는 jejuFishingCollection 버전 2, catchRecords와 customLocations였다. [IndexedDB 계약](../skills/catch-record-manager/references/indexeddb-schema.md)을 대조하고 기존 records·Blob·index와 기타 store의 보존, transaction 완료 후 성공 처리, metadata 저장·삭제 정책과 집계를 검증했다.
+- [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 명시적으로 적용하고 [T01~T14](../skills/fishing-app-tester/references/test-cases.md)를 기준으로 신규 A~K, 정적 검사·실제 Chrome·모바일·기존 지도/도감/장소 선택/통계 회귀를 실행했다. 개인 데이터와 분리한 임시 origin·격리 profile/context, 합성 PNG만 사용했으며 .env/키·사용자 원본 사진/기록을 읽거나 출력하지 않았다.
+
+### 최종 업적 목록과 계산 계약
+
+| 분야 | 실제 업적 |
+| --- | --- |
+| 도감 수집 6 | 첫 수집(1종), 낚시 입문자(5종), 도감 탐험가(10종), 제주 컬렉터(15종), 도감 절반 완성(현재 전체의 50%), 도감 마스터(현재 전체) |
+| 마릿수 5 | 첫 손맛(1), 오늘부터 낚시꾼(10), 바다 단골(30), 50마리의 기록(50), 백 마리의 추억(100마리) |
+| 기록 횟수 3 | 첫 기록(1), 꾸준한 기록(10), 낚시 일기장(30개) |
+| 두족류 3 | 에깅 입문(무늬/한치 중 1종), 두족류 헌터(지정 6종 중 3종), 두족류 컬렉터(현재 두족류의 70%) |
+| 돔류 3 | 첫 돔(지정 1종), 돔 수집가(3종), 돔 마스터(현재 등록된 지정 돔류 전체) |
+| 어종 탐구 3 | 다양하게 잡는 낚시꾼(5종 각각 누적 2마리), 한 종 제대로(한 종 누적 10마리), 나만의 주력 어종(한 종 누적 20마리) |
+| 지도 포인트 3 | 첫 포인트(1), 제주 바다 탐험(5), 포인트 탐험가(10곳) |
+| 기록 날짜 2 | 꾸준한 낚시꾼(서로 다른 5일), 계속되는 기록(서로 다른 10일) |
+
+Tier는 Bronze **8**, Silver **9**, Gold **9**, Master **2**다. 정의는 [achievements.js](../achievements.js)의 불변 목록 하나에 ID·제목·설명·분야·Tier·조건·목표·정렬 순서로 모았다. Secret 조건은 없다. 아이콘은 로컬 문자/이모지이며 외부 이미지·새 API·의존성은 없다.
+
+계산은 catch-statistics.js의 동일 유효 기록 검증과 summary/speciesStats/totalCount/recordCount를 재사용한다. 해당 기존 루프에 mapSpotId Set과 caughtAt Set만 추가했으며 지도 ID 수와 날짜 수를 업적에 전달한다. TOP 5 장소 통계의 개수로 포인트 업적을 계산하거나 별도 Record 검증·집계를 복제하지 않는다. 기록 수와 마릿수는 별개이며 중복 ID·불량 count·미등록 종·미래 날짜는 기존 정책대로 제외한다.
+
+현재 실제 도감은 31종, category=cephalopod는 6종이다. 두족류는 local-hanchi/patterned-squid/golden-cuttlefish/japanese-flying-squid/common-octopus/webfoot-octopus(실제 이름 참문어 포함), 돔류는 black-seabream/red-seabream/largescale-blackfish/striped-beakfish를 사용한다. 자리돔은 지정 돔류에 넣지 않는다. 절반은 ceil(31×0.5)=16종, 두족류 70%는 ceil(6×0.7)=5종이며 실제 카탈로그가 바뀌면 분모·목표도 바뀐다. 분모 0으로 Master를 무료 해금하지 않는다.
+
+업적 상태는 현재 조건 충족 또는 저장된 해금 이력 중 하나가 있으면 달성이다. Progress와 수치/남은 어종은 항상 현재 기록 기준이므로 기록 삭제 뒤에도 배지는 달성으로 남지만 현재 Progress는 감소한다. 이를 카드·상세·정책 안내에 명시했다. 다음 목표는 이미 달성한 배지를 제외한 현재 진행률 최댓값이며, 동률은 정적 정의 순서다. 최근 해금은 저장된 unlockedAt 최신순, 같은 시각은 정의 순서다.
+
+### 저장·알림·화면
+
+- **DB 버전 2→3**. onupgradeneeded에서 기존 catchRecords/customLocations/기타 store를 유지하고 achievementUnlocks(keyPath: achievementId, 추가 index 없음)만 추가했다. 저장 행은 `{ achievementId, unlockedAt }` 두 필드뿐이다. Progress·통계·점수·사진을 업적 저장소에 복제하지 않는다.
+- syncAchievementUnlocks는 하나의 readwrite transaction에서 현재 이력을 읽고 미보유 ID만 추가한다. 최초 unlockedAt을 덮어쓰지 않고 동시 탭도 직렬화한다. 날짜는 실제 발견·저장 시각의 ISO UTC이며 과거 caughtAt을 최초 달성일로 추정하지 않는다. Record 수정/삭제는 이력을 지우지 않는다.
+- 기존 기록 사용자도 현재 유효 기록으로 조건을 평가하고 미보유 배지를 저장한다. 추가된 이력이 있으면 “기존 기록으로 업적 N개…”라는 안내 하나를 제공하며 새로고침/재접속에서는 반복하지 않는다. 신규 등록·수정으로 여러 배지가 해금되어도 “새로운 업적 N개 달성” 알림 하나와 접힌 목록으로 처리한다. 알림은 metadata transaction complete 이후에만 표시한다.
+- 업적 모듈/이력 실패는 별도 영역에서 안내·재시도하며, 이미 완료된 조과 저장을 실패로 되돌리거나 도감/기록 입력을 막지 않는다. 선택적 JS가 늦게 로드되는 동안의 기록 변경 snapshot도 큐에 보관해 빠른 추가→삭제 후 최초 달성 이력을 놓치지 않는다.
+- 나의 도감 내부 `[도감] [조과 통계] [업적]` 탭과 Arrow/Home/End 이동을 제공한다. 상단 두 Navigation 링크는 유지했다. 전체/달성/미달성, 현재 수치·Progress·남은 조건, 잠금/달성 텍스트, Tier, 버튼 focus, 상세의 수집/미수집 대상·주력 어종 마릿수·달성 날짜를 제공한다. 320px 1열, 375px 2열, 768px 3열, 1440px 이상 4열이다. 배지 상세는 native dialog, 알림은 focus를 빼앗지 않는 작은 popover이며 미지원 브라우저의 표시 경로도 제공했다.
+
+### 실제 실행 결과
+
+| 명령 | 결과 |
+| --- | --- |
+| npm.cmd test | **135 PASS**. 기존 121개와 신규 업적 14개. 28개 정의/Tier·A~H 조건·경계값·동적 분모·명시적 어종 ID·마릿수/횟수 분리·지도 ID/날짜 Set·다음 목표·불량 기록·입력 불변 검사 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | 9개 집계 시나리오, 유효 입력과 25개 거부 입력 PASS |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS. 실제 도감/기록은 다음 명령으로 별도 연결 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=5 --catalog species-catalog.json --record-module catch-records.js | 29 PASS. 실제 데이터/export, JS syntax, 문서/Skill 참조, 서버 자원·비공개 경로 검사 |
+| node .verify/achievements-browser.cjs | **13 PASS**. A 빈 0/28, B 첫 볼락 1마리→첫 수집/첫 손맛/첫 기록, E count 1→10 편집→배지 5개, G 마지막 삭제 후 5개 유지/현재 진행0, H 실제 Chrome 재실행/원래 시각 유지/중복 알림0, C 5종·D 10종·F 무늬+한치+갑, I v2→v3 전후 모든 과거 필드/사진바이트·사용자 장소·기타 store/index 동일, J 6 viewport/가로·375 tap·28개 전체 달성·상세/필터/focus/다음 목표 없음 |
+| 위 browser.cjs의 K 통계 | 총120마리·31회·31/31종·최다 볼락30마리, 순위31행·최근5·최근6개월/당월120마리·장소TOP5 유지. 통계와 도감 완성률 일치 |
+| node .verify/achievements-boundaries.cjs | **9 PASS**. metadata quota/요청 성공 후 abort에도 조과 보존·거짓 알림0·재시도, 업적 계산/UI/공유 통계 JS 각각404→기존31종/실제 기록 정상→복구, 업적 JS/통계 JS 지연 중 추가→삭제에도 이력3개, 동시 탭 동일ID1건/동일 최초 시각, 다음 목표9/10·통계9마리 일치 |
+| node .verify/achievements-regressions.cjs locations storage | **18+5 PASS**. 버전1→3 직접 업그레이드·과거 이름/사진/기존 index 보존, 지도/사용자 장소 등록·검색·ID 전환 수정·삭제·통계·중복·좌표·키보드·동시 등록·브라우저 재실행·6 viewport, 실제 upgrade blocked→다른 연결 닫기→복구·미래 버전4 보호·모듈 누락·375 tap/CRUD/재잠금·잘못된 입력 유지 |
+| node .verify/achievements-regressions.cjs map integration | **19+12 PASS**. 기존44마커/어종14·검색/필터·즐겨찾기 복원·모의GPS/거부·주변5·화장실·오늘/내일 물때, 6 viewport×정상/Marine실패/전체API실패. 도감→지도 무늬23/14·한치20/18·History/query/null9종·9 viewport Navigation. 기존69 Popup DOM 차이0/업적 기능0, 지도DB open0·pageerror/로컬404 0 |
+
+기존 실행 결과를 복사하지 않고 이번 변경 파일을 제공하는 임시 서버에서 다시 실행했다. 회귀 하네스의 버전 기대값은 현재 3, 미래 버전 검사는 4로 갱신했다. 지도 성공/실패와 GPS는 fixture/에뮬레이션이며 외부 실 API·현장 GPS 성공을 주장하지 않는다. 테스트 서버는 종료했다.
+
+브라우저 검증에서 알림을 modal 밖에 두면 popover도 inert 처리되어 확인 버튼을 누를 수 없음을 발견해 활성 modal 내부로 옮겼다. 선택적 모듈 로딩 중 빠르게 추가·삭제한 기록의 달성이 누락될 수 있는 경계도 발견해 snapshot 큐로 보완했다. 두 경우를 실제 브라우저로 재현한 뒤 재검증했다. 기존 장소 검색의 비동기 조회가 내용 변화 없이 결과 DOM을 교체해 스크롤/선택을 끊던 경계는 동일 데이터일 때 재렌더하지 않도록 최소 수정하고 전체 장소 회귀를 다시 통과했다. 새 테스트의 통계 선택자는 새 업적 요약과 구별되도록 통계 패널에 한정했다.
+
+증거는 Git 제외 `.verify/artifacts/achievements/` 아래 browser-results.json, boundaries.json, locked-1440.png, retained-375.png/retained-1440.png, first-unlock-toast.png, all-unlocked-375.png, statistics-regression-375.png, locations/results.json, storage/boundaries.json, map/map-results.json, integration/integration-results.json이다. PC/모바일 업적 스크린샷을 직접 열어 확인했다.
+
+수정 파일: PRD.md, TODO.md, catalog.html, catalog.js, catch-records.js, catch-statistics.js, catch-location-ui.js, server.js, tests/catalog.test.cjs, skills/catch-record-manager/references/indexeddb-schema.md, docs/SKILL_USAGE.md. 새 파일: achievements.js, achievement-ui.js, achievements.css, tests/achievements.test.cjs. Git 제외 검증 스크립트는 .verify/achievements-browser.cjs, achievements-boundaries.cjs, achievements-regressions.cjs와 생성된 runtime 파일이다.
+
+실제 휴대폰의 가상 키보드·사진 권한/Emoji 표시, Safari/Firefox(특히 popover 미지원 경로), 배포 origin의 실제 기존 사용자 DB 업그레이드/다중 탭은 수동 확인이 필요하다. 기존 31종 이미지 판독·권리 감사 전체(T03)는 이번에 재실행하지 않았고 원본 자산 불변·기존 정적 검사를 확인했다. README·지도 포인트·도감 JSON·이미지·기존 지도 Popup은 변경하지 않았다. 점수/보상/순위표/친구비교/출석/확률형보상/공유/서버 업적 기능과 새 외부 API·의존성은 추가하지 않았다. git commit/push하지 않았다.
+
+## 오류 수정 — 업적 탭 로드 실패와 저장소 fallback (2026-10-29, KST)
+
+### 실제 최초 오류와 정확한 원인
+
+작업 시작 전에 요청한 [catch-record-manager](../skills/catch-record-manager/SKILL.md), [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 다시 읽고 명시적으로 적용했다. 이어 [IndexedDB 계약](../skills/catch-record-manager/references/indexeddb-schema.md)과 [T01~T14](../skills/fishing-app-tester/references/test-cases.md)를 확인했다. 추정으로 코드를 바꾸기 전에 실제 실행 중인 **8080 서버**의 `/catalog.html`을 격리 Chrome에서 열었다.
+
+첫 Console 오류는 다음 CSS MIME 오류였다.
+
+```text
+Refused to apply style from 'http://127.0.0.1:8080/achievements.css' because its MIME type ('application/json') is not a supported stylesheet MIME type, and strict MIME checking is enabled.
+```
+
+뒤이어 `/achievements.js`, `/achievement-ui.js`가 실제 **404 application/json**으로 응답했고, 브라우저가 JS 실행을 거부했다. `[catalog:achievements] MODULE_LOAD`, 업적 카드 0개, 두 업적 전역 export undefined와 사용자와 동일한 “업적 기능을 불러오지 못했습니다.”를 확인했다. 최초 원인은 ReferenceError/TypeError나 DB 버전 오류가 아니었다.
+
+디스크의 server.js에는 세 경로가 이미 허용 목록에 있었다. 8080 프로세스 시작 시각이 해당 파일 수정 전임을 확인했고, 서버가 제공한 catalog.html/catalog.js/fishing-spots.js/catch-records.js 네 파일의 SHA-256이 현재 작업 폴더와 모두 일치하는 것도 확인했다. **실행 중인 Node 프로세스가 변경 전 staticFiles Map을 메모리에 유지하면서, 갱신된 HTML/JS만 디스크에서 제공한 상태**였다. 앞선 신규 기능 검증은 새 테스트 서버를 사용해 이 기존 프로세스의 상태 차이를 놓쳤다.
+
+확인한 프로젝트의 해당 프로세스만 재시작했다. 동일한 8080 서버에서 CSS/JS 세 파일 모두 200과 올바른 MIME, 28개 카드·0/28, Console/pageerror 0으로 복구했다. 사용자 브라우저 프로필의 DB·사진·기록은 읽거나 삭제하지 않았다. 기본 서버는 사용자가 계속 확인할 수 있도록 실행 상태로 두었다.
+
+### 코드 보완 범위
+
+- **정적 목록 우선:** 업적 정의/UI 두 정적 자원만 allSettled로 확인해 먼저 28개의 기본 잠금 카드를 그린다. 공유 통계 JS·조과 기록·영구 해금 이력은 각각 독립적으로 반영한다. 통계 파일이나 IndexedDB가 늦거나 실패해도 정적 목록이 없어지지 않는다.
+- **계산 방어:** undefined/null/부분 통계, 없는 category·어종, 잘못된 해금 시각을 안전하게 처리한다. 기본 진행도는 0이며 실제 종 수의 동적 목표는 유지한다. 기존 count 검증은 공유 통계가 담당하고 저장된 숫자 문자열 등 불량 Record는 기존 정책대로 제외한다. 유효한 큰 누적 합계는 방어 기본값 때문에 0으로 바꾸지 않는다.
+- **정의 검증:** 필수 필드·고유 ID·양수 target·지원 조건/Tier를 검사한다. 현재 28개 모두 정상이며 참조 누락 ID 0개, 실제 category=cephalopod 6종을 확인했다. 미래/작은 도감에서 일부 대상이 없어도 계산 전체를 중단하지 않는다.
+- **오류 분리:** 정의/UI 자체를 읽지 못할 때만 “업적 정보를 불러오지 못했습니다.”를 표시한다. 이력 저장소만 실패하면 목록·현재 진행도를 유지하고 “업적 기록 저장소를 불러오지 못했습니다. 현재 기록 기준으로 업적 진행도는 계속 확인할 수 있습니다.” 경고만 표시한다. 기록 자체가 아직 없거나 읽기 실패한 경우에는 기본값/마지막 snapshot임을 명시한다.
+- **실제 재시도:** “업적 다시 불러오기”는 cache-busting 요청으로 정적 정의를 다시 읽고 catchRecords와 achievementUnlocks를 다시 조회·계산한다. 실행 중 재클릭을 막고 기존 UI 인스턴스를 재사용한다. 3회 반복 후에도 카드 28개·상세 닫기 click listener 1개·조과 원본 1건을 확인했다.
+- **DOM 방어:** 업적 panel/detail/close/toast가 없는 경우에도 다른 도감·통계·기록 화면이 멈추지 않게 했다. 유효한 실제 HTML의 선택자·탭 키보드·모달 동작은 유지했다.
+
+DB는 **jejuFishingCollection / 버전 3 유지**다. catchRecords(keyPath recordId), customLocations(customLocationId), achievementUnlocks(achievementId)가 맞고, 기존 onupgradeneeded의 조건부 생성도 정상이다. 버전 2 fixture를 실제 3으로 열어 achievementUnlocks 생성과 과거 Record의 모든 필드/Blob 바이트·사용자 장소 보존을 다시 확인했다. DB 삭제·store 재생성·임의 버전 상승은 하지 않았다. Record CRUD·사진·수집률·통계 계산·지도·검색/필터·날씨/해상/물때·화장실 기능 코드는 이번에 변경하지 않았다.
+
+### 이번 실행 결과
+
+| 실행 | 실제 결과 |
+| --- | --- |
+| node .verify/achievement-load-diagnose.cjs | 최초 실제 8080에서 CSS MIME 오류·업적 JS404·MODULE_LOAD·0카드를 재현. 서버 재시작 직후 같은 주소에서 세 파일200·28카드·0/28·Console/pageerror0 확인 |
+| node .verify/achievement-load-recovery.cjs | **14 PASS**, 실제 8080·격리 context. A/G 빈 데이터28잠금/정상자원/치명적오류0, B 첫 볼락1마리→3업적, C refresh 후 원본/사진/이력 동일, D metadata 접근실패에도 1/10 진행 유지, E 외부 count변경 후 retry로9/10·정의 재요청3회/Record·metadata 재조회/중복 listener0 |
+| 위 recovery.cjs의 나머지 검사 | 통계/기록 로드를 모두 보류해도 기본28카드가 먼저 표시됨, v2→3·사진/사용자 장소 보존, 전체 DB open실패→기본카드/명확한 경고→retry 복구, 정의404와 통계404 오류 구분/복구, 업적 상세/toast/panel DOM 누락 중 기존 화면 유지, 320/375/768/1440/1920px·focus/넘침 검사 PASS |
+| npm.cmd test | **140 PASS**, 실패/건너뜀0. 기존135개 + 기본 렌더/정의 검증/누락 category·어종/불량 aggregate·이력/큰 유효 합계 5개 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | 9개 집계·25개 거부 입력 PASS. 실제 공유 기록 모듈을 사용 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS. 실제 도감/기록은 다음 명령에서 연결 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=5 --catalog species-catalog.json --record-module catch-records.js | 29 PASS. 실제 도감·기록 export·JS syntax·문서/Skill 참조·공개 자원/비공개 경로 |
+| node .verify/achievements-browser.cjs | **13 PASS**. 기존28개 업적, 첫3개/수정·삭제 후 이력 유지·Chrome 재실행·동적 목표·전체28달성·통계120마리/31회/31종·사진/기존store 보존·6 viewport·모바일tap·focus, 정상 Console/pageerror/로컬404 0 |
+| node .verify/achievements-regressions.cjs map integration | **19+12 PASS**. 지도44마커·어종14·검색/필터·즐겨찾기·모의GPS/거부·주변5·화장실·물때 오늘/내일, 6 viewport×정상/부분/전체API실패. 도감→지도·History/query·9 viewport Navigation·기존69Popup DOM 동일, pageerror0 |
+
+신규 복구 14개와 기존 업적13개·지도/연동31개, 총 **58개 브라우저 결과**를 이번에 다시 실행했다. 의도적인404·저장소 실패의 진단 메시지는 정상 화면의 Console0 결과와 구분했다. 외부 API와 GPS는 fixture/에뮬레이션이며 실제 새 응답·현장 결과를 주장하지 않는다.
+
+증거는 Git 제외 `.verify/artifacts/achievement-load-fix/`의 after-restart.json, after-restart-1440.png, recovery-results.json, empty-1440.png/empty-375.png, history-recovered-1440.png에 있다. 최초 오류는 첫 진단 도구 출력으로 확인했다. PC·모바일 정상/복구 화면을 직접 확인했다. 기존 회귀를 새로 실행한 결과는 `.verify/artifacts/achievements/`의 browser-results.json, map/map-results.json, integration/integration-results.json이다.
+
+이번 수정 파일은 catalog.js, achievements.js, achievement-ui.js, tests/achievements.test.cjs, skills/catch-record-manager/references/indexeddb-schema.md, docs/SKILL_USAGE.md다. 검증 전용 신규 스크립트는 Git 제외 .verify/achievement-load-diagnose.cjs와 achievement-load-recovery.cjs다. 이전 작업의 미커밋 변경은 보존했다. 새로운 업적/기능·README/PRD/TODO·의존성·지도/도감 데이터·이미지는 이번에 수정하지 않았다.
+
+사용자는 **기존에 사용하던 같은 주소**에서 Ctrl+F5 후 업적 탭을 확인하면 된다. 주소/브라우저를 바꾸거나 사이트 데이터를 삭제할 필요가 없다. 실제 휴대폰·Safari/Firefox·배포 서버의 프로세스 재시작과 원래 사용자 프로필의 기존 데이터 인수는 별도 확인이 필요하다. git commit/push하지 않았다.
+
+## 업적 조건 정리 (2026-10-30, KST)
+
+[catch-record-manager](../skills/catch-record-manager/SKILL.md)와 [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)를 적용하고 IndexedDB 계약·T01~T14를 확인했다. 첫 기록의 중복 목표를 정리해 **28→24개**로 변경했다(Bronze 5·Silver 9·Gold 8·Master 2). 요청한 주요 수집/마릿수/두족류/돔류/다양성/탐험/날짜 목표 19개는 유지했다.
+
+| 변경 | 현재 조건 |
+| --- | --- |
+| 첫 수집·첫 손맛·첫 기록 통합 → 첫 조과 | 유효 Record 1회, Bronze |
+| 새로운 손맛 추가 | 서로 다른 어종 3종, Bronze |
+| 첫 포인트 → 제주 첫 발자국 | 서로 다른 mapSpotId 2곳, Bronze |
+| 꾸준한 기록 조정 | Record 10→5회, Silver |
+| 한 곳 제대로 추가 | 같은 mapSpotId의 Record 3회, Silver |
+
+첫 어종이 무엇이든 1마리 기록에서 한 배지만 얻도록 에깅 입문·첫 돔도 제거했다. 숫자를 채우기 위한 낚시 일기장(30회)·꾸준한 낚시꾼(5일)도 정리했고 계속되는 기록(10일)은 유지했다. 같은 포인트 기록 수는 기존 통계의 유효 기록 루프에서 계산하며 마릿수·사용자 장소·과거 장소 문자열·중복/불량 Record를 방문 기록으로 오인하지 않는다.
+
+`first-catch`는 첫 조과로 유지한다. 유효한 첫 어종 수집과 유효 Record 1회는 기존에도 동치였으므로 과거 최초 시각을 그대로 쓴다. 변경한 장소/기록 목표는 `jeju-first-steps`/`five-records`를 사용해 이전 ID의 해금이 새 조건을 대신하지 않게 했다. 나머지 삭제된 ID는 UI·달성 수·최근 해금·다음 목표에서 무시하며 저장 원본은 지우지 않는다. DB 버전 **3 유지**, Record/사진·사용자 장소·해금 저장 구조도 동일하다.
+
+전체 조건을 실제 도감 **31종·두족류6종·돔류4종** 기준으로 검사해 동일 조건 **0건**을 확인했다. 기존 1종/1마리/1기록의 동치 및 비율 목표의 실제 정수 목표도 검사한다. 진행률 최댓값인 미달성 목표를 계속 사용하며, 2종 상태에서 “새로운 손맛 · 1종 남음”을 확인했다. 큰 마릿수를 한 번에 기록해 별도의 마릿수/주력 어종 목표까지 충족하는 경우는 정상 동시 달성이다.
+
+검증: `npm.cmd test` **144 PASS**(업적23개 포함), 실제 record 검증기 **9개 집계·25개 거부 입력 PASS**, Phase 5 정적 검사 **29 PASS**. 모든 31종의 첫 1마리/1포인트가 첫 조과 하나만 달성하는 단위 검사를 통과했다. 실제 8080의 격리 Chrome에서 `.verify/achievement-condition-scenarios.cjs` **11 PASS**: A 첫1개, B 두포인트/2종, C 세어종, E 동일포인트3회, D 총5회, 다음 목표·refresh·사진/과거 metadata 보존, 돔/두족류 첫기록, 사용자 장소 제외, 5 viewport·키보드·Console/로컬404 0. `.verify/achievement-condition-regressions.cjs map integration`은 기존 지도/도감 연결 **19+12 PASS**이며 외부 API/GPS는 fixture/에뮬레이션이다.
+
+보호 대상 UI·CSS·기록 저장소·서버·지도/도감 데이터·README 등 **13개 파일의 변경 전후 SHA-256이 모두 동일**하다. PRD/TODO는 현재 수·조건·호환 설명만 수정했다. 증거는 Git 제외 `.verify/artifacts/achievement-conditions/`의 browser-results.json, preservation.json, five-goals-1440.png, locked-375.png, map/map-results.json, integration/integration-results.json이며 PC/모바일 화면을 직접 확인했다. 실제 휴대폰·다른 브라우저의 캐시/입력은 별도 확인이 필요하다. README·사용자 원본 기록은 수정하지 않았고 commit/push하지 않았다.

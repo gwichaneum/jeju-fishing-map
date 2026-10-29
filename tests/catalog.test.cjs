@@ -137,7 +137,7 @@ test('Express serves only catalog resources and registered species images withou
   await once(server, 'listening');
   t.after(() => new Promise(resolve => server.close(resolve)));
   const origin = `http://127.0.0.1:${server.address().port}`;
-  for (const file of ['/catalog.html', '/catalog.css', '/catalog.js', '/catch-records.js', '/catch-record-ui.js', '/catch-location-ui.js', '/species-catalog.json', ...catalog.filter(item => item.imageSrc).map(item => '/' + item.imageSrc)]) {
+  for (const file of ['/catalog.html', '/catalog.css', '/catalog.js', '/achievements.js', '/achievement-ui.js', '/achievements.css', '/catch-records.js', '/catch-record-ui.js', '/catch-location-ui.js', '/species-catalog.json', ...catalog.filter(item => item.imageSrc).map(item => '/' + item.imageSrc)]) {
     const result = await fetch(origin + file);
     assert.equal(result.status, 200, file);
     await result.arrayBuffer();

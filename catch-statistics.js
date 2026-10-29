@@ -54,6 +54,8 @@
     const monthlyStats = recentMonths(now);
     const months = new Map(monthlyStats.map(month => [month.month, month]));
     const locations = new Map();
+    const mapPoints = new Map();
+    const caughtDates = new Set();
     const spotsById = new Map(mapSpots.map(spot => [spot.id, spot]));
     const customById = new Map(customLocations.map(location => [location.customLocationId, location]));
     const spotsByName = new Map();
@@ -62,6 +64,8 @@
       spotsByName.get(spot.name).push(spot);
     }
     for (const record of validRecords) {
+      if (record.mapSpotId != null) mapPoints.set(record.mapSpotId, (mapPoints.get(record.mapSpotId) || 0) + 1);
+      caughtDates.add(record.caughtAt);
       const count = Number(record.count);
       const month = months.get(record.caughtAt.slice(0, 7));
       if (month) month.totalCount += count;
@@ -98,6 +102,9 @@
       recentRecords: api.sortRecords(validRecords).slice(0, 5),
       monthlyStats,
       locationStats,
+      mapPointCount: mapPoints.size,
+      maxMapSpotRecordCount: Math.max(0, ...mapPoints.values()),
+      distinctDateCount: caughtDates.size,
       invalidCount,
     };
   }

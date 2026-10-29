@@ -5,9 +5,10 @@
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
   const DB_NAME = 'jejuFishingCollection';
-  const DB_VERSION = 2;
+  const DB_VERSION = 3;
   const STORE_NAME = 'catchRecords';
   const CUSTOM_STORE_NAME = 'customLocations';
+  const ACHIEVEMENT_STORE_NAME = 'achievementUnlocks';
   const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
   const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
   const nonempty = value => typeof value === 'string' && value.trim().length > 0;
@@ -199,6 +200,9 @@
       ? transaction.objectStore(CUSTOM_STORE_NAME) : db.createObjectStore(CUSTOM_STORE_NAME, { keyPath: 'customLocationId' });
     if (locations.keyPath !== 'customLocationId') throw new CatchRecordError('SCHEMA');
     if (!locations.indexNames.contains('name')) locations.createIndex('name', 'name', { unique: true });
+    const unlocks = db.objectStoreNames.contains(ACHIEVEMENT_STORE_NAME)
+      ? transaction.objectStore(ACHIEVEMENT_STORE_NAME) : db.createObjectStore(ACHIEVEMENT_STORE_NAME, { keyPath: 'achievementId' });
+    if (unlocks.keyPath !== 'achievementId') throw new CatchRecordError('SCHEMA');
   }
 
   function createCatchRecordStore({ speciesIds, mapSpots = [], mapSpotIds = mapSpots.map(spot => spot.id), indexedDB: factory = globalThis.indexedDB, onVersionChange = () => {} }) {
@@ -229,7 +233,7 @@
         request.onsuccess = () => {
           const db = request.result;
           if (settled || generation !== currentGeneration) { db.close(); fail(new CatchRecordError('VERSION_CHANGED')); return; }
-          if (![STORE_NAME, CUSTOM_STORE_NAME].every(name => db.objectStoreNames.contains(name))) { db.close(); fail(new CatchRecordError('SCHEMA')); return; }
+          if (![STORE_NAME, CUSTOM_STORE_NAME, ACHIEVEMENT_STORE_NAME].every(name => db.objectStoreNames.contains(name))) { db.close(); fail(new CatchRecordError('SCHEMA')); return; }
           database = db;
           db.onversionchange = () => {
             db.close();
@@ -386,11 +390,33 @@
       });
     }
 
-    return { open, loadAll, addRecord, updateRecord, deleteRecord, listCustomLocations, addCustomLocation,
+    async function syncAchievementUnlocks(achievementIds) {
+      const ids = [...new Set(achievementIds)];
+      if (!ids.every(id => typeof id === 'string' && /^[a-z0-9-]{1,100}$/.test(id))) throw new CatchRecordError('VALIDATION', '업적 ID가 올바르지 않습니다.');
+      return transact('readwrite', (store, done, fail) => {
+        store.getAll().onsuccess = event => {
+          try {
+            const unlocks = event.target.result.filter(row => nonempty(row.achievementId) && validTimestamp(row.unlockedAt));
+            const existing = new Set(unlocks.map(row => row.achievementId));
+            const added = [];
+            const unlockedAt = new Date().toISOString();
+            for (const achievementId of ids) {
+              if (existing.has(achievementId)) continue;
+              const row = { achievementId, unlockedAt };
+              // Preserve the first timestamp when another tab has already earned this badge.
+              store.add(row); added.push(row); unlocks.push(row);
+            }
+            done({ unlocks, added });
+          } catch (error) { fail(error); }
+        };
+      }, [ACHIEVEMENT_STORE_NAME]);
+    }
+
+    return { open, loadAll, addRecord, updateRecord, deleteRecord, listCustomLocations, addCustomLocation, syncAchievementUnlocks,
       close() { generation++; if (database) database.close(); database = null; } };
   }
 
-  return { DB_NAME, DB_VERSION, STORE_NAME, CUSTOM_STORE_NAME, MAX_PHOTO_BYTES, PHOTO_TYPES, CatchRecordError,
+  return { DB_NAME, DB_VERSION, STORE_NAME, CUSTOM_STORE_NAME, ACHIEVEMENT_STORE_NAME, MAX_PHOTO_BYTES, PHOTO_TYPES, CatchRecordError,
     localDate, validDate, parseCount, photoError, inspectPhoto, validateCatchRecord, summarizeCollection,
     sortRecords, createRecordId, storageErrorMessage, upgradeSchema, createCatchRecordStore,
     searchLocations, findDuplicateLocation, validateCustomLocation };

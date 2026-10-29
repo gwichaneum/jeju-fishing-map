@@ -175,8 +175,9 @@
           || { customLocationId: record.customLocationId, name: record.locationName }), source: 'custom' });
         store.listCustomLocations().then(rows => {
           if (current !== generation) return;
+          const changed = JSON.stringify(customs) !== JSON.stringify(rows);
           customs = rows;
-          if (!dropdown.hidden) renderResults();
+          if (changed && !dropdown.hidden) renderResults();
         }).catch(error => {
           if (current !== generation) return;
           loadingError = `${api.storageErrorMessage(error)} 지도 포인트는 계속 검색할 수 있습니다.`;

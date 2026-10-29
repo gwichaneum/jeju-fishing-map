@@ -229,6 +229,20 @@ function initializeCatalog() {
   let statisticsUI = null;
   let statisticsLoading = true;
   let statisticsInitializing = null;
+  let achievementsUI = null;
+  let achievementState = null;
+  let achievementUnlocks = [];
+  let achievementsLoading = true;
+  let achievementsInitializing = null;
+  let achievementError = '';
+  let achievementStaticError = '';
+  let achievementProgressError = '';
+  let achievementsRetrying = false;
+  let achievementReload = 0;
+  let recordLoadFailed = false;
+  let achievementQueue = Promise.resolve();
+  let achievementSyncing = false;
+  let pendingAchievementSnapshots = [];
   let pageActive = true;
   let activeView = 'collection';
   let ready = false;
@@ -243,6 +257,60 @@ function initializeCatalog() {
 
   const viewTabs = [...panel.querySelectorAll('.collection-tabs [role="tab"]')];
   const statisticsView = panel.querySelector('#statistics-view');
+  const achievementsView = panel.querySelector('#achievements-view');
+
+  function refreshAchievementState() {
+    if (typeof globalThis.FishingAchievements?.calculateAchievements === 'function') {
+      achievementState = globalThis.FishingAchievements.calculateAchievements(statistics, species, achievementUnlocks);
+    }
+  }
+
+  function renderAchievements() {
+    if (!achievementsView || activeView !== 'achievements' || document.hidden || !pageActive) return;
+    const recordWarning = recordLoadFailed ? hasSnapshot ? '조과 기록을 다시 확인하지 못해 마지막으로 확인한 진행도를 표시합니다.'
+      : '조과 기록을 불러오지 못해 기본 잠금 상태를 표시합니다. 저장소 접근을 복구한 뒤 다시 불러와 주세요.' : '';
+    if (achievementsUI) achievementsUI.render({ state: achievementState, hasSnapshot, ready, syncing: achievementSyncing || achievementsRetrying,
+      errorMessage: [achievementStaticError, achievementProgressError, achievementError, recordWarning].filter(Boolean).join(' ') });
+    else {
+      achievementsView.replaceChildren(catalogElement('p', 'catalog-load-status', achievementsLoading ? '업적을 준비하고 있어요.'
+        : '업적 정보를 불러오지 못했습니다. 개발 서버가 최신 파일을 제공하는지 확인해 주세요.'));
+      if (!achievementsLoading) {
+        const retry = catalogElement('button', 'catalog-button', '업적 다시 불러오기'); retry.type = 'button';
+        retry.disabled = achievementsRetrying;
+        retry.addEventListener('click', retryAchievements); achievementsView.append(retry);
+      }
+    }
+  }
+
+  function synchronizeAchievements(reason = 'existing', sourceStatistics = statistics) {
+    const api = globalThis.FishingAchievements;
+    if (!hasSnapshot || !store) return;
+    if (!sourceStatistics) { pendingAchievementSnapshots.push({ reason, records: [...records] }); return; }
+    if (!achievementsUI || !api) { pendingAchievementSnapshots.push({ reason, statistics: sourceStatistics }); return; }
+    const pending = pendingAchievementSnapshots;
+    pendingAchievementSnapshots = [];
+    for (const snapshot of pending) synchronizeAchievements(snapshot.reason, snapshot.statistics || calculateStatistics(snapshot.records));
+    achievementState = api.calculateAchievements(statistics, species, achievementUnlocks);
+    const ids = api.calculateAchievements(sourceStatistics, species, achievementUnlocks).achievements.filter(row => row.qualified).map(row => row.achievementId);
+    // Capture every committed snapshot: a quick edit/delete cannot skip an earned milestone.
+    achievementQueue = achievementQueue.then(async () => {
+      achievementSyncing = true; renderAchievements();
+      try {
+        const result = await withTimeout(store.syncAchievementUnlocks(ids), 10000, 'ACHIEVEMENT_TIMEOUT');
+        achievementUnlocks = result.unlocks;
+        achievementError = '';
+        achievementState = globalThis.FishingAchievements.calculateAchievements(statistics, species, achievementUnlocks);
+        if (result.added.length && pageActive) {
+          const added = new Set(result.added.map(row => row.achievementId));
+          achievementsUI.notify(api.definitions.filter(row => added.has(row.achievementId)), reason !== 'new');
+        }
+      } catch (error) {
+        achievementError = '업적 기록 저장소를 불러오지 못했습니다. 현재 기록 기준으로 업적 진행도는 계속 확인할 수 있습니다. 영구 해금 이력은 다시 불러와 주세요.';
+        reportFailure('achievements', error);
+      } finally { achievementSyncing = false; renderAchievements(); }
+    });
+    renderAchievements();
+  }
 
   function renderStatistics() {
     if (activeView !== 'statistics' || document.hidden || !pageActive) return;
@@ -261,7 +329,8 @@ function initializeCatalog() {
       const selected = tab.id === `${view}-tab`;
       tab.setAttribute('aria-selected', String(selected));
       tab.tabIndex = selected ? 0 : -1;
-      document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+      const targetPanel = document.getElementById(tab.getAttribute('aria-controls'));
+      if (targetPanel) targetPanel.hidden = !selected;
     }
     if (view === 'statistics') {
       const now = new Date();
@@ -271,10 +340,11 @@ function initializeCatalog() {
       else renderStatistics();
     }
     else statisticsUI?.cleanup();
+    if (view === 'achievements') renderAchievements();
   }
 
   for (const [index, tab] of viewTabs.entries()) {
-    tab.addEventListener('click', () => showView(tab.id === 'statistics-tab' ? 'statistics' : 'collection'));
+    tab.addEventListener('click', () => showView(tab.id.replace(/-tab$/, '')));
     tab.addEventListener('keydown', event => {
       const target = event.key === 'Home' ? 0 : event.key === 'End' ? viewTabs.length - 1
         : event.key === 'ArrowRight' ? (index + 1) % viewTabs.length
@@ -306,10 +376,10 @@ function initializeCatalog() {
       .finally(() => clearTimeout(timer));
   }
 
-  function loadRecordModule(src) {
+  function loadRecordModule(src, { reload = false } = {}) {
     if (moduleLoads.has(src)) return moduleLoads.get(src);
     const script = document.createElement('script');
-    script.src = src;
+    script.src = reload ? `${src}?achievementRetry=${++achievementReload}` : src;
     const pending = withTimeout(new Promise((resolve, reject) => {
       script.onload = resolve;
       script.onerror = () => reject(recordError('MODULE_LOAD'));
@@ -351,6 +421,59 @@ function initializeCatalog() {
         statisticsInitializing = null;
       }
     })();
+  }
+
+  function initializeAchievements({ reload = false } = {}) {
+    if (!achievementsView) return Promise.resolve();
+    if (achievementsInitializing) return achievementsInitializing;
+    achievementsLoading = true; renderAchievements();
+    achievementsInitializing = (async () => {
+      try {
+        const resources = await Promise.allSettled([
+          !reload && typeof globalThis.FishingAchievements?.calculateAchievements === 'function' ? null : loadRecordModule('./achievements.js', { reload }),
+          typeof globalThis.createAchievementsUI === 'function' ? null : loadRecordModule('./achievement-ui.js'),
+        ]);
+        const failure = resources.find(result => result.status === 'rejected');
+        if (failure) throw failure.reason;
+        if (typeof globalThis.FishingAchievements?.calculateAchievements !== 'function' || typeof globalThis.createAchievementsUI !== 'function'
+          || !globalThis.FishingAchievements.validateDefinitions?.(species).valid) throw recordError('MODULE_INVALID');
+        if (!achievementsUI) achievementsUI = globalThis.createAchievementsUI({ root: achievementsView, onRetry: retryAchievements });
+        if (!achievementsUI) throw recordError('ACHIEVEMENT_DOM');
+        achievementStaticError = '';
+        // Render the static list before waiting for either records or the shared statistics module.
+        refreshAchievementState();
+        achievementsLoading = false;
+        renderAchievements();
+      } catch (error) {
+        achievementStaticError = '업적 정보를 다시 불러오지 못했습니다. 마지막으로 확인한 목록을 표시합니다.';
+        reportFailure('achievements', error);
+        return;
+      }
+      try {
+        if (typeof globalThis.CatchStatistics?.calculateCatchStatistics !== 'function') await loadRecordModule('./catch-statistics.js');
+        if (typeof globalThis.CatchStatistics?.calculateCatchStatistics !== 'function') throw recordError('MODULE_INVALID');
+        achievementProgressError = '';
+        recalculate();
+      } catch (error) {
+        achievementProgressError = '업적 진행도를 갱신하지 못했습니다. 업적 목록은 계속 확인할 수 있습니다. 다시 불러와 주세요.';
+        reportFailure('achievement-progress', error);
+      }
+    })().finally(() => { achievementsLoading = false; achievementsInitializing = null; renderAchievements(); });
+    return achievementsInitializing;
+  }
+
+  async function retryAchievements() {
+    if (achievementsRetrying) return;
+    achievementsRetrying = true; renderAchievements();
+    try {
+      await initializeAchievements({ reload: true });
+      if (store) await loadRecords({ background: true });
+      else await initializeRecords();
+      await achievementQueue;
+    } catch (error) {
+      achievementProgressError = '업적을 다시 확인하지 못했습니다. 마지막으로 확인한 목록과 진행도를 표시합니다.';
+      reportFailure('achievement-retry', error);
+    } finally { achievementsRetrying = false; renderAchievements(); }
   }
 
   function closeDetail() { if (!recordUI?.isBusy()) dialog.close(); }
@@ -505,11 +628,15 @@ function initializeCatalog() {
     count.textContent = `${matches.length}종 표시 · 전체 ${species.length}종`;
   }
 
-  function recalculate() {
+  function calculateStatistics(rows) {
+    return globalThis.CatchStatistics.calculateCatchStatistics(rows, species,
+      { mapSpotIds: mapSpotIds(), mapSpots: typeof fishingSpots === 'undefined' ? [] : fishingSpots, customLocations });
+  }
+
+  function recalculate({ achievementReason = 'existing' } = {}) {
     statistics = null;
     if (hasSnapshot && typeof globalThis.CatchStatistics?.calculateCatchStatistics === 'function') {
-      try { statistics = globalThis.CatchStatistics.calculateCatchStatistics(records, species,
-        { mapSpotIds: mapSpotIds(), mapSpots: typeof fishingSpots === 'undefined' ? [] : fishingSpots, customLocations }); }
+      try { statistics = calculateStatistics(records); }
       catch (error) { reportFailure('statistics', error); }
     }
     // Both views use the same summary object. Statistics never open or initialize IndexedDB.
@@ -520,11 +647,14 @@ function initializeCatalog() {
     renderProgress();
     render();
     renderStatistics();
+    synchronizeAchievements(achievementReason);
+    renderAchievements();
     if (dialog.open) renderDetail();
   }
 
   function showStorageError(error) {
     ready = false;
+    recordLoadFailed = true;
     storageStatus.hidden = false;
     const detail = ['MODULE_LOAD', 'MODULE_TIMEOUT', 'MODULE_INVALID'].includes(error?.code)
       ? '기록 기능 파일을 불러오지 못했습니다. 개발 서버를 재시작한 뒤 기록 다시 불러오기를 눌러 주세요.'
@@ -536,6 +666,7 @@ function initializeCatalog() {
     statusFilters.disabled = false;
     reportFailure('records', error);
     renderStatistics();
+    renderAchievements();
     if (dialog.open) renderDetail();
   }
 
@@ -554,6 +685,7 @@ function initializeCatalog() {
       records = snapshot.records;
       customLocations = snapshot.customLocations || [];
       ready = hasSnapshot = true;
+      recordLoadFailed = false;
       storageRetry.hidden = true;
       storageStatus.hidden = snapshot.invalidCount === 0;
       storageMessage.textContent = snapshot.invalidCount ? `유효하지 않은 기록 ${snapshot.invalidCount}개는 집계에서 제외했습니다. 저장된 데이터는 삭제하지 않았습니다.` : '';
@@ -584,7 +716,7 @@ function initializeCatalog() {
     records = records.filter(record => record.recordId !== id);
     if (change.record) records.push(change.record);
     ready = hasSnapshot = true;
-    recalculate();
+    recalculate({ achievementReason: 'new' });
     // Read the store again for changes from other tabs. A read failure does not undo a committed save.
     loadRecords({ background: true });
   }
@@ -633,6 +765,7 @@ function initializeCatalog() {
     if (loaded) {
       // Optional statistics must never block the static catalog or the record store.
       initializeStatistics();
+      initializeAchievements();
       await initializeRecords();
     }
     retry.disabled = storageRetry.disabled = false;
@@ -648,17 +781,18 @@ function initializeCatalog() {
   document.querySelector('#catalog-reset').addEventListener('click', () => { form.reset(); render(); query.focus(); });
   retry.addEventListener('click', load);
   storageRetry.addEventListener('click', load);
-  window.addEventListener('pagehide', () => { pageActive = false; recordUI?.cleanup(); statisticsUI?.cleanup(); store?.close(); });
+  window.addEventListener('pagehide', () => { pageActive = false; recordUI?.cleanup(); statisticsUI?.cleanup(); achievementsUI?.cleanup(); store?.close(); });
   window.addEventListener('pageshow', event => {
     pageActive = true;
     if (event.persisted) {
       renderStatistics();
+      renderAchievements();
       if (store && !reloading) loadRecords();
     }
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) statisticsUI?.cleanup();
-    else renderStatistics();
+    else { renderStatistics(); renderAchievements(); }
     if (!document.hidden && hasSnapshot && store && !reloading && !recordUI?.isBusy() && !recordUI?.isEditing()) loadRecords({ background: true });
   });
   load();
