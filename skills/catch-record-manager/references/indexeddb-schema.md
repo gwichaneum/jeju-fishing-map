@@ -1,4 +1,4 @@
-# IndexedDB 계약 — Phase 3 구현
+# IndexedDB 계약 — Phase 3 구현 및 장소 선택 확장
 
 실제 공유 모듈은 [catch-records.js](../../../catch-records.js), 입력·목록 UI는 [catch-record-ui.js](../../../catch-record-ui.js), 도감 연결은 catalog.js다. 공개 어종 JSON·이미지는 변경하지 않았다.
 
@@ -8,8 +8,10 @@
 | --- | --- |
 | Database | jejuFishingCollection |
 | 초기 버전 | DB_VERSION=1. 기존 DB 코드가 없음을 확인한 후 도입 |
+| 현재 버전 | DB_VERSION=2. 2026-10-29 장소 선택 확장. onupgradeneeded에서 기존 기록·사진·index를 보존하고 customLocations 추가 |
 | Object store | catchRecords, keyPath: recordId, autoIncrement: false |
 | Index | speciesId, caughtAt, createdAt (각 unique: false) |
+| 사용자 장소 store | customLocations, keyPath: customLocationId, name index (unique: true) |
 
 어종의 공개 정보는 별도 정적 speciesCatalog로 관리하고 개인 사진·메모를 섞지 않는다.
 사진은 해당 기록의 photoBlob에 함께 넣어 transaction 하나로 저장·수정·삭제한다. 별도 사진 store가 필요해지면 원자성과 참조 정리를 먼저 설계한다.
@@ -23,10 +25,18 @@
 | photoBlob | 실제 디코딩 가능한 원본 Blob, 필수. image/jpeg, image/png, image/webp; 0 초과 최대 10MiB |
 | photoName / photoType | 원본 파일명 / Blob.type과 같은 MIME, 필수. 사진 미교체 수정 시 유지 |
 | locationName | string, 최대 120자, 선택 입력은 빈 문자열로 정규화 |
-| mapSpotId | 기존 fishing-spots.js의 숫자 id 또는 null. 저장 좌표를 추측하지 않음 |
+| mapSpotId | 기존 fishing-spots.js의 숫자 id 또는 null. 과거 기록은 필드 누락도 허용. 선택 시 공식 name을 locationName에 저장하며 좌표를 추측하지 않음 |
+| customLocationId | 사용자 장소 UUID 문자열 또는 null. 과거 기록은 필드 누락 허용. mapSpotId와 동시에 설정 불가. 선택 시 customLocations.name을 locationName에 저장 |
 | memo | string, 최대 2,000자, 선택 입력은 빈 문자열; textContent로 표시 |
 | createdAt | ISO UTC timestamp, 생성 시 고정 |
 | updatedAt | ISO UTC timestamp, 수정 시 갱신, createdAt 이상 |
+
+customLocations는 `{ customLocationId, name, address, latitude, longitude, memo, createdAt, updatedAt }`를 저장한다.
+이름은 1~120자, 주소는 300자, 메모는 2,000자 이내다. 좌표는 선택이며 미입력은 null, 입력 시 유한 숫자 위도 -90~90·경도 -180~180이다. ID는 기록과 같은 안전한 UUID 생성기를 사용한다.
+지도와 정확히 같은 이름은 등록을 거부한다. 사용자 장소의 동일 이름 확인과 추가는 같은 transaction에서 수행하며 unique name index로 동시 탭 중복도 방지한다. 비슷한 이름은 자동 병합하지 않는다.
+기록 저장·수정은 두 store를 포함한 transaction에서 사용자 장소 존재 여부와 공식 이름을 확인하고 기록을 쓴다. 기록 삭제는 사용자 장소를 삭제하지 않는다.
+등록·수정 UI는 [catch-location-ui.js](../../../catch-location-ui.js)를 공유한다. 새 기록은 검색 결과 선택 또는 새 장소 등록이 필요하며 장소 미입력은 허용한다. 과거 이름은 사용자가 바꾸지 않으면 그대로 유지한다.
+통계는 mapSpotId → customLocationId → 기존 이름 순으로 집계한다. ID가 없는 과거 이름은 유일한 지도 공식 이름과 완전히 같은 경우에만 통계에서 해당 ID와 묶으며, DB에 ID를 자동으로 쓰지 않는다. 지도 표시 이름은 현재 공식 name, 사용자 장소는 현재 등록 name을 사용한다.
 
 10MiB와 허용 MIME을 변경하면 UI·검증기·문서를 함께 수정한다. 저장 전 MIME·용량·PNG/JPEG/WebP 파일 시그니처와 브라우저의 실제 이미지 디코딩을 확인한다. 저장소에서 다시 읽은 사진도 검증하여 손상된 파일을 집계에서 제외한다. SVG·HEIC/HEIF 직접 저장은 지원하지 않고 변환 안내를 제공한다.
 자동 압축·EXIF 분석·방향 재인코딩은 하지 않는다. 원본 바이트를 보관하고 브라우저의 이미지 표시 방향을 사용한다. 10MiB를 넘는 사진은 사용자가 줄여서 다시 선택하도록 안내한다.

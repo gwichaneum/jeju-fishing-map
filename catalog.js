@@ -234,6 +234,7 @@ function initializeCatalog() {
   let ready = false;
   let hasSnapshot = false;
   let store = null;
+  let customLocations = [];
   let recordUI = null;
   let loadGeneration = 0;
   let reloading = false;
@@ -326,6 +327,8 @@ function initializeCatalog() {
       && typeof globalThis.CatchRecords?.summarizeCollection === 'function';
     if (!hasCore()) await loadRecordModule('./catch-records.js');
     if (!hasCore()) throw recordError('MODULE_INVALID');
+    if (typeof globalThis.createCatchLocationUI !== 'function') await loadRecordModule('./catch-location-ui.js');
+    if (typeof globalThis.createCatchLocationUI !== 'function') throw recordError('MODULE_INVALID');
     if (typeof globalThis.createCatchRecordUI !== 'function') await loadRecordModule('./catch-record-ui.js');
     if (typeof globalThis.createCatchRecordUI !== 'function') throw recordError('MODULE_INVALID');
   }
@@ -505,7 +508,8 @@ function initializeCatalog() {
   function recalculate() {
     statistics = null;
     if (hasSnapshot && typeof globalThis.CatchStatistics?.calculateCatchStatistics === 'function') {
-      try { statistics = globalThis.CatchStatistics.calculateCatchStatistics(records, species, { mapSpotIds: mapSpotIds() }); }
+      try { statistics = globalThis.CatchStatistics.calculateCatchStatistics(records, species,
+        { mapSpotIds: mapSpotIds(), mapSpots: typeof fishingSpots === 'undefined' ? [] : fishingSpots, customLocations }); }
       catch (error) { reportFailure('statistics', error); }
     }
     // Both views use the same summary object. Statistics never open or initialize IndexedDB.
@@ -548,6 +552,7 @@ function initializeCatalog() {
       if (generation !== loadGeneration) return;
       if (!snapshot || !Array.isArray(snapshot.records)) throw recordError('RECORD_DATA');
       records = snapshot.records;
+      customLocations = snapshot.customLocations || [];
       ready = hasSnapshot = true;
       storageRetry.hidden = true;
       storageStatus.hidden = snapshot.invalidCount === 0;
@@ -563,8 +568,10 @@ function initializeCatalog() {
     storageMessage.textContent = '저장된 조과 기록을 확인하고 있어요.';
     try {
       await ensureRecordModules();
-      if (!store) store = globalThis.CatchRecords.createCatchRecordStore({ speciesIds: species.map(item => item.speciesId), mapSpotIds: mapSpotIds(), onVersionChange: showStorageError });
-      if (!recordUI) recordUI = globalThis.createCatchRecordUI({ store, getState: () => ({ records, summary, ready, hasSnapshot, storageMessage: storageMessage.textContent }), onCommitted, announce });
+      if (!store) store = globalThis.CatchRecords.createCatchRecordStore({ speciesIds: species.map(item => item.speciesId),
+        mapSpots: typeof fishingSpots === 'undefined' ? [] : fishingSpots, mapSpotIds: mapSpotIds(), onVersionChange: showStorageError });
+      if (!recordUI) recordUI = globalThis.createCatchRecordUI({ store, mapSpots: typeof fishingSpots === 'undefined' ? [] : fishingSpots,
+        getState: () => ({ records, customLocations, summary, ready, hasSnapshot, storageMessage: storageMessage.textContent }), onCommitted, announce });
       if (dialog.open) renderDetail();
       await loadRecords();
     } catch (error) { showStorageError(error); }

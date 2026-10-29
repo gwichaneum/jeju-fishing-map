@@ -188,6 +188,22 @@
 .catch-form-actions button { min-width: 92px; }
 .catch-record-dialog input:focus-visible, .catch-record-dialog textarea:focus-visible, .species-catches button:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .catch-record-form[aria-busy="true"] { cursor: progress; }
+.catch-location-dropdown { margin-top: 8px; padding: 8px; border: 1px solid #c6dfe5; border-radius: 16px; background: rgba(239, 249, 251, 0.9); backdrop-filter: blur(12px); box-shadow: 0 8px 24px #174f6112; }
+.catch-location-dropdown[hidden], .catch-location-selection[hidden], .custom-location-fields[hidden] { display: none; }
+#catch-location-results { max-height: min(280px, 40dvh); overflow-y: auto; overscroll-behavior: contain; margin: 0; padding: 0; list-style: none; }
+.catch-location-option { display: flex; flex-direction: column; gap: 5px; width: 100%; min-height: 64px; padding: 12px; border: 0; border-radius: 10px; color: #24596b; background: transparent; text-align: left; font: inherit; cursor: pointer; overflow-wrap: anywhere; }
+.catch-location-option strong { font-size: 0.87rem; }
+.catch-location-option span { color: #617c86; font-size: 0.73rem; }
+.catch-location-option:hover, .catch-location-option[aria-selected="true"] { background: #dceff3; }
+.catch-location-field button:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+.catch-location-field button { scroll-margin-block: 80px; }
+.catch-location-dropdown > button { width: 100%; }
+.catch-location-selection { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding: 12px; border: 1px solid #badbd6; border-radius: 12px; background: #eaf6f1; }
+.catch-location-selection p { flex: 1 1 180px; margin: 0; font-size: 0.8rem; color: #236854; overflow-wrap: anywhere; }
+.custom-location-fields { min-width: 0; margin: 12px 0 0; padding: 14px; border: 1px solid #c6dfe5; border-radius: 14px; background: #f0f8fa; }
+.custom-location-fields legend { padding: 0 6px; color: #24596b; font-weight: 650; }
+.custom-location-fields input, .custom-location-fields textarea { margin-bottom: 12px; }
+.custom-location-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 @media (min-width: 480px) {
   .catch-form-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .catch-statistics { grid-template-columns: repeat(4, minmax(0, 1fr)); }

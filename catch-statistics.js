@@ -21,7 +21,7 @@
     });
   }
 
-  function calculateCatchStatistics(records, speciesCatalog, { now = new Date(), mapSpotIds = null } = {}) {
+  function calculateCatchStatistics(records, speciesCatalog, { now = new Date(), mapSpots = [], customLocations = [], mapSpotIds = null } = {}) {
     // CatchRecords is loaded lazily by the catalog. Loading this file must not depend on its arrival.
     const api = getRecordsApi();
     if (typeof api?.validateCatchRecord !== 'function' || typeof api?.summarizeCollection !== 'function'
@@ -54,15 +54,34 @@
     const monthlyStats = recentMonths(now);
     const months = new Map(monthlyStats.map(month => [month.month, month]));
     const locations = new Map();
+    const spotsById = new Map(mapSpots.map(spot => [spot.id, spot]));
+    const customById = new Map(customLocations.map(location => [location.customLocationId, location]));
+    const spotsByName = new Map();
+    for (const spot of mapSpots) {
+      if (!spotsByName.has(spot.name)) spotsByName.set(spot.name, []);
+      spotsByName.get(spot.name).push(spot);
+    }
     for (const record of validRecords) {
       const count = Number(record.count);
       const month = months.get(record.caughtAt.slice(0, 7));
       if (month) month.totalCount += count;
 
-      const locationName = normalizeLocationName(record.locationName);
+      let locationName = normalizeLocationName(record.locationName);
+      let locationKey;
+      if (record.mapSpotId != null) {
+        locationKey = `map:${record.mapSpotId}`;
+        locationName = spotsById.get(record.mapSpotId)?.name || locationName;
+      } else if (record.customLocationId != null) {
+        locationKey = `custom:${record.customLocationId}`;
+        locationName = customById.get(record.customLocationId)?.name || locationName;
+      } else {
+        // Only a unique, byte-for-byte official name match can join an old record to a map ID.
+        const exact = spotsByName.get(record.locationName);
+        locationKey = exact?.length === 1 ? `map:${exact[0].id}` : `legacy:${locationName}`;
+      }
       if (!locationName) continue;
-      if (!locations.has(locationName)) locations.set(locationName, { locationName, recordCount: 0, totalCount: 0 });
-      const location = locations.get(locationName);
+      if (!locations.has(locationKey)) locations.set(locationKey, { locationName, recordCount: 0, totalCount: 0 });
+      const location = locations.get(locationKey);
       location.recordCount++;
       location.totalCount += count;
     }

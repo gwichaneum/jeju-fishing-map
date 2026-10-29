@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  root.createCatchRecordUI = function ({ store, getState, onCommitted, announce }) {
+  root.createCatchRecordUI = function ({ store, mapSpots, getState, onCommitted, announce }) {
     const api = root.CatchRecords;
     const dialog = document.querySelector('#catch-record-dialog');
     const form = document.querySelector('#catch-record-form');
@@ -23,7 +23,8 @@
     let returnRecordId = null;
     const thumbnailUrls = new Set();
     let initialValues = '';
-    const formValues = () => JSON.stringify([fields.date.value, fields.count.value, fields.location.value, fields.memo.value]);
+    const locationUI = root.createCatchLocationUI({ store, mapSpots, getCustomLocations: () => getState().customLocations || [], setBusy });
+    const formValues = () => JSON.stringify([fields.date.value, fields.count.value, locationUI.dirtyValue(), fields.memo.value]);
     const isDirty = () => dialog.open && (formValues() !== initialValues || photo.files.length > 0);
     root.addEventListener('beforeunload', event => {
       if (!isDirty()) return;
@@ -90,7 +91,7 @@
       fields.date.max = api.localDate();
       fields.date.value = record?.caughtAt || api.localDate();
       fields.count.value = record?.count ?? 1;
-      fields.location.value = record?.locationName || '';
+      locationUI.reset(record);
       fields.memo.value = record?.memo || '';
       initialValues = formValues();
       keepPhoto.hidden = !record;
@@ -109,6 +110,7 @@
     document.querySelector('#catch-form-cancel').addEventListener('click', cancelForm);
     dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
     dialog.addEventListener('close', () => {
+      locationUI.close();
       photoGeneration++;
       setPreview(null);
       selectedPhoto = null;
@@ -170,11 +172,12 @@
       const count = api.parseCount(fields.count.value);
       if (!Number.isSafeInteger(count)) fieldError('count', '잡은 마릿수는 1마리 이상의 정수로 입력해 주세요.');
       if (fields.location.value.length > 120) fieldError('location', '장소는 120자 이내로 입력해 주세요.');
+      else if (locationUI.validate()) fieldError('location', locationUI.validate());
       if (fields.memo.value.length > 2000) fieldError('memo', '메모는 2,000자 이내로 입력해 주세요.');
       const firstInvalid = Object.keys(fields).find(key => !errors[key].hidden);
       if (firstInvalid) { fields[firstInvalid].focus(); return; }
       const input = { speciesId: species.speciesId, caughtAt: fields.date.value, count,
-        locationName: fields.location.value.trim(), memo: fields.memo.value.trim() };
+        ...locationUI.value(), memo: fields.memo.value.trim() };
       if (selectedPhoto) { input.photoBlob = selectedPhoto; input.photoName = selectedPhoto.name; }
       setBusy(true);
       let committed = false;

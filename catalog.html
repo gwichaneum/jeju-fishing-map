@@ -124,9 +124,37 @@
             <p id="catch-count-error" class="catch-field-error" role="alert" hidden></p>
           </div>
         </div>
-        <div class="catch-field">
-          <label for="catch-location">장소 <span>(선택)</span></label>
-          <input id="catch-location" name="locationName" type="text" maxlength="120" autocomplete="off" placeholder="예: 도두항 방파제" aria-describedby="catch-location-error" />
+        <div class="catch-field catch-location-field">
+          <label for="catch-location">장소 검색 <span>(선택)</span></label>
+          <input id="catch-location" type="text" maxlength="120" autocomplete="off" placeholder="이름·지역·주소로 검색" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="catch-location-results" aria-describedby="catch-location-hint catch-location-error" />
+          <p id="catch-location-hint" class="catch-form-caption">검색 결과에서 장소를 선택하세요. 없는 장소는 새로 등록할 수 있어요.</p>
+          <div id="catch-location-dropdown" class="catch-location-dropdown" hidden>
+            <ul id="catch-location-results" role="listbox" aria-label="장소 검색 결과"></ul>
+            <p id="catch-location-search-status" class="catch-form-caption" role="status"></p>
+            <button id="catch-location-create" type="button" class="catalog-button">+ 새 장소 등록</button>
+          </div>
+          <div id="catch-location-selection" class="catch-location-selection" hidden>
+            <p id="catch-location-selected" role="status"></p>
+            <button id="catch-location-clear" type="button" class="catalog-button">× 선택 해제</button>
+          </div>
+          <fieldset id="custom-location-fields" class="custom-location-fields" aria-describedby="custom-location-error" hidden>
+            <legend>새 장소 등록</legend>
+            <label for="custom-location-name">장소 이름 <span>(필수)</span></label>
+            <input id="custom-location-name" type="text" maxlength="120" />
+            <label for="custom-location-address">주소 <span>(선택)</span></label>
+            <input id="custom-location-address" type="text" maxlength="300" />
+            <div class="catch-form-pair">
+              <div><label for="custom-location-latitude">위도 <span>(선택)</span></label><input id="custom-location-latitude" type="number" inputmode="decimal" step="any" min="-90" max="90" /></div>
+              <div><label for="custom-location-longitude">경도 <span>(선택)</span></label><input id="custom-location-longitude" type="number" inputmode="decimal" step="any" min="-180" max="180" /></div>
+            </div>
+            <label for="custom-location-memo">장소 메모 <span>(선택)</span></label>
+            <textarea id="custom-location-memo" rows="2" maxlength="2000"></textarea>
+            <p id="custom-location-error" class="catch-field-error" role="alert" hidden></p>
+            <div class="custom-location-actions">
+              <button id="custom-location-cancel" type="button" class="catalog-button">등록 취소</button>
+              <button id="custom-location-save" type="button" class="catalog-button catalog-primary-button">장소 등록 후 선택</button>
+            </div>
+          </fieldset>
           <p id="catch-location-error" class="catch-field-error" role="alert" hidden></p>
         </div>
         <div class="catch-field">

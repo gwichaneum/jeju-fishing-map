@@ -291,3 +291,18 @@ PRD 연결: F9, 기존 F4/F5/F7/F8. 완료일: 2026-10-28 (KST). 아래 완료�
 - [x] 통계 Test — A~F 포함 단위 14개, 전체 113개, 사용자 18개 브라우저 항목·기존 지도/도감 회귀
 
 상세 실행·증거·미확인 범위는 [SKILL_USAGE](./docs/SKILL_USAGE.md)의 조과 통계 기록을 따른다. 통계 탭은 이미 읽은 기록을 재사용하며 DB 버전 1·기존 store/index와 원본 데이터를 유지했다. 실제 휴대폰·다른 브라우저·배포 환경 인수는 별도 확인이 필요하다. 이번 작업에서 commit/push하지 않았다.
+
+## 추가 기능 — 조과 기록 장소 선택 (2026-10-29, KST)
+
+PRD 연결: F10, F4/F7/F8/F9. 완료 표시는 격리된 로컬 Chrome·모바일 에뮬레이션 기준이다.
+
+- [x] 지도 포인트 장소 검색 — name/region/address/aliases, 원본 69개 포인트 읽기 전용
+- [x] 장소 자동완성 — 최대 8개, 선택·해제, Arrow Up/Down·Enter·Escape·Tab
+- [x] 사용자 장소 등록 — 이름 필수, 메모·주소·위도·경도 선택, 정확한 이름 중복 차단
+- [x] customLocations IndexedDB — UUID keyPath, name unique index, transaction 완료 후 반영
+- [x] 조과 Record와 장소 ID 연결 — mapSpotId/customLocationId, 공식 이름 저장, 수정 시 이전 ID 해제
+- [x] 장소별 통계 그룹화 — 지도 ID → 사용자 장소 ID → 과거 이름, 정확히 일치하는 유일한 공식 이름만 통계에서 병합
+- [x] 기존 Record 호환 — 버전 1→2, 사진·필드·기존 index 보존, ID 누락 기록 유지
+- [x] 장소 입력 모바일 테스트 — 320/375/768/1440/1920px·812×375 가로, 375px 실제 tap 이벤트 에뮬레이션
+
+실제 휴대폰의 가상 키보드·사진 권한, Safari/Firefox, 배포 origin에서의 기존 데이터 업그레이드는 직접 확인이 필요하다. 실행 결과와 예시 이름 대체 사유는 [SKILL_USAGE](./docs/SKILL_USAGE.md)의 장소 선택 기록을 따른다. git commit/push는 하지 않았다.

@@ -771,3 +771,49 @@ README/PRD/TODO/최종 테스트/배포 점검/출처 문구를 현재 범위로
 증거는 Git 제외 .verify/artifacts/statistics/ 아래 dashboard/results.json·dashboard-1440.png·dashboard-375.png·empty-desktop.png, map/map-results.json·keyboard.json·map-states/map-results.json, crud/browser-results.json, storage-errors/error-results.json, boundaries/boundaries.json, review-boundaries/results.json, integration/integration-results.json, default-server-smoke.json에 있다. 제품 데이터가 아닌 합성 테스트 화면이다. TODO의 11개 조과 통계 항목만 완료 표시하고 PRD F9를 최소 추가했다.
 
 실제 휴대폰의 터치·사진 선택, Safari/Firefox, 실제 GPS·새 실 API 응답, Render 배포 후 화면/그 origin의 IndexedDB는 이번에 검증하지 않았다. 새 통계에는 외부 API가 없으며 지도 API 검사는 성공/부분/전체 실패 fixture를 사용했다. 장소→지도·포인트별 기록·출조 일지·클라우드·로그인·서버 DB는 구현하지 않았다. commit/push하지 않았다.
+
+## 추가 기능 — 조과 기록 장소 선택 (2026-10-29, KST)
+
+### 실제 Skill 적용과 사전 조사
+
+- [catch-record-manager](../skills/catch-record-manager/SKILL.md)와 [IndexedDB 계약](../skills/catch-record-manager/references/indexeddb-schema.md)을 읽고 실제 저장·수정·삭제·집계 모듈에 적용했다. 변경 전 jejuFishingCollection은 버전 1, catchRecords의 keyPath는 recordId, index는 speciesId/caughtAt/createdAt이었다. mapSpotId는 숫자 또는 null이었고 locationName은 선택 문자열이었다. 기존 수정 코드가 지도 ID를 변경하지 못하는 부분도 함께 수정했다.
+- [fishing-app-tester](../skills/fishing-app-tester/SKILL.md)와 [T01~T14](../skills/fishing-app-tester/references/test-cases.md)를 읽고 정적 검사, 기존 자동 테스트, 별도 Chrome profile/context의 실제 IndexedDB·Form·모바일·지도 회귀 검사를 수행했다. 기존 실행 결과를 이번 PASS로 복사하지 않았다.
+- fishing-spots.js는 69개 항목이며 고유 숫자 id, name, region, category, latitude/longitude를 가진다. 일부 좌표는 null이고 address/aliases는 선택 필드다. 검색은 좌표 유무와 관계없이 이 원본을 읽기만 한다. 기존 이름·좌표·메모·어종·방법·도감 JSON·이미지는 수정하지 않았다.
+- 요청 예시인 **도두항 방파제는 현재 원본에 없다**. Test B/C의 실제 저장·집계 검사는 “도두” 검색으로 나오는 **도두등대, ID 48**로 대체했다. 현사는 현사포구, ID 67로 확인했다. 예시를 맞추려고 기존 포인트를 바꾸거나 새 지도 포인트를 만들지 않았다.
+
+### 저장·검색·호환 계약
+
+1. 지도 검색은 name/region/address/aliases의 대소문자를 구분하지 않는 부분 일치다. 사용자 장소는 name/address를 검색하며, 이름 완전 일치 → 이름 부분 일치 → 지역·주소 일치 순으로 최대 8개를 표시한다. 결과는 지도/사용자 장소를 구분하고 지도 결과에 지역·category를 표시한다.
+2. 등록·수정 화면은 catch-location-ui.js를 공유한다. label·combobox/listbox·선택 상태, Arrow Up/Down·Enter·Escape·Tab+Enter, 선택 해제, 결과 스크롤, 빈 결과와 새 장소 등록을 제공한다. 결과 패널과 등록 fieldset은 dialog 안의 문서 흐름에 배치해 외부 overlay 뒤로 숨지 않도록 했다.
+3. 지도 선택은 `{ mapSpotId: 숫자ID, customLocationId: null, locationName: 공식name }`, 사용자 장소 선택은 `{ mapSpotId: null, customLocationId: UUID, locationName: 등록name }`로 저장한다. UI뿐 아니라 저장소에서도 원본/등록 이름을 다시 적용한다. 수정 시 선택한 장소 ID를 반영하고 이전 종류의 ID를 null로 해제한다.
+4. DB_VERSION은 **1→2**다. onupgradeneeded는 기존 catchRecords와 index를 재사용하고 customLocations만 추가한다. catchRecords를 삭제·재생성하거나 과거 필드를 일괄 수정하지 않는다. customLocations의 keyPath는 customLocationId, index는 name(unique: true)이다.
+5. customLocations는 `{ customLocationId, name, address, latitude, longitude, memo, createdAt, updatedAt }`다. ID는 crypto.randomUUID 또는 getRandomValues 기반 UUID다. 이름 1~120자만 필수이며 주소(300자)·메모(2,000자)·좌표는 선택이다. 미입력 좌표는 null, 입력 좌표는 위도 -90~90·경도 -180~180의 유한 숫자로 검사한다. 시각은 ISO UTC다.
+6. 지도/사용자 장소와 **정확히 같은 이름**만 중복으로 막는다. 기존 결과를 보여주고 선택하도록 안내한다. 사용자 장소의 중복 확인·추가는 같은 transaction과 unique index로 처리하므로 동시 탭에서도 한 건만 생성된다. 비슷한 이름은 합치지 않는다.
+7. 장소 통계는 **mapSpotId → customLocationId → 기존 locationName** 순으로 그룹화한다. 같은 지도 ID의 이름이 달라도 현재 원본 name으로 표시하고, 사용자 장소도 포함한다. 과거 이름이 유일한 지도 공식 이름과 문자열 그대로 일치하면 통계에서만 같은 지도 ID와 묶는다. 비슷한 이름·공백 차이·동명 포인트는 추측하지 않으며 기존 DB에 ID를 자동 기록하지 않는다.
+8. ID 필드가 없는 과거 기록을 유효하게 읽고 기존 문자열을 수정 화면에 보여준다. 사용자가 그대로 두면 유지하고 직접 재선택한 경우에만 ID를 저장한다. 사진 Blob·recordId·speciesId·createdAt은 장소 수정으로 바뀌지 않는다. 장소 미입력은 허용하지만 새로 입력한 검색어만으로 조과를 저장할 수는 없다.
+9. 등록·수정·삭제·사용자 장소 추가의 성공 UI는 transaction complete 이후에만 반영한다. 사용자 장소를 참조하는 조과 저장은 두 store의 같은 transaction에서 존재·공식 이름을 확인한다. 조과를 삭제해도 재사용할 사용자 장소는 유지한다. quota/abort/blocked/versionchange는 입력·기존 기록을 보존하고 재시도를 안내한다.
+
+### 이번 실행 결과
+
+검사는 사용자 원본 데이터와 분리한 임시 origin·Chrome profile, 합성 PNG로 실행했다. 개인 사진·기록·.env·키를 읽거나 출력하지 않았다. 테스트 서버는 종료했고 격리 profile/증거는 Git 제외 .verify 아래에 남겼다.
+
+| 실행 | 결과와 검증 범위 |
+| --- | --- |
+| npm.cmd test | 121 PASS: 기존 113개 + 신규 tests/catch-locations.test.cjs 8개. 실제 원본 검색·사용자 검색·대소문자/주소/별칭·중복·좌표·ID 누락 호환·공식 이름·ID별 통계·정확한 과거 이름만 통계에서 병합·동명 포인트 분리 |
+| node skills/catch-record-manager/scripts/validate-record-logic.mjs --module catch-records.js | 9개 집계 시나리오·25개 거부 입력 PASS. 사진/날짜/마릿수와 수정·삭제·종별 격리 유지 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=1 | 27 PASS. 누락된 도감/기록 연결 검사는 아래 실제 Phase 5 인자로 확인 |
+| node skills/fishing-app-tester/scripts/run-static-checks.mjs --phase=5 --catalog species-catalog.json --record-module catch-records.js | 29 PASS. 실제 JSON/기록 export, JS syntax, 자원·문서·Skill 참조 검사 |
+| node .verify/location-selection.cjs | 18 PASS. 사용자 A~I/K, 실제 v1→v2 업그레이드 전후 모든 과거 필드·사진 바이트·index 동일, 지도/사용자 장소 CRUD, ID 전환 수정, 중복 안내, 잘못된 좌표·미선택 검색어 차단, 키보드, quota/요청 성공 후 abort, 동시 탭 중복, 공식 이름 강제, Chrome 재실행 후 동일 필드/사진/검색 복원, 6 viewport·가로 화면 |
+| node .verify/location-boundaries.cjs | 5 PASS. 실제 다른 연결의 v1 upgrade blocked→닫기→재시도, versionchange와 미래 DB 버전 보호, 새 UI 모듈 404→정적31종 유지→복구, 사용자 장소 읽기 실패 중 지도 검색 유지, 375px isMobile/hasTouch의 tap·결과 스크롤·등록·통계·첫 해금·마릿수 수정·마지막 삭제 재잠금·잘못된 마릿수/미래 날짜/위장 PNG 거부 |
+| node .verify/location-map-regression.cjs | 19 PASS. 사용자 J 및 기존 지도 회귀: 6 viewport × 정상/Marine 실패/전체 API 실패 18조합 + GPS 거부. 기본44마커·어종14마커, 검색·다중필터·즐겨찾기 재복원, 모의GPS/주변5, 화장실·물때 오늘/내일·Popup·Navigation·도감31종 유지, pageerror 0 |
+| node .verify/location-integration-regression.cjs | 12 PASS. T10/T11: 375/1440px 도감→지도 무늬23/14·한치20/18, History/직접 query/초기화/무효 입력·null9종, 69개 Popup의 기존 DOM과 차이0·도감 기능 추가0, 지도 DB open0, 0/1마커 범위 및 9 viewport Navigation, pageerror/로컬404 0 |
+
+장소 선택 정상/오류 주입 시나리오는 pageerror·예상하지 않은 console error·로컬404가 모두 0이었다. UI 모듈 누락 검사의 의도적404는 별도로 구분했다. 성공/Marine/전체 API 실패는 fixture이며 실제 API 성공을 주장하지 않는다.
+
+이번 검사 중 중복 안내가 focus 재렌더에서 지워지던 문제와 customLocations 추가의 quota 예외가 event handler 밖으로 전파되던 문제를 발견해 수정했다. 해당 전체 장소 시나리오를 다시 실행하고 안내 유지·입력 보존·미처리 오류 0을 확인했다. 결과 선택 후 ID 변경과 과거 ID 누락 호환도 직접 대조했다.
+
+증거는 `.verify/artifacts/location-selection/`의 results.json, boundaries.json, statistics-1440.png, registration-375.png/registration-1440.png, touch-statistics-375.png, map/map-results.json, integration/integration-results.json과 지도 화면이다. 모바일 등록·통계 스크린샷을 직접 열어 레이아웃을 확인했다. `git diff --check`로 공백 오류도 확인했다.
+
+T01/T02/T04~T14는 위 실행의 관련 범위에서 검증했다. T03의 기존 31종 이미지 판독/권리 감사 전체는 재실행하지 않았으며 원본 자산 불변과 기존 정적 검사를 확인했다. 실제 휴대폰의 가상 키보드·사진 권한, Safari/Firefox, 배포 origin의 실제 사용자 DB 업그레이드와 실제 GPS/새 외부 API 응답은 수동 확인이 필요하다. Popup 조과 목록·포인트 상세·출조 일지·클라우드·로그인·공유·사용자 장소의 공개 지도 업로드는 추가하지 않았다. git commit/push는 하지 않았다.
+
+수정 파일은 PRD.md, TODO.md, catalog.css, catalog.html, catalog.js, catch-record-ui.js, catch-records.js, catch-statistics.js, docs/SKILL_USAGE.md, server.js, skills/catch-record-manager/references/indexeddb-schema.md, tests/catalog.test.cjs다. 새 제품/테스트 파일은 catch-location-ui.js와 tests/catch-locations.test.cjs다. Git 제외 검증 스크립트는 .verify/location-selection.cjs, location-boundaries.cjs, location-map-regression.cjs, location-integration-regression.cjs이며 뒤의 두 스크립트는 격리 서버로 기존 회귀 하네스를 실행한다. 원본 지도·도감 데이터/이미지와 의존성은 변경하지 않았다.

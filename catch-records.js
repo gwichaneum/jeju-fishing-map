@@ -5,8 +5,9 @@
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
   const DB_NAME = 'jejuFishingCollection';
-  const DB_VERSION = 1;
+  const DB_VERSION = 2;
   const STORE_NAME = 'catchRecords';
+  const CUSTOM_STORE_NAME = 'customLocations';
   const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
   const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
   const nonempty = value => typeof value === 'string' && value.trim().length > 0;
@@ -93,8 +94,10 @@
     if (photoIssue) errors.push(photoIssue);
     if (!nonempty(record.photoName)) errors.push('사진 파일명이 필요합니다.');
     if (record.photoType !== record.photoBlob?.type) errors.push('사진 형식 정보가 일치하지 않습니다.');
-    if (record.mapSpotId !== null && (!Number.isSafeInteger(record.mapSpotId)
+    if (record.mapSpotId != null && (!Number.isSafeInteger(record.mapSpotId)
       || Array.isArray(mapSpotIds) && !mapSpotIds.includes(record.mapSpotId))) errors.push('존재하지 않는 지도 포인트입니다.');
+    if (record.customLocationId != null && (!nonempty(record.customLocationId) || record.customLocationId.length > 120)) errors.push('사용자 장소 ID가 올바르지 않습니다.');
+    if (record.mapSpotId != null && record.customLocationId != null) errors.push('장소는 하나만 선택해 주세요.');
     if (typeof record.locationName !== 'string' || record.locationName.length > 120) errors.push('장소는 120자 이내로 입력해 주세요.');
     if (typeof record.memo !== 'string' || record.memo.length > 2000) errors.push('메모는 2,000자 이내로 입력해 주세요.');
     if (!validTimestamp(record.createdAt) || !validTimestamp(record.updatedAt)) errors.push('기록 시각이 올바르지 않습니다.');
@@ -135,8 +138,46 @@
     return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
   }
 
+  function searchLocations(mapSpots, customLocations, query, limit = 8) {
+    const needle = String(query || '').trim().toLocaleLowerCase();
+    if (!needle) return [];
+    const matches = (row, fields) => fields.some(key => (Array.isArray(row[key]) ? row[key] : [row[key]])
+      .some(value => typeof value === 'string' && value.toLocaleLowerCase().includes(needle)));
+    const rows = [
+      ...mapSpots.filter(row => matches(row, ['name', 'region', 'address', 'aliases']))
+        .map(row => ({ ...row, source: 'map' })),
+      ...customLocations.filter(row => matches(row, ['name', 'address']))
+        .map(row => ({ ...row, source: 'custom' })),
+    ];
+    // Prefer an exact name, then a name match over a region/address match. Keep source order for ties.
+    const rank = row => row.name.toLocaleLowerCase() === needle ? 0 : row.name.toLocaleLowerCase().includes(needle) ? 1 : 2;
+    return rows.sort((a, b) => rank(a) - rank(b)).slice(0, limit);
+  }
+
+  function findDuplicateLocation(mapSpots, customLocations, name) {
+    const exactName = name.trim();
+    const spot = mapSpots.find(row => row.name === exactName);
+    if (spot) return { ...spot, source: 'map' };
+    const custom = customLocations.find(row => row.name === exactName);
+    return custom ? { ...custom, source: 'custom' } : null;
+  }
+
+  function validateCustomLocation(location) {
+    const errors = [];
+    if (!location || !nonempty(location.customLocationId) || !nonempty(location.name) || location.name.length > 120) errors.push('장소 이름은 1~120자로 입력해 주세요.');
+    if (!location) return { valid: false, errors };
+    for (const [field, max, label] of [['address', 300, '주소'], ['memo', 2000, '메모']]) {
+      if (typeof location[field] !== 'string' || location[field].length > max) errors.push(`${label}는 ${max}자 이내로 입력해 주세요.`);
+    }
+    for (const [field, max, label] of [['latitude', 90, '위도'], ['longitude', 180, '경도']]) {
+      if (location[field] !== null && (typeof location[field] !== 'number' || !Number.isFinite(location[field]) || Math.abs(location[field]) > max)) errors.push(`${label}는 -${max}~${max} 사이의 숫자로 입력해 주세요.`);
+    }
+    if (!validTimestamp(location.createdAt) || !validTimestamp(location.updatedAt) || location.updatedAt < location.createdAt) errors.push('장소 등록 시각이 올바르지 않습니다.');
+    return { valid: errors.length === 0, errors };
+  }
+
   function storageErrorMessage(error) {
-    if (error?.code === 'PHOTO' || error?.code === 'VALIDATION') return error.message;
+    if (['PHOTO', 'VALIDATION', 'DUPLICATE_MAP', 'DUPLICATE_CUSTOM'].includes(error?.code)) return error.message;
     if (error?.code === 'BLOCKED') return '기록 저장소를 준비하지 못했습니다. 이 도감을 연 다른 탭을 닫고 다시 시도해 주세요.';
     if (error?.name === 'QuotaExceededError') return '기록을 저장하지 못했습니다. 브라우저 저장 공간을 확인하거나 더 작은 사진으로 다시 시도해 주세요.';
     if (error?.name === 'VersionError' || error?.code === 'SCHEMA' || error?.code === 'VERSION_CHANGED') return '기록 저장소 버전이 변경되었습니다. 도감을 연 다른 탭을 닫고 페이지를 새로고침해 주세요.';
@@ -154,9 +195,13 @@
     for (const key of ['speciesId', 'caughtAt', 'createdAt']) {
       if (!store.indexNames.contains(key)) store.createIndex(key, key, { unique: false });
     }
+    const locations = db.objectStoreNames.contains(CUSTOM_STORE_NAME)
+      ? transaction.objectStore(CUSTOM_STORE_NAME) : db.createObjectStore(CUSTOM_STORE_NAME, { keyPath: 'customLocationId' });
+    if (locations.keyPath !== 'customLocationId') throw new CatchRecordError('SCHEMA');
+    if (!locations.indexNames.contains('name')) locations.createIndex('name', 'name', { unique: true });
   }
 
-  function createCatchRecordStore({ speciesIds, mapSpotIds = [], indexedDB: factory = globalThis.indexedDB, onVersionChange = () => {} }) {
+  function createCatchRecordStore({ speciesIds, mapSpots = [], mapSpotIds = mapSpots.map(spot => spot.id), indexedDB: factory = globalThis.indexedDB, onVersionChange = () => {} }) {
     // No catalog metadata, collection flags or photo URLs are persisted here.
     const validIds = [...speciesIds];
     const validSpotIds = [...mapSpotIds];
@@ -184,7 +229,7 @@
         request.onsuccess = () => {
           const db = request.result;
           if (settled || generation !== currentGeneration) { db.close(); fail(new CatchRecordError('VERSION_CHANGED')); return; }
-          if (!db.objectStoreNames.contains(STORE_NAME)) { db.close(); fail(new CatchRecordError('SCHEMA')); return; }
+          if (![STORE_NAME, CUSTOM_STORE_NAME].every(name => db.objectStoreNames.contains(name))) { db.close(); fail(new CatchRecordError('SCHEMA')); return; }
           database = db;
           db.onversionchange = () => {
             db.close();
@@ -200,21 +245,21 @@
       return opening;
     }
 
-    async function transact(mode, operate) {
+    async function transact(mode, operate, storeNames = [STORE_NAME]) {
       const db = await open();
       return new Promise((resolve, reject) => {
         let result;
         let operationError = null;
         let transaction;
         try {
-          transaction = db.transaction(STORE_NAME, mode);
+          transaction = db.transaction(storeNames, mode);
           transaction.oncomplete = () => resolve(result);
           transaction.onerror = () => {}; // abort owns the rejection; no personal data is logged.
           transaction.onabort = () => reject(operationError || transaction.error || new CatchRecordError('TRANSACTION'));
-          operate(transaction.objectStore(STORE_NAME), value => { result = value; }, error => {
+          operate(transaction.objectStore(storeNames[0]), value => { result = value; }, error => {
             operationError = error;
             transaction.abort();
-          });
+          }, transaction);
         } catch (error) {
           if (transaction) { operationError = error; try { transaction.abort(); } catch { reject(error); } }
           else reject(error);
@@ -223,7 +268,13 @@
     }
 
     async function loadAll() {
-      const rows = await transact('readonly', (store, done) => { const request = store.getAll(); request.onsuccess = () => done(request.result); });
+      const snapshot = await transact('readonly', (store, done, _fail, transaction) => {
+        const result = { rows: [], customLocations: [] };
+        store.getAll().onsuccess = event => { result.rows = event.target.result; };
+        transaction.objectStore(CUSTOM_STORE_NAME).getAll().onsuccess = event => { result.customLocations = event.target.result; };
+        done(result);
+      }, [STORE_NAME, CUSTOM_STORE_NAME]);
+      const { rows } = snapshot;
       const records = [];
       let invalidCount = 0;
       let next = 0;
@@ -236,7 +287,8 @@
           catch { invalidCount++; }
         }
       }));
-      return { records: sortRecords(records), invalidCount };
+      return { records: sortRecords(records), invalidCount,
+        customLocations: snapshot.customLocations.filter(row => validateCustomLocation(row).valid) };
     }
 
     function ensureValid(record) {
@@ -245,19 +297,64 @@
       return record;
     }
 
+    function writeRecord(store, transaction, record, method, done, fail) {
+      const write = () => {
+        try { ensureValid(record); store[method](record); done(record); }
+        catch (error) { fail(error); }
+      };
+      if (record.mapSpotId != null) {
+        const spot = mapSpots.find(row => row.id === record.mapSpotId);
+        if (spot) record.locationName = spot.name;
+      }
+      if (record.customLocationId != null) {
+        const request = transaction.objectStore(CUSTOM_STORE_NAME).get(record.customLocationId);
+        request.onsuccess = () => {
+          if (!request.result || !validateCustomLocation(request.result).valid) { fail(new CatchRecordError('VALIDATION', '사용자 장소를 찾을 수 없습니다. 다시 검색해 선택해 주세요.')); return; }
+          record.locationName = request.result.name;
+          write();
+        };
+      } else write();
+    }
+
+    async function listCustomLocations() {
+      const rows = await transact('readonly', (store, done) => { store.getAll().onsuccess = event => done(event.target.result); }, [CUSTOM_STORE_NAME]);
+      return rows.filter(row => validateCustomLocation(row).valid);
+    }
+
+    async function addCustomLocation(input) {
+      const now = new Date().toISOString();
+      const location = { customLocationId: createRecordId(), name: String(input.name || '').trim(),
+        address: String(input.address || '').trim(), memo: String(input.memo || '').trim(),
+        latitude: input.latitude ?? null, longitude: input.longitude ?? null, createdAt: now, updatedAt: now };
+      const validation = validateCustomLocation(location);
+      if (!validation.valid) throw new CatchRecordError('VALIDATION', validation.errors.join(' '));
+      if (findDuplicateLocation(mapSpots, [], location.name)) throw new CatchRecordError('DUPLICATE_MAP', '지도에 이미 같은 이름의 장소가 있습니다. 기존 지도 장소를 선택해 주세요.');
+      return transact('readwrite', (store, done, fail) => {
+        // The check and insert share a transaction; concurrent tabs cannot create duplicate names.
+        store.index('name').get(location.name).onsuccess = event => {
+          try {
+            if (event.target.result) throw new CatchRecordError('DUPLICATE_CUSTOM', '이미 등록된 장소입니다. 검색 결과에서 선택해 주세요.');
+            store.add(location);
+            done(location);
+          } catch (error) { fail(error); }
+        };
+      }, [CUSTOM_STORE_NAME]);
+    }
+
     async function addRecord(input) {
       const now = new Date().toISOString();
       const record = ensureValid({ recordId: createRecordId(), speciesId: input.speciesId, caughtAt: input.caughtAt, count: input.count,
         photoBlob: input.photoBlob, photoName: input.photoName, photoType: input.photoBlob?.type,
-        locationName: input.locationName || '', mapSpotId: input.mapSpotId ?? null, memo: input.memo || '', createdAt: now, updatedAt: now });
+        locationName: input.locationName || '', mapSpotId: input.mapSpotId ?? null, customLocationId: input.customLocationId ?? null,
+        memo: input.memo || '', createdAt: now, updatedAt: now });
       await inspectPhoto(record.photoBlob);
-      return transact('readwrite', (store, done) => { store.add(record); done(record); });
+      return transact('readwrite', (store, done, fail, transaction) => writeRecord(store, transaction, record, 'add', done, fail), [STORE_NAME, CUSTOM_STORE_NAME]);
     }
 
     async function updateRecord(recordId, changes) {
       if (!nonempty(recordId)) throw new CatchRecordError('NOT_FOUND');
       if (Object.hasOwn(changes, 'photoBlob')) await inspectPhoto(changes.photoBlob);
-      return transact('readwrite', (store, done, fail) => {
+      return transact('readwrite', (store, done, fail, transaction) => {
         const request = store.get(recordId);
         request.onsuccess = () => {
           try {
@@ -267,13 +364,14 @@
             const updatedAt = new Date(Math.max(Date.now(), new Date(previous.updatedAt).getTime() + 1)).toISOString();
             const record = ensureValid({ ...previous,
               caughtAt: changes.caughtAt, count: changes.count, locationName: changes.locationName || '', memo: changes.memo || '', updatedAt,
+              mapSpotId: Object.hasOwn(changes, 'mapSpotId') ? changes.mapSpotId : previous.mapSpotId ?? null,
+              customLocationId: Object.hasOwn(changes, 'customLocationId') ? changes.customLocationId : previous.customLocationId ?? null,
               ...(Object.hasOwn(changes, 'photoBlob') ? { photoBlob: changes.photoBlob, photoName: changes.photoName, photoType: changes.photoBlob.type } : {}),
             });
-            store.put(record);
-            done(record);
+            writeRecord(store, transaction, record, 'put', done, fail);
           } catch (error) { fail(error); }
         };
-      });
+      }, [STORE_NAME, CUSTOM_STORE_NAME]);
     }
 
     async function deleteRecord(recordId) {
@@ -288,11 +386,12 @@
       });
     }
 
-    return { open, loadAll, addRecord, updateRecord, deleteRecord,
+    return { open, loadAll, addRecord, updateRecord, deleteRecord, listCustomLocations, addCustomLocation,
       close() { generation++; if (database) database.close(); database = null; } };
   }
 
-  return { DB_NAME, DB_VERSION, STORE_NAME, MAX_PHOTO_BYTES, PHOTO_TYPES, CatchRecordError,
+  return { DB_NAME, DB_VERSION, STORE_NAME, CUSTOM_STORE_NAME, MAX_PHOTO_BYTES, PHOTO_TYPES, CatchRecordError,
     localDate, validDate, parseCount, photoError, inspectPhoto, validateCatchRecord, summarizeCollection,
-    sortRecords, createRecordId, storageErrorMessage, upgradeSchema, createCatchRecordStore };
+    sortRecords, createRecordId, storageErrorMessage, upgradeSchema, createCatchRecordStore,
+    searchLocations, findDuplicateLocation, validateCustomLocation };
 });
