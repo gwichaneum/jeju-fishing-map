@@ -1,10 +1,11 @@
 # Jeju Fishing Map & Collection
 
-제주 낚시 포인트를 찾아보고, 직접 잡은 어종을 기록해 나만의 낚시 도감을 채우는 웹앱입니다.
+제주 낚시 포인트를 찾아보고, 직접 잡은 어종을 기록해 나만의 낚시 도감을 완성하는 웹앱입니다.
 
 [웹사이트 바로가기](https://jeju-fishing-map.onrender.com) ·
 [GitHub 저장소](https://github.com/gwichaneum/jeju-fishing-map)
 
+[📊 발표자료 PPT 다운로드](https://github.com/gwichaneum/jeju-fishing-map/raw/refs/heads/main/docs/Jeju_Fishing_Map_Collection_Presentation.pptx) ·
 [PRD](./PRD.md) ·
 [TODO](./TODO.md) ·
 [Skill 사용 기록](./docs/SKILL_USAGE.md) ·
